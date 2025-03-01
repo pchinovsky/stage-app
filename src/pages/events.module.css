@@ -53,3 +53,7 @@
 .eventsSection {
     @apply relative p-4 z-20 bg-white w-[95%] rounded-t-lg mt-16 flex flex-wrap gap-4 left-10 overflow-hidden;
 }
+
+.tooltipCircle {
+    @apply w-10 h-10 border-2 border-white rounded-full cursor-pointer z-[100];
+}

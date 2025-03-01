@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import DefaultLayout from "@/layouts/default";
-import { Image } from "@heroui/react";
+import { Image, Tooltip } from "@heroui/react";
 import FloatingControls from "../components/FloatingControls";
 import EventCard from "../components/EventCard";
 import { NavContext } from "../contexts/navContext";
 import FilterBar from "../components/FilterBar";
 import styles from "./events.module.css";
+import TabbedCard from "../components/TabCard";
+import eventsData from "../mockEventData";
 
 export default function EventLayout() {
     const { setNavWhite } = useContext(NavContext);
@@ -39,6 +41,12 @@ export default function EventLayout() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [searchFixed]);
+
+    const circlePos = [
+        { top: "20%", left: "30%" },
+        { top: "50%", left: "60%" },
+        { top: "70%", left: "40%" },
+    ];
 
     return (
         <DefaultLayout>
@@ -78,6 +86,37 @@ export default function EventLayout() {
                         width={1920}
                         height={1080}
                     />
+
+                    {/* Floating Tooltip Circles */}
+                    {circlePos.map((pos, index) => (
+                        <Tooltip
+                            key={index}
+                            content={
+                                index === 0 ? (
+                                    `${eventsData[0].title}: ${eventsData[0].description}`
+                                ) : index === 1 ? (
+                                    `Location: ${eventsData[0].category}`
+                                ) : (
+                                    <a
+                                        href="#"
+                                        className="text-blue-500 underline"
+                                    >
+                                        Explore Event
+                                    </a>
+                                )
+                            }
+                            placement="top"
+                        >
+                            <div
+                                className={styles.tooltipCircle}
+                                style={{
+                                    position: "absolute",
+                                    top: pos.top,
+                                    left: pos.left,
+                                }}
+                            ></div>
+                        </Tooltip>
+                    ))}
                 </motion.div>
 
                 {/* Floating Controls */}
