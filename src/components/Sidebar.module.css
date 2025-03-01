@@ -1,0 +1,57 @@
+.container {
+    position: relative;
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    height: 97%;
+    width: 4rem; /* original 16rem */
+    background-color: rgb(227, 229, 232, 0.5);
+    color: rgb(56, 24, 199);
+    padding: 1rem;
+    border-radius: 1em;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-out;
+    backdrop-filter: blur(10px) !important;
+    z-index: 30;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.navItem {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.navItem a {
+    color: rgb(53, 13, 185);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.navItem a:hover {
+    color: #60a5fa;
+}
+
+.hoverTrigger {
+    position: absolute;
+    left: 50;
+    top: 0;
+    height: 50%;
+    width: 2px;
+    background-color: #2054bc;
+    cursor: pointer;
+    transition: width 0.2s ease-in-out;
+}
+
+.hoverTrigger:hover {
+    width: 4px;
+}

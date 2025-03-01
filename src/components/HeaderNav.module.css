@@ -1,0 +1,34 @@
+:root {
+    --navbar-height: 70px;
+    --navbar-bg: transparent;
+}
+
+.navbar {
+    @apply w-full transition-all;
+    background-color: var(--navbar-bg) !important;
+    height: var(--navbar-height) !important;
+}
+
+.brand {
+    @apply font-bold text-lg text-gray-800;
+}
+
+.navContent {
+    @apply hidden sm:flex gap-4;
+}
+
+.featureButton {
+    @apply p-0 bg-transparent text-gray-700 hover:text-gray-900 transition-colors;
+}
+
+.dropdownMenu {
+    @apply bg-white shadow-lg border border-gray-200 rounded-md;
+}
+
+.dropdownMenu .dropdown-item {
+    @apply p-2 hover:bg-gray-100 transition-colors;
+}
+
+.item {
+    @apply border-2 border-gray-600 rounded-2xl p-2 px-3 text-gray-800 hover:bg-gray-100 transition-all;
+}

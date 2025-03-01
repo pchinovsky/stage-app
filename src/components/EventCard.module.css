@@ -1,0 +1,43 @@
+.card {
+    @apply flex items-start py-2 px-2 w-[450px] z-[60] gap-3;
+    @apply flex-row !important;
+    @apply bg-white !important;
+    @apply h-[250px] !important;
+}
+
+.cardContent {
+    @apply flex flex-row items-end justify-between;
+}
+
+.cardHeader {
+    @apply pb-0 pt-2 px-4 flex flex-col h-full;
+    @apply w-[100px] !important;
+    @apply justify-start !important;
+    @apply items-start !important;
+}
+
+.cardBody {
+    @apply flex overflow-hidden w-full p-0;
+    @apply p-0 !important;
+}
+
+.textTiny {
+    @apply text-xs uppercase font-bold;
+}
+
+.textDefault {
+    @apply text-gray-500;
+}
+
+.textLarge {
+    @apply text-medium font-bold text-start;
+}
+
+.image {
+    @apply object-fill transition-all duration-500 ease-in-out;
+    @apply rounded-md !important;
+}
+
+.image:hover {
+    @apply rounded-3xl transition-all duration-500 ease-in-out;
+}

@@ -1,0 +1,23 @@
+.layout {
+    @apply relative flex flex-col h-screen;
+}
+
+.main {
+    @apply mx-auto w-full px-1 pt-1 flex flex-col gap-1 items-start;
+}
+
+.footer {
+    @apply fixed bottom-0 w-full flex items-center justify-center py-3 bg-white shadow-md;
+}
+
+.footerLink {
+    @apply flex items-center gap-1 text-current;
+}
+
+.footerText {
+    @apply text-default-600;
+}
+
+.brand {
+    @apply text-primary;
+}

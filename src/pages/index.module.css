@@ -1,0 +1,62 @@
+.container {
+    @apply flex flex-wrap gap-3 items-start justify-center min-h-screen w-screen py-2;
+}
+
+.container2 {
+    @apply flex flex-wrap gap-3 items-start justify-center min-h-screen w-screen py-2 bg-slate-300;
+}
+
+.button {
+    @apply rounded-none transition-all duration-500 ease-in-out;
+    @apply self-start mt-4 mx-auto bg-purple-500 !important;
+    @apply rounded-md font-bold transition-transform;
+    /* background-color: !important; */
+    @apply w-[50px] !important;
+}
+
+.button:hover {
+    @apply bg-blue-400 rounded-3xl transition-all duration-500 ease-in-out;
+    /* background-color: blue !important; */
+}
+
+.button:active {
+}
+
+.textTiny {
+    @apply text-xs uppercase font-bold;
+}
+
+.textDefault {
+    @apply text-gray-500;
+}
+
+.textLarge {
+    @apply text-medium font-bold text-start;
+}
+
+.image {
+    @apply object-fill transition-all duration-500 ease-in-out;
+    @apply rounded-md !important;
+}
+
+.image:hover {
+    @apply rounded-3xl transition-all duration-500 ease-in-out;
+}
+
+.ops {
+    @apply cursor-pointer text-lg font-bold text-gray-300 bg-blue-800 
+           px-8 py-3 rounded-full border-4 border-blue-600 shadow-lg w-1/2 mx-auto transition-transform;
+}
+
+.ops:active {
+    @apply relative top-2 border-blue-400 shadow-none;
+}
+
+.ops:hover {
+    @apply scale-105;
+}
+
+.drop {
+    margin-left: 1rem !important;
+    background-color: lightblue !important;
+}

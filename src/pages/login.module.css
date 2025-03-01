@@ -1,0 +1,43 @@
+.container {
+    @apply relative flex h-screen w-screen items-center justify-center;
+}
+
+.backgroundImage {
+    @apply w-screen h-screen object-cover;
+}
+
+.loginBox {
+    @apply absolute z-10 bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm;
+}
+
+.title {
+    @apply pb-4 text-left text-3xl font-semibold;
+}
+
+.form {
+    @apply flex flex-col gap-4;
+}
+
+.eyeIcon {
+    @apply pointer-events-none text-2xl text-default-400;
+}
+
+.error {
+    @apply text-red-500;
+}
+
+.rememberSection {
+    @apply flex w-full items-center justify-between px-1 py-2;
+}
+
+.forgotLink {
+    @apply text-default-500;
+}
+
+.submitButton {
+    @apply w-full;
+}
+
+.signupText {
+    @apply text-center text-small;
+}

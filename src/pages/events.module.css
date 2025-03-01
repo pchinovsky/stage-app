@@ -1,0 +1,55 @@
+.layout {
+    @apply relative w-full h-screen;
+}
+
+.heroSection {
+    @apply sticky top-0 h-[40vh] w-full bg-gray-800 text-white flex items-center justify-center text-3xl z-10;
+}
+
+.infoBoxes {
+    @apply fixed top-[20px] right-4 flex flex-col gap-4 z-[1000] mr-6;
+}
+
+.infoBox {
+    @apply bg-yellow-300 text-black p-4 w-[200px] rounded-lg shadow-lg bg-opacity-40 h-[120px] overflow-hidden;
+}
+
+.cityBox {
+    @apply bg-white text-black p-4 w-[200px] rounded-lg shadow-lg flex flex-col gap-2 bg-opacity-40;
+}
+
+.infoTitle {
+    @apply text-lg font-bold;
+}
+
+.infoText {
+    @apply text-sm;
+}
+
+.infoNumber {
+    @apply text-sm font-bold;
+}
+
+.infoUpdate {
+    @apply text-xs;
+}
+
+.cityImage {
+    @apply rounded-md;
+}
+
+.heroImage {
+    @apply object-cover rounded-xl transition-all duration-500 ease-in-out z-50;
+}
+
+.floatingControls {
+    @apply fixed top-10 left-10 z-[9999];
+}
+
+.filterPlaceholder {
+    @apply w-full h-16 z-[1000];
+}
+
+.eventsSection {
+    @apply relative p-4 z-20 bg-white w-[95%] rounded-t-lg mt-16 flex flex-wrap gap-4 left-10 overflow-hidden;
+}

@@ -1,0 +1,43 @@
+.container {
+    @apply relative flex h-screen w-screen items-center justify-center;
+}
+
+.backgroundImage {
+    @apply w-screen h-screen object-cover;
+}
+
+.registerBox {
+    @apply absolute z-10 bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm;
+}
+
+.title {
+    @apply pb-4 text-left text-3xl font-semibold;
+}
+
+.emoji {
+    @apply ml-2;
+}
+
+.form {
+    @apply flex flex-col gap-4;
+}
+
+.eyeIcon {
+    @apply pointer-events-none text-2xl text-default-400;
+}
+
+.error {
+    @apply text-red-500;
+}
+
+.checkbox {
+    @apply py-4;
+}
+
+.submitButton {
+    @apply w-full;
+}
+
+.loginText {
+    @apply text-center text-small;
+}

@@ -1,0 +1,33 @@
+.panel {
+    @apply fixed z-[9999] bg-white border border-gray-300 rounded-lg w-56 
+           backdrop-blur-md bg-opacity-40;
+}
+
+.header {
+    @apply bg-gray-100 px-4 py-2 flex justify-between items-center rounded-t-lg 
+           cursor-move backdrop-blur-md bg-opacity-10;
+}
+
+.title {
+    @apply font-semibold text-gray-700;
+}
+
+.content {
+    @apply p-4;
+}
+
+.detachButton {
+    @apply bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600;
+}
+
+.actions {
+    @apply flex justify-end space-x-2 p-4 border-t border-gray-200;
+}
+
+.actionButton {
+    @apply bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600;
+}
+
+.createButton {
+    @apply bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800;
+}

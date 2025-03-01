@@ -1,0 +1,50 @@
+{
+    "id": "event123",
+    "title": "Art Exhibition: Modern Perspectives",
+    "description": "An exploration of modern abstract art in the digital age.",
+    "creatorId": "user456",
+    "collaborators": ["user789", "user101"],
+    "createdAt": "2025-02-19T12:00:00Z",
+    "staged": false,
+    "stagedAt": null,
+    "openingDate": "2025-03-01T18:00:00Z",
+    "duration": 7,
+    "location": {
+        "address": "123 Art Street, Sofia, Bulgaria",
+        "latitude": 42.6977,
+        "longitude": 23.3242
+    },
+    "attendance": {
+        "attending": ["user567", "user890"],
+        "interested": ["user345", "user678"],
+        "notGoing": ["user999"]
+    },
+    "ratings": {
+        "past": {
+            "user567": 5,
+            "user890": 4
+        },
+        "anticipated": {
+            "user345": 5
+        }
+    },
+    "polls": [
+        {
+            "id": "poll1",
+            "question": "What theme should the next exhibition explore?",
+            "options": {
+                "Abstract Art": 10,
+                "Minimalism": 5
+            },
+            "voters": ["user567", "user678"]
+        }
+    ],
+    "clutterAlert": false,
+    "recommendationTags": [
+        "abstract",
+        "digital art",
+        "gallery"
+    ],
+    "invitedUsers": ["user112", "user113"],
+    "commentCount": 25
+}

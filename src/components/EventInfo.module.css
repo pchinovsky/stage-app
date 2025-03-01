@@ -1,0 +1,28 @@
+.card {
+    @apply max-w-[200px] bottom-10 left-10 z-[100] 
+           bg-white backdrop-blur-md bg-opacity-20;
+}
+
+.cardHeader {
+    @apply flex gap-3;
+}
+
+.headerContent {
+    @apply flex flex-col;
+}
+
+.title {
+    @apply text-sm;
+}
+
+.subtitle {
+    @apply text-small text-default-500;
+}
+
+.cardBody {
+    @apply p-4;
+}
+
+.cardFooter {
+    @apply p-4;
+}

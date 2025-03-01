@@ -1,0 +1,11 @@
+.headingContainer {
+    @apply mt-16 inline-block max-w-lg text-center justify-center;
+}
+
+.cardsContainer {
+    @apply flex flex-wrap gap-6 justify-center items-center mt-6;
+}
+
+.section {
+    @apply flex flex-col items-center justify-center gap-4 py-8 md:py-10;
+}
