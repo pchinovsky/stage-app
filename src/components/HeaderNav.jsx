@@ -14,10 +14,12 @@ import {
 import styles from "./HeaderNav.module.css";
 import { useContext } from "react";
 import { NavContext } from "../contexts/navContext";
+import { AuthContext } from "../contexts/authContext";
 import { useLogout } from "../hooks/useAuth";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
+    const { isAuth } = useContext(AuthContext);
     const logout = useLogout();
 
     return (
@@ -93,73 +95,93 @@ export default function HeaderNav() {
                     </DropdownMenu>
                 </Dropdown>
 
-                <NavbarItem isActive className={styles.item}>
-                    <Link aria-current="page" href="/create">
-                        Create Event
-                    </Link>
-                </NavbarItem>
+                {isAuth && (
+                    <NavbarItem isActive className={styles.item}>
+                        <Link aria-current="page" href="/create">
+                            Create Event
+                        </Link>
+                    </NavbarItem>
+                )}
             </NavbarContent>
 
             {/* Right Navbar Items */}
             <NavbarContent justify="end">
-                <NavbarItem className="hidden lg:flex">
-                    <Link href="/login">Login</Link>
-                </NavbarItem>
-                <NavbarItem>
-                    <Button
-                        as={Link}
-                        color="primary"
-                        href="/register"
-                        variant="flat"
-                    >
-                        Sign Up
-                    </Button>
-                </NavbarItem>
-                <NavbarItem>
-                    <Button
-                        as={Link}
-                        color="secondary"
-                        href="/logout"
-                        variant="flat"
-                        onPress={logout}
-                    >
-                        Logout
-                    </Button>
-                </NavbarItem>
-
-                {/* User Avatar & Dropdown */}
-                <Dropdown placement="top-end">
-                    <DropdownTrigger>
-                        <User
-                            as="button"
-                            avatarProps={{
-                                isBordered: true,
-                                src: "https://th.bing.com/th?id=OSK.HEROW-wRV8gajI7GQAlcsww50kp26c7GuT_1KPa6bPqp1zA&w=312&h=200&c=7&rs=1&o=6&dpr=1.3&pid=SANGAM",
-                            }}
-                            className="transition-transform"
-                        />
-                    </DropdownTrigger>
-                    <DropdownMenu aria-label="User Actions" variant="flat">
-                        <DropdownItem key="profile" className="h-14 gap-2">
-                            <p className="font-bold">Signed in as</p>
-                            <p className="font-bold">@tonyreichert</p>
-                        </DropdownItem>
-                        <DropdownItem key="settings" as={Link} href="/profile">
-                            Profile
-                        </DropdownItem>
-                        <DropdownItem key="analytics">Analytics</DropdownItem>
-                        <DropdownItem key="system">System</DropdownItem>
-                        <DropdownItem key="configurations">
-                            Configurations
-                        </DropdownItem>
-                        <DropdownItem key="help_and_feedback">
-                            Help & Feedback
-                        </DropdownItem>
-                        <DropdownItem key="logout" color="danger">
-                            Log Out
-                        </DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+                {isAuth ? (
+                    <>
+                        <NavbarItem>
+                            <Button
+                                as={Link}
+                                color="secondary"
+                                href="/logout"
+                                variant="flat"
+                                onPress={logout}
+                            >
+                                Logout
+                            </Button>
+                        </NavbarItem>
+                        {/* User Avatar & Dropdown */}
+                        <Dropdown placement="top-end">
+                            <DropdownTrigger>
+                                <User
+                                    as="button"
+                                    avatarProps={{
+                                        isBordered: true,
+                                        src: "https://th.bing.com/th?id=OSK.HEROW-wRV8gajI7GQAlcsww50kp26c7GuT_1KPa6bPqp1zA&w=312&h=200&c=7&rs=1&o=6&dpr=1.3&pid=SANGAM",
+                                    }}
+                                    className="transition-transform"
+                                />
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                aria-label="User Actions"
+                                variant="flat"
+                            >
+                                <DropdownItem
+                                    key="profile"
+                                    className="h-14 gap-2"
+                                >
+                                    <p className="font-bold">Signed in as</p>
+                                    <p className="font-bold">@tonyreichert</p>
+                                </DropdownItem>
+                                <DropdownItem
+                                    key="settings"
+                                    as={Link}
+                                    href="/profile"
+                                >
+                                    Profile
+                                </DropdownItem>
+                                <DropdownItem key="analytics">
+                                    Analytics
+                                </DropdownItem>
+                                <DropdownItem key="system">System</DropdownItem>
+                                <DropdownItem key="configurations">
+                                    Configurations
+                                </DropdownItem>
+                                <DropdownItem key="help_and_feedback">
+                                    Help & Feedback
+                                </DropdownItem>
+                                <DropdownItem key="logout" color="danger">
+                                    Log Out
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </>
+                ) : (
+                    <>
+                        <NavbarItem className="hidden lg:flex">
+                            <Link href="/login">Login</Link>
+                        </NavbarItem>
+                        <NavbarItem>
+                            <Button
+                                as={Link}
+                                color="primary"
+                                href="/register"
+                                variant="flat"
+                            >
+                                Sign Up
+                            </Button>
+                        </NavbarItem>
+                    </>
+                )}
             </NavbarContent>
         </Navbar>
     );
