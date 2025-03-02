@@ -6,6 +6,7 @@ const eventsData = [
         description:
             "An electrifying night of music with top DJs from around the world.",
         category: "Music",
+        location: "New York",
     },
     {
         id: 2,
@@ -14,6 +15,7 @@ const eventsData = [
         description:
             "Explore the latest trends in modern art with international artists.",
         category: "Art",
+        location: "San Francisco",
     },
     {
         id: 3,
@@ -22,6 +24,7 @@ const eventsData = [
         description:
             "Meet entrepreneurs and investors in this exclusive startup networking event.",
         category: "Business",
+        location: "San Francisco",
     },
     {
         id: 4,
@@ -30,14 +33,15 @@ const eventsData = [
         description:
             "Learn gourmet cooking techniques from world-renowned chefs.",
         category: "Food",
+        location: "New York",
     },
     {
         id: 5,
         title: "Live Theatre Performance",
         image: "https://sarieva.org/data/i/ST2.jpeg",
-        description:
-            "A breathtaking live performance by award-winning actors.",
+        description: "A breathtaking live performance by award-winning actors.",
         category: "Theatre",
+        location: "Los Angeles",
     },
     {
         id: 6,
@@ -46,6 +50,7 @@ const eventsData = [
         description:
             "Enhance your photography skills with professional guidance.",
         category: "Workshops",
+        location: "Los Angeles",
     },
     {
         id: 7,
@@ -54,6 +59,7 @@ const eventsData = [
         description:
             "Get insights into the latest tech trends from industry leaders.",
         category: "Technology",
+        location: "San Francisco",
     },
 ];
 

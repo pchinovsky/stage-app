@@ -46,7 +46,7 @@ export function useLogout() {
             await authApi.logout();
             setUser(null);
             setIsAuth(false);
-            navigate("/about");
+            navigate("/events");
         } catch (error) {
             console.error("Logout Error:", error);
         }

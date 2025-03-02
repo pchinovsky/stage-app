@@ -10,6 +10,7 @@ import useForm from "../hooks/useForm";
 import { useLogin } from "../hooks/useAuth";
 import { loginSchema } from "../api/validationSchemas";
 import styles from "./login.module.css";
+import ButtonDynamic from "../components/ButtonDynamic";
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false);
@@ -36,6 +37,7 @@ export default function Login() {
     return (
         <DefaultLayout>
             <div className={styles.container}>
+                <ButtonDynamic />
                 {featuredEvent && (
                     <Image
                         src={featuredEvent.image}

@@ -8,7 +8,8 @@ import { NavContext } from "../contexts/navContext";
 import FilterBar from "../components/FilterBar";
 import styles from "./events.module.css";
 import TabbedCard from "../components/TabCard";
-import eventsData from "../mockEventData";
+import { useEvents } from "@/hooks/useEvents";
+import eventsData2 from "../mockEventData2";
 
 export default function EventLayout() {
     const { setNavWhite } = useContext(NavContext);
@@ -18,6 +19,11 @@ export default function EventLayout() {
     const [searchFixed, setSearchFixed] = useState(false);
     const searchBarRef = useRef(null);
     const placeholderRef = useRef(null);
+
+    const filters = { staged: true };
+
+    const { events, loading, error } = useEvents({ filters });
+    // const events = eventsData2;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -60,24 +66,15 @@ export default function EventLayout() {
                             <p className={styles.infoText}>
                                 Staged events currently
                             </p>
-                            <p className={styles.infoNumber}>230,556</p>
+                            <p className={styles.infoNumber}>
+                                {loading ? "..." : events.length}
+                                {/* {events.length} */}
+                            </p>
                             <p className={styles.infoUpdate}>
                                 Last Update: 13:06:33
                             </p>
                         </div>
-                        <div className={styles.cityBox}>
-                            <h3 className={styles.infoTitle}>
-                                Recommended for you
-                            </h3>
-                            <p className={styles.infoText}>
-                                Liste / Showtime September 20
-                            </p>
-                            <img
-                                src="https://sarieva.org/data/i/ST2.jpeg"
-                                alt="Building"
-                                className={styles.cityImage}
-                            />
-                        </div>
+                        <TabbedCard className={styles.cityBox}></TabbedCard>
                     </div>
                     <Image
                         src="https://sarieva.org/data/i/5w.jpeg"
@@ -87,15 +84,15 @@ export default function EventLayout() {
                         height={1080}
                     />
 
-                    {/* Floating Tooltip Circles */}
+                    {/* Floating Circles */}
                     {circlePos.map((pos, index) => (
                         <Tooltip
                             key={index}
                             content={
                                 index === 0 ? (
-                                    `${eventsData[0].title}: ${eventsData[0].description}`
+                                    `${events[0]?.title || "Loading"}: ${events[0]?.description || ""}`
                                 ) : index === 1 ? (
-                                    `Location: ${eventsData[0].category}`
+                                    `Location: ${events[0]?.location || "Unknown"}`
                                 ) : (
                                     <a
                                         href="#"
@@ -136,9 +133,20 @@ export default function EventLayout() {
                     <FilterBar ref={searchBarRef} searchFixed={searchFixed} />
 
                     {/* Event Cards */}
-                    {[...Array(15)].map((_, i) => (
-                        <EventCard key={i} />
-                    ))}
+                    {loading ? (
+                        <p>Loading events...</p>
+                    ) : error ? (
+                        <p>Error loading events.</p>
+                    ) : (
+                        events.map((event) => (
+                            <EventCard key={event.id} event={event} />
+                        ))
+                    )}
+
+                    {/* Mock data */}
+                    {/* {events.map((event) => (
+                        <EventCard key={event.id} event={event} />
+                    ))} */}
                 </div>
             </div>
         </DefaultLayout>
