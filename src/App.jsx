@@ -7,6 +7,7 @@ import EventLayout from "./pages/events";
 import CreatePage from "./pages/create";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import Event from "./pages/event";
 
 function AnimatedRoutes() {
     const location = useLocation();
@@ -77,6 +78,27 @@ function AnimatedRoutes() {
                             }}
                         >
                             <EventLayout />
+                        </motion.div>
+                    }
+                />
+                <Route
+                    path="/events/:eventId"
+                    element={
+                        <motion.div
+                            initial={{
+                                opacity: 0,
+                                x: -50,
+                            }}
+                            animate={{
+                                opacity: 1,
+                                x: 0,
+                            }}
+                            exit={{ opacity: 0, x: 50 }}
+                            transition={{
+                                duration: 0.4,
+                            }}
+                        >
+                            <Event />
                         </motion.div>
                     }
                 />

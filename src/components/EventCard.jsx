@@ -9,9 +9,13 @@ import {
 } from "@heroui/react";
 import styles from "./EventCard.module.css";
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, onPress }) {
     return (
-        <Card isPressable={true} className={styles.card}>
+        <Card
+            isPressable={true}
+            className={styles.card}
+            onPress={() => onPress(event.id)}
+        >
             <CardHeader className={styles.cardHeader}>
                 <h4 className={styles.textLarge}>{event.title}</h4>
                 <small className={styles.textDefault}>

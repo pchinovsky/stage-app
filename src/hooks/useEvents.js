@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 // Key for filters (avoids useEffect infinite loops with obj deps)
@@ -20,36 +20,44 @@ export function useEvents(filters = {}) {
 
     const filtersKey = useMemo(() => getFiltersKey(filters), [filters]);
 
-    // console.log("Filters Key:", filtersKey); 
-    console.log("Filters Key:", typeof filtersKey, filtersKey);
-
-
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 setLoading(true);
-                let eventsRef = collection(db, "events");
-                let conditions = [];
+                let fetchedEvents = [];
 
-                // Dynamic query - 
-                Object.entries(filters).forEach(([key, value]) => {
-                    if (value !== undefined && value !== null) {
-                        if (Array.isArray(value) && value.length > 0) {
-                            conditions.push(where(key, "in", value));
-                        }
-                        else if (typeof value === "boolean" || typeof value === "string") {
-                            conditions.push(where(key, "==", value));
-                        }
+                if (filters.id) {
+                    // Fetch single event 
+                    const docRef = doc(db, "events", filters.id);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        fetchedEvents = [{ id: docSnap.id, ...docSnap.data() }];
+                    } else {
+                        console.warn("No such event!");
                     }
-                });
+                } else {
+                    // Fetch all events or filtered events
+                    let eventsRef = collection(db, "events");
+                    let conditions = [];
 
-                const eventsQuery = conditions.length > 0 ? query(eventsRef, ...conditions) : eventsRef;
+                    // Dynamic query
+                    Object.entries(filters).forEach(([key, value]) => {
+                        if (value !== undefined && value !== null) {
+                            if (Array.isArray(value) && value.length > 0) {
+                                conditions.push(where(key, "in", value));
+                            } else if (typeof value === "boolean" || typeof value === "string") {
+                                conditions.push(where(key, "==", value));
+                            }
+                        }
+                    });
 
-                const snapshot = await getDocs(eventsQuery);
-                const fetchedEvents = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
+                    const eventsQuery = conditions.length > 0 ? query(eventsRef, ...conditions) : eventsRef;
+                    const snapshot = await getDocs(eventsQuery);
+                    fetchedEvents = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
+                }
 
                 console.log("Fetched Events:", fetchedEvents);
 

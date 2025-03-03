@@ -10,6 +10,7 @@ import styles from "./events.module.css";
 import TabbedCard from "../components/TabCard";
 import { useEvents } from "@/hooks/useEvents";
 import eventsData2 from "../mockEventData2";
+import { useNavigate } from "react-router-dom";
 
 export default function EventLayout() {
     const { setNavWhite } = useContext(NavContext);
@@ -22,6 +23,7 @@ export default function EventLayout() {
 
     const filters = { staged: true };
 
+    const navigate = useNavigate();
     const { events, loading, error } = useEvents({ filters });
     // const events = eventsData2;
 
@@ -47,6 +49,10 @@ export default function EventLayout() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [searchFixed]);
+
+    const handleEventPress = (eventId) => {
+        navigate(`/events/${eventId}`);
+    };
 
     const circlePos = [
         { top: "20%", left: "30%" },
@@ -139,7 +145,11 @@ export default function EventLayout() {
                         <p>Error loading events.</p>
                     ) : (
                         events.map((event) => (
-                            <EventCard key={event.id} event={event} />
+                            <EventCard
+                                key={event.id}
+                                event={event}
+                                onPress={handleEventPress}
+                            />
                         ))
                     )}
 
