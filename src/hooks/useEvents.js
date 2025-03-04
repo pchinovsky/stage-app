@@ -21,7 +21,7 @@ export function useEvents(filters = {}) {
     const filtersKey = useMemo(() => getFiltersKey(filters), [filters]);
 
     useEffect(() => {
-        const fetchEvents = async () => {
+        (async () => {
             try {
                 setLoading(true);
                 let fetchedEvents = [];
@@ -68,9 +68,7 @@ export function useEvents(filters = {}) {
                 setError(err);
                 setLoading(false);
             }
-        };
-
-        fetchEvents();
+        })();
     }, [filtersKey]);
 
     return { events, loading, error };
