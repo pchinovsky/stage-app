@@ -3,7 +3,7 @@ import { Modal, Image, Card, Button } from "@heroui/react";
 
 export default function ModalProfile({ profile, isOpen, onClose }) {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} className="p-6">
+        <Modal isOpen={isOpen} onClose={onClose} className="p-6 z-[101]">
             <Card className="flex flex-col items-center gap-4 p-6">
                 <Image
                     src={profile.image}

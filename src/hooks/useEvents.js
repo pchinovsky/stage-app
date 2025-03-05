@@ -18,6 +18,9 @@ export function useEvents(filters = {}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    console.log('use events filters', filters);
+
+
     const filtersKey = useMemo(() => getFiltersKey(filters), [filters]);
 
     useEffect(() => {

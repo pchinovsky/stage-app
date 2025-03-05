@@ -13,11 +13,16 @@
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
-    padding: 2rem;
+    overflow: hidden;
 }
 
 .image {
-    @apply w-screen h-screen object-cover z-0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .controlsColumn {

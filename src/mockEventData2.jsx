@@ -7,7 +7,7 @@ const eventsData2 = [
             "An electrifying night of music with top DJs from around the world.",
         categories: ["Music"],
         location: "New York",
-        venue: "venue123",
+        venue: "S2xeuMjZBPFa9TMrZbXQ",
         eventEndDate: "2025-03-30T20:00:00Z",
         openingDateTime: "2025-03-01T18:00:00Z",
         openingDurationHours: 3,
@@ -41,7 +41,7 @@ const eventsData2 = [
         ratingAvg: 4.8,
         totalRatings: 35,
         relatedEvents: ["event654"],
-        createdBy: "user456",
+        createdBy: "user123",
     },
     {
         title: "Startup Networking Event",

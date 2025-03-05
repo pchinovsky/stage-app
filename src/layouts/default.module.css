@@ -1,11 +1,22 @@
 .layout {
-    @apply relative flex flex-col h-screen;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .main {
-    @apply mx-auto w-full px-1 pt-1 flex flex-col gap-1 items-start;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
 }
-
 .footer {
     @apply fixed bottom-0 w-full flex items-center justify-center py-3 bg-white shadow-md;
 }

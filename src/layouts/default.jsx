@@ -9,7 +9,7 @@ export default function DefaultLayout({ children }) {
             <HeaderNav />
             {/* <SlidingSidebar /> */}
             <main className={styles.main}>{children}</main>
-            <footer className={styles.footer}>
+            {/* <footer className={styles.footer}>
                 <Link
                     isExternal
                     className={styles.footerLink}
@@ -19,7 +19,7 @@ export default function DefaultLayout({ children }) {
                     <span className={styles.footerText}>Powered by</span>
                     <p className={styles.brand}>Pesho</p>
                 </Link>
-            </footer>
+            </footer> */}
         </div>
     );
 }

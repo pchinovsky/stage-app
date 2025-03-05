@@ -6,29 +6,27 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
+    const [userId, setUserId] = useState(null);
     const [isAuth, setIsAuth] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(
-            auth,
-            (user) => {
-                if (user) {
-                    setUser(user);
-                    setIsAuth(true);
-                } else {
-                    setUser(null);
-                    setIsAuth(false);
-                }
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+                setUserId(user.uid);
+                setIsAuth(true);
+            } else {
+                setUser(null);
+                setUserId(null);
+                setIsAuth(false);
             }
-        );
+        });
 
         return unsubscribe;
     }, []);
 
     const getToken = async () => {
-        return auth.currentUser
-            ? await auth.currentUser.getIdToken()
-            : null;
+        return auth.currentUser ? await auth.currentUser.getIdToken() : null;
     };
 
     const authData = {
@@ -40,8 +38,6 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={authData}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
     );
 }

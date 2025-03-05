@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
@@ -14,30 +14,106 @@ import DefaultLayout from "../layouts/default";
 import { FloatingCard } from "../components/FloatingCard";
 import TooltipProfile from "../components/TooltipProfile";
 import ModalProfile from "../components/ModalProfile";
+import ModalProfileCustom from "../components/ModalProfileCustom";
+import Engaged from "../components/Engaged";
+import Toggle from "../components/Toggle";
+import Discussion from "../components/Discussion";
+import { useArtists } from "../hooks/useArtists";
+import { useVenue } from "../hooks/useVenue";
+import ArtistList from "../components/ArtistList";
+import SlidingSidebar from "../components/Sidebar";
 
 export default function Event() {
     const { eventId } = useParams();
     const { events, loading, error } = useEvents({ id: eventId });
 
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // if (loading) return <p className={styles.loading}>Loading...</p>;
-    // if (error) return <p className={styles.error}>Error: {error.message}</p>;
-    // if (!events.length)
-    //     return <p className={styles.notFound}>Event not found.</p>;
-
     const event = events[0];
 
-    const handleOpenModal = () => {
-        console.log("Opening modal");
+    const [artistIds, setArtistIds] = useState(null);
+    const [venueId, setVenueId] = useState(null);
+    const [modalContent, setModalContent] = useState(null);
+    const [sidebarData, setSidebarData] = useState(null);
+
+    useEffect(() => {
+        if (!loading && events.length > 0) {
+            const event = events[0];
+            setArtistIds(event.artists || []);
+            setVenueId(event.venue || null);
+        }
+    }, [loading, events]);
+
+    const { artists, loading: artistsLoading } = useArtists(artistIds);
+    const { venue, loading: venueLoading } = useVenue(venueId);
+
+    useEffect(() => {
+        if (!event || artistsLoading || venueLoading) return;
+
+        setSidebarData({
+            artists: artists || [],
+            categories: event.categories || [],
+            createdBy: event.createdBy || "",
+            venue: venue || "",
+        });
+    }, [event, artists, venue, artistsLoading, venueLoading]);
+
+    console.log("artists", artists);
+    console.log("venue", venue);
+
+    // const sidebarData = {
+    //     artists: artists || [],
+    //     categories: event.categories || [],
+    //     createdBy: event.createdBy || "",
+    //     venue: venue || "",
+    // };
+
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPanel, setSelectedPanel] = useState("About");
+
+    const handleOpenModal = (content) => {
+        setModalContent(content);
         setIsModalOpen(true);
+        setTimeout(
+            () => console.log("- Modal State AFTER update -", isModalOpen),
+            0
+        );
+    };
+
+    const handleCloseModal = () => {
+        console.log("Closing modal");
+        setIsModalOpen(false);
+        setModalContent(null);
+    };
+
+    const [comments, setComments] = useState([
+        {
+            text: "Great stuff!",
+            user: { name: "Agent", avatar: "https://i.pravatar.cc/40?img=1" },
+        },
+        {
+            text: "Looking forward to booze!",
+            user: { name: "Lobster", avatar: "https://i.pravatar.cc/40?img=2" },
+        },
+        {
+            text: "Looking forward to booze!",
+            user: { name: "Lobster", avatar: "https://i.pravatar.cc/40?img=2" },
+        },
+    ]);
+
+    const addComment = (text) => {
+        setComments([
+            ...comments,
+            {
+                text,
+                user: { name: "You", avatar: "https://i.pravatar.cc/40?img=3" },
+            },
+        ]);
     };
 
     return (
         <DefaultLayout>
             <div
-                className={styles.eventDetails}
+                className={styles.eventContainer}
                 style={{ position: "relative" }}
             >
                 {loading ? (
@@ -70,15 +146,20 @@ export default function Event() {
                         {/* <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick> */}
-                        <h1 className="absolute top-[120px] left-[300px] z-[100] font-bold text-6xl">
+                        <h1 className="absolute top-[120px] left-[250px] z-[100] font-bold text-6xl">
                             {event.title}
                         </h1>
-                        <h3 className="absolute top-[180px] left-[300px] z-[100] font-bold text-2xl">
+                        <h3 className="absolute top-[180px] left-[250px] z-[100] font-bold text-2xl">
                             {event.subtitle}
                         </h3>
+
                         <Tooltip
-                            content={<TooltipProfile />}
-                            onClick={handleOpenModal}
+                            content={
+                                <TooltipProfile
+                                    data={venue}
+                                    onClick={() => handleOpenModal(venue)}
+                                />
+                            }
                             placement="bottom"
                             offset={1}
                             delay={0}
@@ -87,32 +168,71 @@ export default function Event() {
                                     exit: {
                                         opacity: 0,
                                         transition: {
-                                            duration: 0.1,
+                                            duration: 0.2,
                                             ease: "easeIn",
                                         },
                                     },
                                     enter: {
                                         opacity: 1,
                                         transition: {
-                                            duration: 0.15,
+                                            duration: 0.7,
                                             ease: "easeOut",
                                         },
                                     },
                                 },
                             }}
+                            className="py-0 px-0"
                         >
                             <button
-                                className="absolute top-[220px] left-[300px] z-[100] font-bold text-2xl cursor-pointer"
-                                onClick={() => setIsModalOpen(true)}
+                                className="absolute top-[220px] left-[250px] z-[100] font-bold text-blue-600 text-2xl cursor-pointer"
+                                onClick={() => handleOpenModal(venue)}
                             >
-                                {event.venue}
+                                {venueLoading ? "Loading venue..." : venue.name}
                             </button>
                         </Tooltip>
+                        {/* Artists Section */}
+                        {artistsLoading ? (
+                            <p>Loading artists...</p>
+                        ) : (
+                            <ArtistList
+                                artists={artists}
+                                onClick={(artist) => handleOpenModal(artist)}
+                            />
+                        )}
+
+                        <Engaged
+                            author={{
+                                id: 1,
+                                name: "Gosho",
+                                image: "https://example.com/john.jpg",
+                            }}
+                            attending={[
+                                {
+                                    id: 2,
+                                    name: "Ghee",
+                                    image: "https://example.com/alice.jpg",
+                                },
+                                {
+                                    id: 3,
+                                    name: "Joo",
+                                    image: "https://example.com/bob.jpg",
+                                },
+                            ]}
+                            interested={[
+                                {
+                                    id: 4,
+                                    name: "Faint",
+                                    image: "https://example.com/charlie.jpg",
+                                },
+                            ]}
+                        />
+
                         <Image
                             src={event.image}
                             alt={event.title}
                             className={styles.image}
                         />
+                        <SlidingSidebar event={event} venue={venue} />
                         <FloatingCard className="absolute top-[500px] left-20 w-60 p-4 z-[100]">
                             <div className="flex items-center gap-2">
                                 <Icon
@@ -122,8 +242,7 @@ export default function Event() {
                                 <span>{event.title}</span>
                             </div>
                         </FloatingCard>
-
-                        <MultiAccordion
+                        {/* <MultiAccordion
                             sections={[
                                 {
                                     title: "Description",
@@ -139,17 +258,80 @@ export default function Event() {
                                 },
                             ]}
                             className="absolute top-[300px] left-[700px] z-[100]"
-                        />
-                        <ModalProfile
+                        /> */}
+                        {/* <ModalProfile
                             profile={{
                                 name: event.venue,
                                 image: "https://sarieva.org/data/i/2022-ECHO.jpg",
                                 description:
                                     "This is an amazing venue for events.",
                             }}
-                            isOpen={isModalOpen}
+                            isOpen={true}
                             onClose={() => setIsModalOpen(false)}
+                        /> */}
+                        {/* always-visible modal */}
+                        {/* <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
+                            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                                <h2 className="text-xl font-bold">
+                                    Test Modal
+                                </h2>
+                                <p>This modal should always be visible.</p>
+                                <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
+                                    Close
+                                </button>
+                            </div>
+                        </div> */}
+
+                        <ModalProfileCustom
+                            isOpen={isModalOpen}
+                            onClose={handleCloseModal}
+                            title="Information"
+                            className="z-[1000]"
+                            data={modalContent}
+                        ></ModalProfileCustom>
+                        {/* <Discussion
+                            comments={comments}
+                            onAddComment={addComment}
+                        /> */}
+                        <Toggle
+                            options={["About", "Discussion"]}
+                            onChange={(panel) => setSelectedPanel(panel)}
                         />
+                        <motion.div
+                            key={selectedPanel}
+                            initial={{ opacity: 0, x: -50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 50 }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute top-[300px] left-[700px] z-[100]"
+                        >
+                            {selectedPanel === "About" ? (
+                                <MultiAccordion
+                                    sections={[
+                                        {
+                                            title: "Description",
+                                            content:
+                                                "An amazing event happening soon!",
+                                        },
+                                        {
+                                            title: "Event Statistics",
+                                            content:
+                                                "Attendees: 340, Interested: 1200",
+                                        },
+                                        {
+                                            title: "Venue",
+                                            content:
+                                                "The Grand Arena, New York",
+                                        },
+                                    ]}
+                                />
+                            ) : (
+                                <Discussion
+                                    comments={comments}
+                                    onAddComment={addComment}
+                                />
+                            )}
+                        </motion.div>
                     </>
                 )}
             </div>

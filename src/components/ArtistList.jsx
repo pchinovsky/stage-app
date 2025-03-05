@@ -42,13 +42,14 @@ export default function ArtistList({ artists, onClick }) {
                                 },
                             },
                         }}
+                        className="py-0 px-0"
                     >
                         <button
                             className="flex items-center gap-3 p-2 bg-gray-900 w-full rounded-lg cursor-pointer"
                             onClick={() => onClick(artist)}
                         >
                             <Avatar src={artist.image} size="sm" />
-                            <span className="text-white">{artist.name}</span>
+                            <span className="text-blue-400">{artist.name}</span>
                         </button>
                     </Tooltip>
                 ))}

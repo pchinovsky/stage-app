@@ -16,7 +16,7 @@ export default function CalendarDate({ date }) {
             style={{
                 position: "absolute",
                 top: "120px",
-                left: "150px",
+                left: "100px",
                 zIndex: 100,
             }}
             isPressable

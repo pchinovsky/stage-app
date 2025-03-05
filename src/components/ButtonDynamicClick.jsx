@@ -19,7 +19,7 @@ export default function ButtonDynamicClick({ top, left, text, icon }) {
                 initial={{ width: "28px" }}
                 animate={{ width: hovered ? "140px" : "28px" }}
                 transition={{ type: "tween", stiffness: 200, damping: 20 }}
-                className="absolute flex items-center bg-yellow-200 text-white px-2 py-2 rounded-full overflow-hidden z-[1000]"
+                className="absolute flex items-center bg-black text-white px-2 py-2 rounded-full overflow-hidden z-[1000]"
             >
                 <Icon icon={icon} width={24} className="mx-2" />
                 {hovered && (
