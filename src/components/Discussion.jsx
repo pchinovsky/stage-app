@@ -12,9 +12,9 @@ export default function Discussion({ comments, onAddComment }) {
     };
 
     return (
-        <div className="absolute left-[0px] top-[0px] w-[750px] bg-white p-4 rounded-lg z-[100]">
+        <div className="absolute left-[0px] top-[0px] w-[640px] h-[380px] bg-white p-4 rounded-lg z-[100]">
             {/* Comments List */}
-            <div className="h-60 overflow-y-auto space-y-3 p-2">
+            <div className="h-[295px] overflow-y-auto space-y-3 p-2">
                 {comments.map((comment, index) => (
                     <div
                         key={index}

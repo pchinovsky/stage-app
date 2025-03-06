@@ -1,9 +1,16 @@
 import { Tooltip, Avatar } from "@heroui/react";
 import TooltipProfile from "./TooltipProfile";
 
-export default function ArtistList({ artists, onClick }) {
+export default function ArtistList({
+    artists,
+    onClick,
+    exitDelay,
+    isModalOpen,
+}) {
     const one = artists.length === 1;
     const h = one ? 120 : 160;
+
+    console.log("isModalOpen", isModalOpen);
 
     return (
         <div
@@ -16,7 +23,10 @@ export default function ArtistList({ artists, onClick }) {
             <div className="space-y-3">
                 {artists.map((artist) => (
                     <Tooltip
-                        key={artist.id}
+                        // key={artist.id}
+                        // forcing tooltip re-render to prevent linger post modal closure -
+                        key={isModalOpen ? "closed" : "open"}
+                        isOpen={isModalOpen ? false : undefined}
                         content={
                             <TooltipProfile
                                 data={artist}
@@ -42,6 +52,7 @@ export default function ArtistList({ artists, onClick }) {
                                 },
                             },
                         }}
+                        closeDelay={exitDelay}
                         className="py-0 px-0"
                     >
                         <button

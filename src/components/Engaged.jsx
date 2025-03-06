@@ -12,7 +12,7 @@ export default function Engaged({ author, attending = [], interested = [] }) {
     const involvedUsers = [...attending, ...interested];
 
     return (
-        <Card className="absolute left-[350px] top-[500px] p-4 rounded-lg shadow-md w-72 z-[100]">
+        <Card className="absolute left-[490px] top-[410px] p-4 rounded-lg shadow-md w-[300px] z-[100]">
             <div className="flex items-start justify-between">
                 <span className="font-semibold text-lg">Engaged</span>
                 <Button

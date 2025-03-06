@@ -12,10 +12,11 @@ export default function TooltipProfile({ data, onClick }) {
     return (
         <Card
             isFooterBlurred
-            className="border-none py-0 px-0"
+            className="border-none py-1 px-1"
             radius="lg"
-            style={{ padding: "0px" }}
+            style={{ padding: "5px" }}
             isPressable
+            isHoverable
             onPress={onClick}
         >
             <Image

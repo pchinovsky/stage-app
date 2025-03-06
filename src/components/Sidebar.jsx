@@ -156,6 +156,7 @@ export default function SlidingSidebar({ event, venue }) {
                                 key={event.id}
                                 className={styles.eventCard}
                                 isPressable
+                                isHoverable
                                 radius="sm"
                                 onPress={() => {
                                     handleEventPress(event.id);

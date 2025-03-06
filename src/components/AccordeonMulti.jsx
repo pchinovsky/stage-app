@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
+import { Link } from "@heroui/react";
 
 export default function MultiAccordion({ sections, className }) {
     const [openIndex, setOpenIndex] = useState(null);
@@ -11,10 +12,17 @@ export default function MultiAccordion({ sections, className }) {
 
     return (
         <div
-            className={`w-[750px] border shadow-md rounded-lg bg-white ${className}`}
+            className={`w-[640px] h-[380px] border border-black shadow-md rounded-lg bg-transparent ${className}`}
+            style={{
+                backdropFilter: "blur(10px)",
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+            }}
         >
             {sections.map((section, index) => (
-                <div key={index} className="border-b last:border-none">
+                <div
+                    key={index}
+                    className="border-b last:border-none border-slate-900"
+                >
                     {/* Header */}
                     <button
                         onClick={() => toggleSection(index)}
@@ -39,9 +47,26 @@ export default function MultiAccordion({ sections, className }) {
                         animate={{ height: openIndex === index ? "auto" : 0 }}
                         className="overflow-hidden px-3"
                     >
-                        <div className="py-2 text-gray-200">
-                            {section.content}
-                        </div>
+                        {section.title === "Related Content" ? (
+                            <div className="py-2 text-blue-400">
+                                {section.content.map((link, i) => (
+                                    <Link
+                                        key={i}
+                                        isExternal
+                                        showAnchorIcon
+                                        href={link}
+                                    >
+                                        <div className="py-2 text-blue-400">
+                                            {link}
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="py-2 text-slate-800">
+                                {section.content}
+                            </div>
+                        )}
                     </motion.div>
                 </div>
             ))}

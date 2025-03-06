@@ -22,6 +22,7 @@ import { useArtists } from "../hooks/useArtists";
 import { useVenue } from "../hooks/useVenue";
 import ArtistList from "../components/ArtistList";
 import SlidingSidebar from "../components/Sidebar";
+import StatsBox from "../components/Stats";
 
 export default function Event() {
     const { eventId } = useParams();
@@ -33,6 +34,7 @@ export default function Event() {
     const [venueId, setVenueId] = useState(null);
     const [modalContent, setModalContent] = useState(null);
     const [sidebarData, setSidebarData] = useState(null);
+    const [tooltipExitDelay, setTooltipExitDelay] = useState(500);
 
     useEffect(() => {
         if (!loading && events.length > 0) {
@@ -71,6 +73,7 @@ export default function Event() {
     const [selectedPanel, setSelectedPanel] = useState("About");
 
     const handleOpenModal = (content) => {
+        setTooltipExitDelay(0);
         setModalContent(content);
         setIsModalOpen(true);
         setTimeout(
@@ -83,6 +86,7 @@ export default function Event() {
         console.log("Closing modal");
         setIsModalOpen(false);
         setModalContent(null);
+        setTooltipExitDelay(500);
     };
 
     const [comments, setComments] = useState([
@@ -109,6 +113,27 @@ export default function Event() {
             },
         ]);
     };
+
+    const statsData = [
+        {
+            label: "Attendees",
+            value: "340",
+            description: "People attending",
+            icon: "mdi:account-group",
+        },
+        {
+            label: "Interested",
+            value: "1.2K",
+            description: "People interested",
+            icon: "mdi:star-outline",
+        },
+        {
+            label: "Events Hosted",
+            value: "58",
+            description: "Total events organized",
+            icon: "mdi:calendar-check",
+        },
+    ];
 
     return (
         <DefaultLayout>
@@ -152,7 +177,6 @@ export default function Event() {
                         <h3 className="absolute top-[180px] left-[250px] z-[100] font-bold text-2xl">
                             {event.subtitle}
                         </h3>
-
                         <Tooltip
                             content={
                                 <TooltipProfile
@@ -160,6 +184,8 @@ export default function Event() {
                                     onClick={() => handleOpenModal(venue)}
                                 />
                             }
+                            key={isModalOpen ? "closed" : "open"}
+                            isOpen={isModalOpen ? false : undefined}
                             placement="bottom"
                             offset={1}
                             delay={0}
@@ -197,9 +223,10 @@ export default function Event() {
                             <ArtistList
                                 artists={artists}
                                 onClick={(artist) => handleOpenModal(artist)}
+                                exitDelay={tooltipExitDelay}
+                                isModalOpen={isModalOpen}
                             />
                         )}
-
                         <Engaged
                             author={{
                                 id: 1,
@@ -226,14 +253,14 @@ export default function Event() {
                                 },
                             ]}
                         />
-
                         <Image
                             src={event.image}
                             alt={event.title}
                             className={styles.image}
                         />
+                        <StatsBox stats={statsData} />;
                         <SlidingSidebar event={event} venue={venue} />
-                        <FloatingCard className="absolute top-[500px] left-20 w-60 p-4 z-[100]">
+                        {/* <FloatingCard className="absolute top-[500px] left-20 w-60 p-4 z-[100]">
                             <div className="flex items-center gap-2">
                                 <Icon
                                     icon="lucide:zap"
@@ -241,7 +268,7 @@ export default function Event() {
                                 />
                                 <span>{event.title}</span>
                             </div>
-                        </FloatingCard>
+                        </FloatingCard> */}
                         {/* <MultiAccordion
                             sections={[
                                 {
@@ -281,7 +308,6 @@ export default function Event() {
                                 </button>
                             </div>
                         </div> */}
-
                         <ModalProfileCustom
                             isOpen={isModalOpen}
                             onClose={handleCloseModal}
@@ -303,20 +329,18 @@ export default function Event() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 50 }}
                             transition={{ duration: 0.3 }}
-                            className="absolute top-[300px] left-[700px] z-[100]"
+                            className="absolute top-[300px] left-[810px] z-[100]"
                         >
                             {selectedPanel === "About" ? (
                                 <MultiAccordion
                                     sections={[
                                         {
                                             title: "Description",
-                                            content:
-                                                "An amazing event happening soon!",
+                                            content: event.description,
                                         },
                                         {
-                                            title: "Event Statistics",
-                                            content:
-                                                "Attendees: 340, Interested: 1200",
+                                            title: "Related Content",
+                                            content: event.associatedLinks,
                                         },
                                         {
                                             title: "Venue",

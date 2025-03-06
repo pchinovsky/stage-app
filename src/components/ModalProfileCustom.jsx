@@ -49,6 +49,10 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
+                style={{
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
             >
                 <motion.div
                     className="w-[90%] max-w-lg"
