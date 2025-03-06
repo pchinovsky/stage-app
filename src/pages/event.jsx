@@ -8,6 +8,7 @@ import Accordeon from "../components/Accordeon";
 import ButtonDynamicClick from "../components/ButtonDynamicClick";
 import MultiAccordion from "../components/AccordeonMulti";
 import CalendarDate from "../components/CalendarDate";
+import CalendarModal from "../components/Calendar";
 
 import styles from "./event.module.css";
 import DefaultLayout from "../layouts/default";
@@ -35,6 +36,7 @@ export default function Event() {
     const [modalContent, setModalContent] = useState(null);
     const [sidebarData, setSidebarData] = useState(null);
     const [tooltipExitDelay, setTooltipExitDelay] = useState(500);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     useEffect(() => {
         if (!loading && events.length > 0) {
@@ -135,6 +137,21 @@ export default function Event() {
         },
     ];
 
+    const yourEvents = [
+        { title: "Art Show-mow", date: "2025-03-10" },
+        { title: "Music Festival-val", date: "2025-03-15" },
+    ];
+
+    const followedUsersEvents = [
+        { title: "Gallery Opening with Protein Bars", date: "2025-03-12" },
+        {
+            title: "Tech Meetup with Bear Grills eating eyeballs",
+            date: "2025-03-20",
+        },
+    ];
+
+    console.log("calendar open - ", isCalendarOpen);
+
     return (
         <DefaultLayout>
             <div
@@ -149,7 +166,16 @@ export default function Event() {
                     <p className={styles.notFound}>Event not found.</p>
                 ) : (
                     <>
-                        <CalendarDate date={event.openingDateTime} />
+                        <CalendarDate
+                            date={event.openingDateTime}
+                            onPress={setIsCalendarOpen}
+                        />
+                        <CalendarModal
+                            isOpen={isCalendarOpen}
+                            onClose={() => setIsCalendarOpen(false)}
+                            events={events}
+                            followedEvents={followedUsersEvents}
+                        />
                         <ButtonDynamicClick
                             top="600px"
                             left="100px"

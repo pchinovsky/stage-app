@@ -1,6 +1,6 @@
 import { Card } from "@heroui/react";
 
-export default function CalendarDate({ date }) {
+export default function CalendarDate({ date, onPress }) {
     const options = {
         weekday: "short",
         month: "short",
@@ -20,6 +20,9 @@ export default function CalendarDate({ date }) {
                 zIndex: 100,
             }}
             isPressable
+            onPress={() => {
+                onPress(true);
+            }}
         >
             <span className="text-4xl font-bold">
                 {formattedDate.getDate()}
