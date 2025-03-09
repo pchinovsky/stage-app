@@ -31,6 +31,7 @@ export function AuthProvider({ children }) {
 
     const authData = {
         user,
+        userId,
         isAuth,
         setUser,
         setIsAuth,

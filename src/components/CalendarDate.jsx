@@ -20,11 +20,12 @@ export default function CalendarDate({ date, onPress }) {
                 zIndex: 100,
             }}
             isPressable
+            isHoverable
             onPress={() => {
                 onPress(true);
             }}
         >
-            <span className="text-4xl font-bold">
+            <span className="text-4xl font-bold text-blue-600">
                 {formattedDate.getDate()}
             </span>
             <span className="text-lg font-semibold">

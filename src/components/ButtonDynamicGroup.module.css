@@ -1,0 +1,8 @@
+.buttonGroup {
+    position: absolute;
+    left: 100px;
+    top: 585px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}

@@ -12,6 +12,8 @@ import { db } from "../firebase/firebaseConfig";
 export default function User({ user, currentUserId }) {
     const [isFollowing, setIsFollowing] = useState(false);
 
+    console.log("user comp - user", user);
+
     // check follow status
     useEffect(() => {
         (async () => {

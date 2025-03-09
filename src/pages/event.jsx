@@ -24,6 +24,9 @@ import { useVenue } from "../hooks/useVenue";
 import ArtistList from "../components/ArtistList";
 import SlidingSidebar from "../components/Sidebar";
 import StatsBox from "../components/Stats";
+import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
+import EventHead from "../components/EventHead";
+import { useUser } from "../hooks/useUser";
 
 export default function Event() {
     const { eventId } = useParams();
@@ -73,6 +76,23 @@ export default function Event() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPanel, setSelectedPanel] = useState("About");
+
+    const {
+        currentUser,
+        loading: userLoading,
+        fetchUsersByIds,
+        otherUsers,
+    } = useUser();
+
+    useEffect(() => {
+        if (event?.createdBy) {
+            fetchUsersByIds([event.createdBy]);
+        }
+    }, [event?.createdBy]);
+
+    const author = otherUsers[event?.createdBy] || {};
+
+    console.log("author", otherUsers);
 
     const handleOpenModal = (content) => {
         setTooltipExitDelay(0);
@@ -176,7 +196,7 @@ export default function Event() {
                             events={events}
                             followedEvents={followedUsersEvents}
                         />
-                        <ButtonDynamicClick
+                        {/* <ButtonDynamicClick
                             top="600px"
                             left="100px"
                             text="Follow"
@@ -193,55 +213,18 @@ export default function Event() {
                             left="100px"
                             text="Attend"
                             icon="mdi:tick-outline"
-                        />
+                        /> */}
+                        <ButtonDynamicGroup />
                         {/* <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick> */}
-                        <h1 className="absolute top-[120px] left-[250px] z-[100] font-bold text-6xl">
-                            {event.title}
-                        </h1>
-                        <h3 className="absolute top-[180px] left-[250px] z-[100] font-bold text-2xl">
-                            {event.subtitle}
-                        </h3>
-                        <Tooltip
-                            content={
-                                <TooltipProfile
-                                    data={venue}
-                                    onClick={() => handleOpenModal(venue)}
-                                />
-                            }
-                            key={isModalOpen ? "closed" : "open"}
-                            isOpen={isModalOpen ? false : undefined}
-                            placement="bottom"
-                            offset={1}
-                            delay={0}
-                            motionProps={{
-                                variants: {
-                                    exit: {
-                                        opacity: 0,
-                                        transition: {
-                                            duration: 0.2,
-                                            ease: "easeIn",
-                                        },
-                                    },
-                                    enter: {
-                                        opacity: 1,
-                                        transition: {
-                                            duration: 0.7,
-                                            ease: "easeOut",
-                                        },
-                                    },
-                                },
-                            }}
-                            className="py-0 px-0"
-                        >
-                            <button
-                                className="absolute top-[220px] left-[250px] z-[100] font-bold text-blue-600 text-2xl cursor-pointer"
-                                onClick={() => handleOpenModal(venue)}
-                            >
-                                {venueLoading ? "Loading venue..." : venue.name}
-                            </button>
-                        </Tooltip>
+                        <EventHead
+                            event={event}
+                            venue={venue}
+                            venueLoading={venueLoading}
+                            isModalOpen={isModalOpen}
+                            handleOpenModal={handleOpenModal}
+                        />
                         {/* Artists Section */}
                         {artistsLoading ? (
                             <p>Loading artists...</p>
@@ -256,8 +239,10 @@ export default function Event() {
                         <Engaged
                             author={{
                                 id: 1,
-                                name: "Gosho",
-                                image: "https://example.com/john.jpg",
+                                name: author.name || "Unknown",
+                                image:
+                                    author.image ||
+                                    "https://example.com/default-avatar.jpg",
                             }}
                             attending={[
                                 {

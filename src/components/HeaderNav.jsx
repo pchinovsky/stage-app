@@ -16,10 +16,13 @@ import { useContext } from "react";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
 import { useLogout } from "../hooks/useAuth";
+import { useUser } from "../hooks/useUser";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
     const { isAuth } = useContext(AuthContext);
+    const { currentUser, loading } = useUser();
+
     const logout = useLogout();
 
     return (
@@ -34,14 +37,18 @@ export default function HeaderNav() {
             }}
         >
             <NavbarBrand>
-                <Link aria-current="page" href="/events">
+                <Link
+                    aria-current="page"
+                    href="/events"
+                    className="bg-white px-4 py-2 rounded-lg"
+                >
                     <p className={styles.brand}>STAGE</p>
                 </Link>
             </NavbarBrand>
 
             {/* Center Navbar Items */}
             <NavbarContent className={styles.navContent} justify="center">
-                <Dropdown>
+                <Dropdown shouldBlockScroll={false}>
                     <NavbarItem>
                         <DropdownTrigger>
                             <Button
@@ -49,7 +56,7 @@ export default function HeaderNav() {
                                 className={styles.featureButton}
                                 endContent="▼"
                                 radius="sm"
-                                variant="light"
+                                variant="solid"
                             >
                                 Features
                             </Button>
@@ -113,7 +120,7 @@ export default function HeaderNav() {
                                 as={Link}
                                 color="secondary"
                                 href="/logout"
-                                variant="flat"
+                                variant="solid"
                                 onPress={logout}
                             >
                                 Logout
@@ -140,7 +147,11 @@ export default function HeaderNav() {
                                     className="h-14 gap-2"
                                 >
                                     <p className="font-bold">Signed in as</p>
-                                    <p className="font-bold">@tonyreichert</p>
+                                    <p className="font-bold">
+                                        {loading
+                                            ? "Loading..."
+                                            : currentUser.name}
+                                    </p>
                                 </DropdownItem>
                                 <DropdownItem
                                     key="settings"
@@ -168,14 +179,21 @@ export default function HeaderNav() {
                 ) : (
                     <>
                         <NavbarItem className="hidden lg:flex">
-                            <Link href="/login">Login</Link>
+                            <Button
+                                as={Link}
+                                href="/login"
+                                variant="solid"
+                                className="bg-white rounded-3xl p-0"
+                            >
+                                Login
+                            </Button>
                         </NavbarItem>
                         <NavbarItem>
                             <Button
                                 as={Link}
                                 color="primary"
                                 href="/register"
-                                variant="flat"
+                                variant="solid"
                             >
                                 Sign Up
                             </Button>

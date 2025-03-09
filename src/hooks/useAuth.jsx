@@ -2,6 +2,8 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import authApi from "../api/auth-api";
 import { AuthContext } from "../contexts/authContext";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 
 export function useLogin() {
     const [error, setError] = useState(null);
@@ -29,6 +31,22 @@ export function useRegister() {
             const authData = await authApi.register(data);
             setUser(authData.user);
             setIsAuth(true);
+
+            const newUser = {
+                id: authData.user.uid,
+                email: authData.user.email,
+                name: data.username,
+                image: "",
+                attendingEvents: [],
+                interestedEvents: [],
+                followedBy: [],
+                followingUsers: [],
+                followingVenues: [],
+                managedVenues: [],
+                eventsFeaturedIn: [],
+            };
+
+            await setDoc(doc(db, "users", authData.user.uid), newUser);
         } catch (err) {
             setError(err.message);
         }

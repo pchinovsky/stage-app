@@ -8,19 +8,19 @@ export function useArtists(artistIds) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-
-        if (!artistIds || artistIds.length === 0) {
-            setArtists([]);
-            setLoading(false);
-            return;
-        }
-
         (async () => {
             try {
                 setLoading(true);
 
                 const artistRef = collection(db, "artists");
-                const artistQuery = query(artistRef, where(documentId(), "in", artistIds));
+                let artistQuery;
+
+                if (!artistIds || artistIds.length === 0) {
+                    artistQuery = query(artistRef);
+                } else {
+                    artistQuery = query(artistRef, where(documentId(), "in", artistIds));
+                }
+
                 const snapshot = await getDocs(artistQuery);
 
                 if (snapshot.empty) {

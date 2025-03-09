@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import DefaultLayout from "@/layouts/default";
-import { Image, Tooltip } from "@heroui/react";
+import { Image, Tooltip, Spinner } from "@heroui/react";
 import FloatingControls from "../components/FloatingControls";
 import EventCard from "../components/EventCard";
 import { NavContext } from "../contexts/navContext";
@@ -82,13 +82,22 @@ export default function EventLayout() {
                         </div>
                         <TabbedCard className={styles.cityBox}></TabbedCard>
                     </div>
-                    <Image
-                        src="https://sarieva.org/data/i/5w.jpeg"
-                        alt="Hero Image"
-                        className={styles.heroImage}
-                        width={1920}
-                        height={1080}
-                    />
+
+                    {loading ? (
+                        <Spinner
+                            classNames={{ label: "text-foreground mt-4" }}
+                            label="simple"
+                            variant="simple"
+                        />
+                    ) : (
+                        <Image
+                            src={events[1]?.image}
+                            alt="Hero Image"
+                            className={styles.heroImage}
+                            width={1920}
+                            height={1080}
+                        />
+                    )}
 
                     {/* Floating Circles */}
                     {circlePos.map((pos, index) => (
@@ -98,10 +107,10 @@ export default function EventLayout() {
                                 index === 0 ? (
                                     `${events[0]?.title || "Loading"}: ${events[0]?.description || ""}`
                                 ) : index === 1 ? (
-                                    `Location: ${events[0]?.location || "Unknown"}`
+                                    `Location: ${events[0]?.venue || "Unknown"}`
                                 ) : (
                                     <a
-                                        href="#"
+                                        href={`/events/${events[0]?.id}`}
                                         className="text-blue-500 underline"
                                     >
                                         Explore Event

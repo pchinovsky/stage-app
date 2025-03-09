@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
-export default function ButtonDynamic() {
+const MotionButton = motion(Button);
+
+export default function ButtonDynamicCombined({ text, icon }) {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -12,24 +14,30 @@ export default function ButtonDynamic() {
             onHoverStart={() => setHovered(true)}
             onHoverEnd={() => setHovered(false)}
         >
-            <motion.div
+            <MotionButton
+                isIconOnly
                 // initial={{ width: "48px" }}
-                animate={{ width: hovered ? "120px" : "48px" }}
-                transition={{ type: "tween", stiffness: 200, damping: 20 }}
-                className="absolute left-10 top-10 flex items-center bg-blue-500 text-white px-2 py-2 rounded-full overflow-hidden z-[1000]"
+                animate={{ width: hovered ? "160px" : "49px", height: "49px" }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="flex items-center bg-white text-black px-2 py-2 rounded-full overflow-hidden shadow-lg z-[1000]"
             >
-                <Icon icon="mdi:bell-outline" width={24} className="mx-2" />{" "}
+                <Icon icon={icon} width={24} className="mx-2" />
                 {hovered && (
                     <motion.span
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
+                        transition={{
+                            type: "tween",
+                            duration: 0.3,
+                            ease: "easeInOut",
+                        }}
                         className="whitespace-nowrap ml-2"
                     >
-                        Follow
+                        {text}
                     </motion.span>
                 )}
-            </motion.div>
+            </MotionButton>
         </motion.div>
     );
 }

@@ -27,6 +27,7 @@
     "@heroui/theme": "2.4.5",
     "@hookform/resolvers": "^4.1.2",
     "@iconify/react": "^5.2.0",
+    "@internationalized/date": "^3.6.0",
     "@react-aria/visually-hidden": "3.8.12",
     "@react-types/shared": "3.26.0",
     "clsx": "2.1.1",

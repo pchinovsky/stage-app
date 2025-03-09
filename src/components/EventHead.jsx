@@ -1,0 +1,56 @@
+import { Tooltip } from "@heroui/react";
+import TooltipProfile from "./TooltipProfile";
+
+export default function EventHead({
+    event,
+    venue,
+    venueLoading,
+    isModalOpen,
+    handleOpenModal,
+}) {
+    return (
+        <div className="absolute left-[250px] top-[120px] z-[100] flex flex-col items-start gap-2">
+            <h1 className="font-bold text-6xl">{event.title}</h1>
+            <h3 className="font-bold text-2xl">{event.subtitle}</h3>
+            <Tooltip
+                content={
+                    <TooltipProfile
+                        data={venue}
+                        onClick={() => handleOpenModal(venue)}
+                    />
+                }
+                key={isModalOpen ? "closed" : "open"}
+                isOpen={isModalOpen ? false : undefined}
+                placement="bottom"
+                offset={1}
+                delay={0}
+                motionProps={{
+                    variants: {
+                        exit: {
+                            opacity: 0,
+                            transition: {
+                                duration: 0.2,
+                                ease: "easeIn",
+                            },
+                        },
+                        enter: {
+                            opacity: 1,
+                            transition: {
+                                duration: 0.7,
+                                ease: "easeOut",
+                            },
+                        },
+                    },
+                }}
+                className="py-0 px-0"
+            >
+                <button
+                    className="font-bold text-blue-600 text-2xl cursor-pointer"
+                    onClick={() => handleOpenModal(venue)}
+                >
+                    {venueLoading ? "Loading venue..." : venue.name}
+                </button>
+            </Tooltip>
+        </div>
+    );
+}
