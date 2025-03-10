@@ -52,6 +52,9 @@ export default function CreatePage() {
         image: "",
         categories: [],
         associatedLinks: [],
+        invited: [],
+        interested: [],
+        attending: [],
         startTime: "",
         endTime: "",
         openingDate: "",
@@ -60,6 +63,7 @@ export default function CreatePage() {
         eventEndDate: "",
         artists: [],
         venue: "",
+        createdBy: "",
     };
 
     const route = "/events";
@@ -105,6 +109,16 @@ export default function CreatePage() {
             }));
         }
     }, [venue]);
+
+    useEffect(() => {
+        if (currentUser) {
+            console.log("Updating formValues with user:", currentUser.id);
+            setFormValues((prevValues) => ({
+                ...prevValues,
+                createdBy: currentUser.id,
+            }));
+        }
+    }, [currentUser]);
 
     const backgroundStyle = formValues.image
         ? {
