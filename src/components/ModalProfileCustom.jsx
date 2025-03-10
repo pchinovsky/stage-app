@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Card,
@@ -9,12 +9,34 @@ import {
     CardFooter,
     user,
 } from "@heroui/react";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+    doc,
+    getDoc,
+    updateDoc,
+    arrayUnion,
+    arrayRemove,
+} from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "../contexts/authContext";
 
 export default function ModalProfileCustom({ isOpen, onClose, data }) {
     const { isAuth, userId } = useContext(AuthContext);
+    const [isFollowing, setIsFollowing] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            if (!isAuth || !userId || !data) return;
+            const userRef = doc(db, "users", userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                const following = userData.following || [];
+                setIsFollowing(following.includes(data.id));
+            } else {
+                console.log("No such document!");
+            }
+        })();
+    }, [isAuth, userId, data]);
 
     useEffect(() => {
         if (isOpen) {
@@ -30,14 +52,35 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
     if (!isOpen || !data) return null;
 
     const handleFollow = async () => {
+        if (!isAuth || !userId || !data) return;
+
         try {
             const userRef = doc(db, "users", userId);
-            await updateDoc(userRef, {
-                following: arrayUnion(data.id),
-            });
-            console.log(`Followed ${data.name}`);
+            const followedRef = data.address
+                ? doc(db, "venues", data.id)
+                : doc(db, "artists", data.id);
+
+            if (isFollowing) {
+                // Unfollow
+                await updateDoc(userRef, {
+                    following: arrayRemove(data.id),
+                });
+                await updateDoc(followedRef, {
+                    followedBy: arrayRemove(userId),
+                });
+                setIsFollowing(false);
+            } else {
+                // Follow
+                await updateDoc(userRef, {
+                    following: arrayUnion(data.id),
+                });
+                await updateDoc(followedRef, {
+                    followedBy: arrayUnion(userId),
+                });
+                setIsFollowing(true);
+            }
         } catch (error) {
-            console.error("Error following:", error);
+            console.error("Error updating follow status:", error);
         }
     };
 
@@ -93,8 +136,11 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                             <Button onPress={onClose} color="primary">
                                 Close
                             </Button>
-                            <Button onPress={handleFollow} color="secondary">
-                                Follow
+                            <Button
+                                onPress={handleFollow}
+                                color={isFollowing ? "danger" : "success"}
+                            >
+                                {isFollowing ? "Unfollow" : "Follow"}
                             </Button>
                         </CardFooter>
                     </Card>

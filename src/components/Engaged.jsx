@@ -11,6 +11,8 @@ export default function Engaged({ author, attending = [], interested = [] }) {
     // non-author engaged users -
     const involvedUsers = [...attending, ...interested];
 
+    console.log("author", author);
+
     return (
         <Card className="absolute left-[490px] top-[410px] p-4 rounded-lg shadow-md w-[300px] z-[100]">
             <div className="flex items-start justify-between">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Avatar, Tooltip, Button } from "@heroui/react";
+import { Avatar, AvatarIcon, Tooltip, Button, Image } from "@heroui/react";
 import {
     doc,
     getDoc,
@@ -11,8 +11,17 @@ import { db } from "../firebase/firebaseConfig";
 
 export default function User({ user, currentUserId }) {
     const [isFollowing, setIsFollowing] = useState(false);
+    const [imageSrc, setImageSrc] = useState(user?.image);
 
-    console.log("user comp - user", user);
+    useEffect(() => {
+        console.log("User data:", user);
+        if (user) setImageSrc(user.image);
+    }, [user]);
+
+    console.log("img src", imageSrc);
+    console.log("user id === current user id", user.id, currentUserId);
+
+    // console.log("user comp - user", user);
 
     // check follow status
     useEffect(() => {
@@ -30,6 +39,8 @@ export default function User({ user, currentUserId }) {
 
     const handleFollow = async () => {
         if (!user || !currentUserId) return;
+        console.log("handle follow", user.id, " - ", currentUserId);
+
         try {
             const followedUserRef = doc(db, "users", user.id);
             const currentUserRef = doc(db, "users", currentUserId);
@@ -63,7 +74,7 @@ export default function User({ user, currentUserId }) {
             content={
                 <Button
                     onPress={handleFollow}
-                    disabled={!user || !currentUserId}
+                    isDisabled={user?.id === currentUserId}
                     size="sm"
                     color={isFollowing ? "danger" : "primary"}
                     className="w-full"
@@ -75,7 +86,15 @@ export default function User({ user, currentUserId }) {
             className="py-0 px-0"
         >
             <div className="flex items-center gap-2 cursor-pointer">
-                <Avatar src={user.image} alt={user.name} size="sm" />
+                <Avatar
+                    src={imageSrc}
+                    fallback={<AvatarIcon />}
+                    showFallback={!user?.image}
+                    alt={user?.name || "User"}
+                    size="sm"
+                    isBordered
+                    color="primary"
+                />
                 <span className="text-sm">{user.name}</span>
             </div>
         </Tooltip>

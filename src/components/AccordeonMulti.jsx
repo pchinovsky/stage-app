@@ -12,11 +12,13 @@ export default function MultiAccordion({ sections, className }) {
 
     return (
         <div
-            className={`w-[640px] h-[380px] border border-black shadow-md rounded-lg bg-transparent ${className}`}
-            style={{
-                backdropFilter: "blur(10px)",
-                backgroundColor: "rgba(255, 255, 255, 0.3)",
-            }}
+            className={`w-[640px] h-[380px] border border-white shadow-md rounded-lg bg-transparent ${className}`}
+            style={
+                {
+                    // backdropFilter: "blur(10px)",
+                    // backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }
+            }
         >
             {sections.map((section, index) => (
                 <div
@@ -63,7 +65,8 @@ export default function MultiAccordion({ sections, className }) {
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-2 text-slate-800">
+                            // <div className="py-2 text-slate-800">
+                            <div className="py-2 text-white">
                                 {section.content}
                             </div>
                         )}
