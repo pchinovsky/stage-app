@@ -25,7 +25,8 @@ export default function ArtistList({
                     <Tooltip
                         // key={artist.id}
                         // forcing tooltip re-render to prevent linger post modal closure -
-                        key={isModalOpen ? "closed" : "open"}
+                        // key={isModalOpen ? "closed" : "open"}
+                        key={isModalOpen ? `${artist.id}-closed` : artist.id}
                         isOpen={isModalOpen ? false : undefined}
                         content={
                             <TooltipProfile
