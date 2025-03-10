@@ -43,16 +43,36 @@ export function useEvents(filters = {}) {
                     let eventsRef = collection(db, "events");
                     let conditions = [];
 
+                    console.log("Full filters object:", filters);
+
                     // Dynamic query
                     Object.entries(filters).forEach(([key, value]) => {
+                        console.log("Checking filter key:", key, "value:", value, "type:", typeof value);
+
                         if (value !== undefined && value !== null) {
-                            if (Array.isArray(value) && value.length > 0) {
-                                conditions.push(where(key, "in", value));
-                            } else if (typeof value === "boolean" || typeof value === "string") {
-                                conditions.push(where(key, "==", value));
+                            console.log("Value is defined:", value);
+
+                            if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+                                console.log("Value is an object, extracting actual value:", value);
+                                value = value[key];
+                                console.log("Extracted value:", value);
+                            }
+
+                            if (Array.isArray(value)) {
+                                console.log("--- Value is an array:", value, "Length:", value.length);
+                                if (value.length > 0) {
+                                    console.log(`Adding "array-contains" filter: ${key} → ${value[0]}`);
+                                    conditions.push(where(key, "array-contains", value[0]));
+                                }
+                            } else {
+                                console.log("Value is NOT an array:", value);
                             }
                         }
                     });
+
+                    console.log("Final conditions:", conditions);
+
+                    console.log("Applying query with conditions:", conditions);
 
                     const eventsQuery = conditions.length > 0 ? query(eventsRef, ...conditions) : eventsRef;
                     const snapshot = await getDocs(eventsQuery);

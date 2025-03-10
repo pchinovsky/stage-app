@@ -5,7 +5,6 @@ import { useEvents } from "../hooks/useEvents";
 import { Button, Tooltip, Modal, Image, Card } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Accordeon from "../components/Accordeon";
-import ButtonDynamicClick from "../components/ButtonDynamicClick";
 import MultiAccordion from "../components/AccordeonMulti";
 import CalendarDate from "../components/CalendarDate";
 import CalendarModal from "../components/Calendar";
@@ -76,6 +75,7 @@ export default function Event() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPanel, setSelectedPanel] = useState("About");
+    const [showModal, setShowModal] = useState(false);
 
     const {
         currentUser,
@@ -86,13 +86,20 @@ export default function Event() {
 
     useEffect(() => {
         if (event?.createdBy) {
+            console.log(
+                "Fetching user data for event creator:",
+                event.createdBy
+            );
+
             fetchUsersByIds([event.createdBy]);
         }
     }, [event?.createdBy]);
 
-    const author = otherUsers[event?.createdBy] || {};
+    // const author = otherUsers[event?.createdBy] || {};
+    const author = { id: event?.createdBy, ...otherUsers[event?.createdBy] };
 
     console.log("author", otherUsers);
+    console.log("author itself", author);
 
     const handleOpenModal = (content) => {
         setTooltipExitDelay(0);
@@ -187,7 +194,7 @@ export default function Event() {
                 ) : (
                     <>
                         <CalendarDate
-                            date={event.openingDateTime}
+                            date={event.openingDate}
                             onPress={setIsCalendarOpen}
                         />
                         <CalendarModal
@@ -238,7 +245,7 @@ export default function Event() {
                         )}
                         <Engaged
                             author={{
-                                id: 1,
+                                id: author.id,
                                 name: author.name || "Unknown",
                                 image:
                                     author.image ||

@@ -21,10 +21,10 @@ export default function EventLayout() {
     const searchBarRef = useRef(null);
     const placeholderRef = useRef(null);
 
-    const filters = { staged: true };
+    const [filters, setFilters] = useState({});
 
     const navigate = useNavigate();
-    const { events, loading, error } = useEvents({ filters });
+    const { events, loading, error } = useEvents(filters);
     // const events = eventsData2;
 
     useEffect(() => {
@@ -49,6 +49,18 @@ export default function EventLayout() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [searchFixed]);
+
+    // for the scroll reset issue -
+    useEffect(() => {
+        const savedScrollY = localStorage.getItem("scrollPosition");
+        if (savedScrollY) {
+            setTimeout(() => {
+                window.scrollTo(0, parseInt(savedScrollY, 10));
+                console.log("📜 Restored scroll to:", savedScrollY);
+                localStorage.removeItem("scrollPosition");
+            }, 50);
+        }
+    }, [filters]);
 
     const handleEventPress = (eventId) => {
         navigate(`/events/${eventId}`);
@@ -145,7 +157,12 @@ export default function EventLayout() {
                 {/* Events Section */}
                 <div className={styles.eventsSection}>
                     {/* Filter Bar */}
-                    <FilterBar ref={searchBarRef} searchFixed={searchFixed} />
+                    <FilterBar
+                        ref={searchBarRef}
+                        searchFixed={searchFixed}
+                        // activeFilters={filters}
+                        setFilters={setFilters}
+                    />
 
                     {/* Event Cards */}
                     {loading ? (

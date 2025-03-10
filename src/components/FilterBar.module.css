@@ -1,5 +1,5 @@
 .filterBar {
-    @apply w-full p-4 bg-white text-slate-950 shadow-lg rounded-xl flex items-center gap-4;
+    @apply w-full h-[110px] px-4 py-5 bg-white text-slate-950 shadow-md rounded-xl flex items-center gap-4;
 }
 
 .input {
@@ -11,25 +11,53 @@
 }
 
 .filterContainer {
-    @apply flex items-center gap-2 max-w-[800px];
+    @apply flex items-center gap-2 max-w-[900px] h-[90px] mr-auto;
 }
 
 .arrowButton {
-    @apply bg-gray-300 text-black px-2 py-1 rounded-full hover:bg-gray-400;
+    /* @apply bg-white text-black px-2 py-1 rounded-lg hover:bg-slate-100; */
+    @apply bg-white text-slate-400 px-2 py-1 rounded-lg hover:shadow-md h-full hover:text-black;
 }
 
 .filters {
-    @apply flex gap-2 overflow-hidden whitespace-nowrap scroll-smooth;
+    @apply flex gap-3 overflow-hidden whitespace-nowrap scroll-smooth h-[100%];
 }
 
 .filterBox {
-    @apply bg-gray-100 px-4 py-2 rounded-lg flex items-center gap-2;
+    @apply relative bg-gray-100 px-3 py-1 rounded-lg flex flex-col;
+    @apply w-[200px] flex-shrink-0;
+}
+
+.largerBox {
+    @apply w-[300px];
 }
 
 .filterLabel {
-    @apply font-semibold;
+    @apply font-semibold text-sm mb-2;
 }
 
 .removeButton {
-    @apply text-red-500 font-bold;
+    @apply absolute top-1 right-1 font-light text-slate-500 hover:text-black text-sm;
+}
+
+.chipContainer {
+    @apply grid grid-cols-2 gap-x-3 gap-y-1;
+}
+
+.chipContainerLarger {
+    @apply grid grid-cols-3 gap-x-3 gap-y-1;
+}
+
+.chip {
+    @apply w-[100px] min-w-[100px] truncate text-ellipsis overflow-hidden px-1 py-1 rounded-lg text-sm text-center;
+    @apply hover:shadow-md hover:bg-blue-100 hover:cursor-pointer;
+}
+
+.activeChip {
+    @apply text-blue-900 shadow-md;
+    @apply bg-blue-100 !important;
+}
+
+.dropdown {
+    @apply ml-[300px];
 }
