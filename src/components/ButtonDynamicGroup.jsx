@@ -1,4 +1,3 @@
-import ButtonDynamicClick from "./ButtonDynamicClick";
 import ButtonDynamic from "./ButtonDynamic";
 import styles from "./ButtonDynamicGroup.module.css";
 

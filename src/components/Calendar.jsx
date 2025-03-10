@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Calendar from "react-calendar";
-import { Modal } from "@heroui/react";
+import { Modal, Button } from "@heroui/react";
 import "react-calendar/dist/Calendar.css";
 
 export default function CalendarModal({
@@ -58,6 +58,9 @@ export default function CalendarModal({
                             ) : null;
                         }}
                     />
+                    <Button onPress={onClose} className="mt-4">
+                        Close
+                    </Button>
                 </div>
             </div>
         </Modal>
