@@ -29,14 +29,20 @@ export const eventSchema = z
         associatedLinks: z
             .array(z.string().url("Invalid URL"))
             .nonempty("At least one link is required"),
-        startTime: z
-            .string()
-            .nonempty("Start time is required")
-            .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
-        endTime: z
-            .string()
-            .nonempty("End time is required")
-            .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+        startTime: z.union([
+            z.string().nonempty("Start time is required"),
+            z.object({
+                hour: z.number(),
+                minute: z.number(),
+            }),
+        ]),
+        endTime: z.union([
+            z.string().nonempty("End time is required"),
+            z.object({
+                hour: z.number(),
+                minute: z.number(),
+            }),
+        ]),
 
         openingDate: z.string().nonempty("Start date is required"),
         eventEndDate: z.string().nonempty("End date is required"),
@@ -47,6 +53,7 @@ export const eventSchema = z
         venue: z.string().nonempty("Venue is required"),
     })
     .refine((data) => {
+        if (typeof data.startTime === "object") return true;
         if (data.openingDate && data.startTime) {
             const openingDateTime = new Date(`${data.openingDate}T${data.startTime}`);
             return openingDateTime > new Date();
@@ -57,6 +64,7 @@ export const eventSchema = z
         path: ["openingDate"],
     })
     .refine((data) => {
+        if (typeof data.startTime === "object" || typeof data.endTime === "object") return true;
         if (data.openingDate && data.startTime && data.eventEndDate && data.endTime) {
             const openingDateTime = new Date(`${data.openingDate}T${data.startTime}`);
             const endDateTime = new Date(`${data.eventEndDate}T${data.endTime}`);

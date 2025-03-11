@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
+import { useNavigate } from "react-router-dom";
 import { Button, Tooltip, Modal, Image, Card } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Accordeon from "../components/Accordeon";
@@ -26,10 +27,13 @@ import StatsBox from "../components/Stats";
 import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
 import EventHead from "../components/EventHead";
 import { useUser } from "../hooks/useUser";
+import useDeleteEvent from "../hooks/useDeleteEvent";
 
 export default function Event() {
     const { eventId } = useParams();
+    const navigate = useNavigate();
     const { events, loading, error } = useEvents({ id: eventId });
+    const { deleteEvent, isDeleting } = useDeleteEvent();
 
     const event = events[0];
 
@@ -116,6 +120,14 @@ export default function Event() {
         setIsModalOpen(false);
         setModalContent(null);
         setTooltipExitDelay(500);
+    };
+
+    const handleEdit = () => {
+        navigate(`/events/${eventId}/edit`);
+    };
+
+    const handleDelete = () => {
+        deleteEvent(event.id);
     };
 
     const [comments, setComments] = useState([
@@ -374,6 +386,20 @@ export default function Event() {
                                 />
                             )}
                         </motion.div>
+                        <div className={styles.controlsColumn}>
+                            <Button onPress={handleEdit} color="primary">
+                                Edit Event
+                            </Button>
+                            <Button
+                                onPress={handleDelete}
+                                color="danger"
+                                disabled={isDeleting}
+                            >
+                                {isDeleting
+                                    ? "Deleting Event..."
+                                    : "Delete Event"}
+                            </Button>
+                        </div>
                     </>
                 )}
             </div>

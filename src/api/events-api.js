@@ -1,5 +1,5 @@
 import { db } from "../firebase/firebaseConfig";
-import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 
 const createEvent = async (eventData) => {
     console.log("--- createEvent - eventData", eventData);
@@ -51,9 +51,34 @@ const getEventById = async (eventId) => {
     }
 };
 
+const updateEvent = async (eventId, updatedEvent) => {
+    const formattedEvent = {
+        ...updatedEvent,
+        startTime: updatedEvent.startTime && typeof updatedEvent.startTime === 'object'
+            ? updatedEvent.startTime.toString()
+            : updatedEvent.startTime,
+        endTime: updatedEvent.endTime && typeof updatedEvent.endTime === 'object'
+            ? updatedEvent.endTime.toString()
+            : updatedEvent.endTime,
+    };
+
+    return updateDoc(doc(db, "events", eventId), formattedEvent);
+}
+
+const deleteEvent = async (eventId) => {
+    try {
+        await deleteDoc(doc(db, "events", eventId));
+    } catch (err) {
+        console.error("Err deleting event:", err);
+        throw err;
+    }
+};
+
 export default {
-    createEvent,
-    createArtist,
     getEvents,
     getEventById,
+    createEvent,
+    createArtist,
+    updateEvent,
+    deleteEvent,
 };

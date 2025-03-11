@@ -35,6 +35,7 @@ export default function ArtistList({
                             />
                         }
                         placement="right"
+                        showArrow
                         motionProps={{
                             variants: {
                                 exit: {
@@ -55,6 +56,12 @@ export default function ArtistList({
                         }}
                         closeDelay={exitDelay}
                         className="py-0 px-0"
+                        classNames={{
+                            base: [
+                                "border-0",
+                                "before:bg-white dark:before:bg-white before:border-0",
+                            ],
+                        }}
                     >
                         <button
                             className="flex items-center gap-3 p-2 bg-gray-900 w-full rounded-lg cursor-pointer"
