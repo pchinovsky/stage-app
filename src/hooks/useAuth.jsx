@@ -37,6 +37,7 @@ export function useRegister() {
                 email: authData.user.email,
                 name: data.username,
                 image: "",
+                invitedTo: [],
                 attendingEvents: [],
                 interestedEvents: [],
                 followedBy: [],

@@ -28,6 +28,7 @@ import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
 import EventHead from "../components/EventHead";
 import { useUser } from "../hooks/useUser";
 import useDeleteEvent from "../hooks/useDeleteEvent";
+import ModalInvite from "../components/ModalInvite";
 
 export default function Event() {
     const { eventId } = useParams();
@@ -80,12 +81,14 @@ export default function Event() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPanel, setSelectedPanel] = useState("About");
     const [showModal, setShowModal] = useState(false);
+    const [isModalInviteOpen, setIsModalInviteOpen] = useState(false);
 
     const {
         currentUser,
         loading: userLoading,
         fetchUsersByIds,
         otherUsers,
+        allUsers,
     } = useUser();
 
     useEffect(() => {
@@ -128,6 +131,14 @@ export default function Event() {
 
     const handleDelete = () => {
         deleteEvent(event.id);
+    };
+
+    const handleOpenModalInvite = () => {
+        setIsModalInviteOpen(true);
+    };
+
+    const handleCloseModalInvite = () => {
+        setIsModalInviteOpen(false);
     };
 
     const [comments, setComments] = useState([
@@ -205,6 +216,13 @@ export default function Event() {
                     <p className={styles.notFound}>Event not found.</p>
                 ) : (
                     <>
+                        <ModalInvite
+                            isOpen={isModalInviteOpen}
+                            onClose={handleCloseModalInvite}
+                            users={allUsers}
+                            currentUser={currentUser}
+                            event={event.id}
+                        />
                         <CalendarDate
                             date={event.openingDate}
                             onPress={setIsCalendarOpen}
@@ -215,25 +233,11 @@ export default function Event() {
                             events={events}
                             followedEvents={followedUsersEvents}
                         />
-                        {/* <ButtonDynamicClick
-                            top="600px"
-                            left="100px"
-                            text="Follow"
-                            icon="mdi:bell-outline"
+                        <ButtonDynamicGroup
+                            user={currentUser}
+                            event={event.id}
+                            onModalOpen={handleOpenModalInvite}
                         />
-                        <ButtonDynamicClick
-                            top="650px"
-                            left="100px"
-                            text="Interested"
-                            icon="mdi:star-outline"
-                        />
-                        <ButtonDynamicClick
-                            top="700px"
-                            left="100px"
-                            text="Attend"
-                            icon="mdi:tick-outline"
-                        /> */}
-                        <ButtonDynamicGroup />
                         {/* <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick> */}

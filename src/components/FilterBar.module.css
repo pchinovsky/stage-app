@@ -20,7 +20,7 @@
 }
 
 .filters {
-    @apply flex gap-3 overflow-hidden whitespace-nowrap scroll-smooth h-[100%];
+    @apply flex gap-3 overflow-hidden whitespace-nowrap scroll-smooth h-[100%] rounded-lg;
 }
 
 .filterBox {

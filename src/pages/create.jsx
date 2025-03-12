@@ -33,16 +33,7 @@ import { eventSchema } from "../api/validationSchemas";
 import eventsApi from "../api/events-api";
 import DurationInput from "../components/DurationInput";
 import ModalArtistAdd from "../components/ModalArtistAdd";
-
-const categories = [
-    { label: "Conference", value: "conference" },
-    { label: "Workshop", value: "workshop" },
-    { label: "Artist Talk", value: "artistTalk" },
-    { label: "Exhibition", value: "exhibition" },
-    { label: "Presentation", value: "presentation" },
-    { label: "Sound", value: "sound" },
-    { label: "Other", value: "other" },
-];
+import { categories } from "../constants/generalConstants";
 
 export default function CreatePage() {
     const initialValues = {

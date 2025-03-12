@@ -7,6 +7,7 @@ export function useUser() {
     const { userId, user } = useContext(AuthContext);
     const [currentUserData, setCurrentUserData] = useState(null);
     const [otherUsersData, setOtherUsersData] = useState({});
+    const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -34,6 +35,22 @@ export function useUser() {
         })();
     }, [user]);
 
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            try {
+                const usersCollection = collection(db, "users");
+                const usersSnapshot = await getDocs(usersCollection);
+                const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setAllUsers(usersList);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, []);
+
     const fetchUsersByIds = async (userIds) => {
         if (!userIds || userIds.length === 0) return;
 
@@ -58,6 +75,7 @@ export function useUser() {
         currentUser: currentUserData,
         fetchUsersByIds,
         otherUsers: otherUsersData,
+        allUsers,
         loading,
         error,
     };

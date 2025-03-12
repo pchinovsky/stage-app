@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 
 const MotionButton = motion(Button);
 
-export default function ButtonDynamicCombined({ text, icon }) {
+export default function ButtonDynamicCombined({ text, icon, onPress }) {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -15,6 +15,7 @@ export default function ButtonDynamicCombined({ text, icon }) {
             onHoverEnd={() => setHovered(false)}
         >
             <MotionButton
+                onPress={onPress}
                 isIconOnly
                 // initial={{ width: "48px" }}
                 animate={{ width: hovered ? "160px" : "49px", height: "49px" }}

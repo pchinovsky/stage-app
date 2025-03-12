@@ -25,6 +25,7 @@ import eventsApi from "../api/events-api";
 import { parseDate, parseTime } from "@internationalized/date";
 import { ArtistInput } from "../components/ArtistInput";
 import TooltipProfile from "../components/TooltipProfile";
+import { categories } from "../constants/generalConstants";
 
 export default function Edit() {
     const { eventId } = useParams();
@@ -151,6 +152,32 @@ export default function Edit() {
                             errorMessage={error?.subtitle?.[0]}
                             isRequired
                         />
+
+                        <Select
+                            label="Categories"
+                            placeholder="Select event categories"
+                            selectedKeys={formValues.categories || []}
+                            onSelectionChange={(keys) =>
+                                handleInputChangeExpanded(
+                                    null,
+                                    "categories",
+                                    Array.from(keys)
+                                )
+                            }
+                            isInvalid={!!error?.categories}
+                            errorMessage={error?.categories?.[0]}
+                            isRequired
+                            selectionMode="multiple"
+                        >
+                            {categories.map((category) => (
+                                <SelectItem
+                                    key={category.value}
+                                    value={category.value}
+                                >
+                                    {category.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
 
                         <Textarea
                             label="Description"
