@@ -1,27 +1,39 @@
-import { useContext, useState } from "react";
-import { Card, Avatar, AvatarGroup, Button } from "@heroui/react";
+import { useContext, useState, useEffect } from "react";
+import { Card, Avatar, AvatarGroup, Button, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import User from "./User";
 import { AuthContext } from "../contexts/authContext";
+import { useUser } from "../hooks/useUser";
 
-export default function Engaged({ author, attending = [], interested = [] }) {
+export default function Engaged({
+    author,
+    attendingIds = [],
+    interestedIds = [],
+    trigger,
+}) {
     const [expanded, setExpanded] = useState(false);
     const { userId } = useContext(AuthContext);
+    const { fetchUsersByIds, otherUsers, loading, error } = useUser();
 
-    // non-author engaged users -
-    const involvedUsers = [...attending, ...interested];
+    useEffect(() => {
+        const userIds = [...attendingIds, ...interestedIds];
+        if (userIds.length > 0) {
+            const unsubscribe = fetchUsersByIds(userIds);
+            return () => unsubscribe && unsubscribe();
+        }
+    }, [attendingIds, interestedIds, trigger]);
 
-    console.log("author", author);
+    const attendingUsers = attendingIds.map((id) => otherUsers[id]);
+    const interestedUsers = interestedIds.map((id) => otherUsers[id]);
 
     return (
         <Card className="absolute left-[490px] top-[410px] p-4 rounded-lg shadow-md w-[300px] z-[100]">
             <div className="flex items-start justify-between">
                 <span className="font-semibold text-lg">Engaged</span>
                 <Button
-                    // size="icon"
                     isIconOnly
                     variant="bordered"
-                    onClick={() => setExpanded(!expanded)}
+                    onPress={() => setExpanded(!expanded)}
                     style={{ width: "5px !important", padding: "0px" }}
                     className="px-0 py-0 w-2"
                 >
@@ -34,60 +46,69 @@ export default function Engaged({ author, attending = [], interested = [] }) {
 
             <div className="flex flex-col items-start gap-3 mt-2">
                 <p className="text-sm font-semibold text-gray-600">Author</p>
-                <User user={author} currentUserId={userId} />
-            </div>
+                {loading ? (
+                    <Spinner size="sm" />
+                ) : (
+                    <User user={author} currentUserId={userId} />
+                )}
 
-            {expanded && (
-                <div className="mt-3 space-y-2 max-h-52 overflow-scroll">
-                    {attending.length > 0 && (
-                        <div>
-                            <p className="text-sm font-semibold text-gray-600">
-                                Attending
-                            </p>
-                            <div className="space-y-1">
-                                {attending.map((user) => (
-                                    <User
-                                        key={user.id}
-                                        user={user}
-                                        currentUserId={userId}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                {expanded ? (
+                    <>
+                        <p className="text-sm font-semibold text-gray-600 mt-4">
+                            Attending
+                        </p>
+                        {loading ? (
+                            <Spinner size="sm" />
+                        ) : (
+                            attendingUsers.map(
+                                (user) =>
+                                    user && (
+                                        <User
+                                            key={user.id}
+                                            user={user}
+                                            currentUserId={userId}
+                                        />
+                                    )
+                            )
+                        )}
 
-                    {interested.length > 0 && (
-                        <div>
-                            <p className="text-sm font-semibold text-gray-600">
-                                Interested
-                            </p>
-                            <div className="space-y-1">
-                                {interested.map((user) => (
-                                    <User
-                                        key={user.id}
-                                        user={user}
-                                        currentUserId={userId}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {!expanded && involvedUsers.length > 0 && (
-                <div className="mt-3">
-                    <AvatarGroup max={4}>
-                        {involvedUsers.map((user) => (
-                            <Avatar
-                                key={user.id}
-                                src={user.image}
-                                alt={user.name}
-                            />
-                        ))}
+                        <p className="text-sm font-semibold text-gray-600 mt-4">
+                            Interested
+                        </p>
+                        {loading ? (
+                            <Spinner size="sm" />
+                        ) : (
+                            interestedUsers.map(
+                                (user) =>
+                                    user && (
+                                        <User
+                                            key={user.id}
+                                            user={user}
+                                            currentUserId={userId}
+                                        />
+                                    )
+                            )
+                        )}
+                    </>
+                ) : (
+                    <AvatarGroup>
+                        {loading ? (
+                            <Spinner size="sm" />
+                        ) : (
+                            [...attendingUsers, ...interestedUsers].map(
+                                (user) =>
+                                    user && (
+                                        <Avatar
+                                            key={user.id}
+                                            src={user.image}
+                                            size="sm"
+                                        />
+                                    )
+                            )
+                        )}
                     </AvatarGroup>
-                </div>
-            )}
+                )}
+            </div>
         </Card>
     );
 }

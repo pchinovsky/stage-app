@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { db } from "../firebase/firebaseConfig";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
 import { AuthContext } from "../contexts/authContext";
 
 export function useUser() {
@@ -11,7 +11,7 @@ export function useUser() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    console.log('useUser', userId, currentUserData);
+    // console.log('useUser', userId, currentUserData);
 
 
     useEffect(() => {
@@ -51,25 +51,50 @@ export function useUser() {
         })();
     }, []);
 
-    const fetchUsersByIds = async (userIds) => {
+    // const fetchUsersByIds = async (userIds) => {
+    //     if (!userIds || userIds.length === 0) return;
+    //     // console.log('--- fetchUsersByIds userIds', userIds);
+
+
+    //     try {
+    //         const usersCollection = collection(db, "users");
+    //         const userDocs = await getDocs(usersCollection);
+
+    //         const users = {};
+    //         userDocs.forEach((doc) => {
+    //             if (userIds.includes(doc.id)) {
+    //                 users[doc.id] = doc.data();
+    //             }
+    //         });
+
+    //         setOtherUsersData((prev) => ({ ...prev, ...users }));
+    //     } catch (err) {
+    //         console.error("Error fetching users -", err);
+    //     }
+    // };
+
+    const fetchUsersByIds = (userIds) => {
         if (!userIds || userIds.length === 0) return;
-
-        try {
-            const usersCollection = collection(db, "users");
-            const userDocs = await getDocs(usersCollection);
-
-            const users = {};
-            userDocs.forEach((doc) => {
-                if (userIds.includes(doc.id)) {
-                    users[doc.id] = doc.data();
-                }
-            });
-
-            setOtherUsersData((prev) => ({ ...prev, ...users }));
-        } catch (err) {
-            console.error("Error fetching users -", err);
-        }
+        const uniqueUserIds = [...new Set(userIds)];
+        const usersCollection = collection(db, "users");
+        const unsubscribe = onSnapshot(
+            usersCollection,
+            (snapshot) => {
+                const users = {};
+                snapshot.docs.forEach((doc) => {
+                    if (uniqueUserIds.includes(doc.id)) {
+                        users[doc.id] = doc.data();
+                    }
+                });
+                setOtherUsersData((prev) => ({ ...prev, ...users }));
+            },
+            (error) => {
+                console.error("Error fetching users -", error);
+            }
+        );
+        return unsubscribe;
     };
+
 
     return {
         currentUser: currentUserData,

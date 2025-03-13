@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 
 const MotionButton = motion(Button);
 
-export default function ButtonDynamicCombined({ text, icon, onPress }) {
+export default function ButtonDynamicCombined({ text, icon, onPress, style }) {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -22,7 +22,7 @@ export default function ButtonDynamicCombined({ text, icon, onPress }) {
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 className="flex items-center bg-white text-black px-2 py-2 rounded-full overflow-hidden shadow-lg z-[1000]"
             >
-                <Icon icon={icon} width={24} className="mx-2" />
+                <Icon icon={icon} width={24} className="mx-2" style={style} />
                 {hovered && (
                     <motion.span
                         initial={{ opacity: 0, x: -10 }}

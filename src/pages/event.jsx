@@ -44,6 +44,7 @@ export default function Event() {
     const [sidebarData, setSidebarData] = useState(null);
     const [tooltipExitDelay, setTooltipExitDelay] = useState(500);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [trigger, setTrigger] = useState(0);
 
     useEffect(() => {
         if (!loading && events.length > 0) {
@@ -141,31 +142,6 @@ export default function Event() {
         setIsModalInviteOpen(false);
     };
 
-    const [comments, setComments] = useState([
-        {
-            text: "Great stuff!",
-            user: { name: "Agent", avatar: "https://i.pravatar.cc/40?img=1" },
-        },
-        {
-            text: "Looking forward to booze!",
-            user: { name: "Lobster", avatar: "https://i.pravatar.cc/40?img=2" },
-        },
-        {
-            text: "Looking forward to booze!",
-            user: { name: "Lobster", avatar: "https://i.pravatar.cc/40?img=2" },
-        },
-    ]);
-
-    const addComment = (text) => {
-        setComments([
-            ...comments,
-            {
-                text,
-                user: { name: "You", avatar: "https://i.pravatar.cc/40?img=3" },
-            },
-        ]);
-    };
-
     const statsData = [
         {
             label: "Attendees",
@@ -235,8 +211,9 @@ export default function Event() {
                         />
                         <ButtonDynamicGroup
                             user={currentUser}
-                            event={event.id}
+                            event={event}
                             onModalOpen={handleOpenModalInvite}
+                            setTrigger={setTrigger}
                         />
                         {/* <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick>
@@ -267,25 +244,9 @@ export default function Event() {
                                     author.image ||
                                     "https://example.com/default-avatar.jpg",
                             }}
-                            attending={[
-                                {
-                                    id: 2,
-                                    name: "Ghee",
-                                    image: "https://example.com/alice.jpg",
-                                },
-                                {
-                                    id: 3,
-                                    name: "Joo",
-                                    image: "https://example.com/bob.jpg",
-                                },
-                            ]}
-                            interested={[
-                                {
-                                    id: 4,
-                                    name: "Faint",
-                                    image: "https://example.com/charlie.jpg",
-                                },
-                            ]}
+                            attendingIds={event.attending || []}
+                            interestedIds={event.interested || []}
+                            trigger={trigger}
                         />
                         <Image
                             src={event.image}
@@ -385,8 +346,10 @@ export default function Event() {
                                 />
                             ) : (
                                 <Discussion
-                                    comments={comments}
-                                    onAddComment={addComment}
+                                    // comments={comments}
+                                    // onAddComment={addComment}
+                                    eventId={event.id}
+                                    authorData={currentUser}
                                 />
                             )}
                         </motion.div>

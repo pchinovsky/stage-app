@@ -52,15 +52,29 @@ const getEventById = async (eventId) => {
 };
 
 const updateEvent = async (eventId, updatedEvent) => {
-    const formattedEvent = {
-        ...updatedEvent,
-        startTime: updatedEvent.startTime && typeof updatedEvent.startTime === 'object'
+    const formattedEvent = { ...updatedEvent };
+
+    // const formattedEvent = {
+    //     ...updatedEvent,
+    //     startTime: updatedEvent.startTime && typeof updatedEvent.startTime === 'object'
+    //         ? updatedEvent.startTime.toString()
+    //         : updatedEvent.startTime,
+    //     endTime: updatedEvent.endTime && typeof updatedEvent.endTime === 'object'
+    //         ? updatedEvent.endTime.toString()
+    //         : updatedEvent.endTime,
+    // };
+
+    if ('startTime' in updatedEvent) {
+        formattedEvent.startTime = updatedEvent.startTime && typeof updatedEvent.startTime === 'object'
             ? updatedEvent.startTime.toString()
-            : updatedEvent.startTime,
-        endTime: updatedEvent.endTime && typeof updatedEvent.endTime === 'object'
+            : updatedEvent.startTime;
+    }
+
+    if ('endTime' in updatedEvent) {
+        formattedEvent.endTime = updatedEvent.endTime && typeof updatedEvent.endTime === 'object'
             ? updatedEvent.endTime.toString()
-            : updatedEvent.endTime,
-    };
+            : updatedEvent.endTime;
+    }
 
     return updateDoc(doc(db, "events", eventId), formattedEvent);
 }
