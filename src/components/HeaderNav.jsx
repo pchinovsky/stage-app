@@ -48,7 +48,7 @@ export default function HeaderNav() {
 
             {/* Center Navbar Items */}
             <NavbarContent className={styles.navContent} justify="center">
-                <Dropdown shouldBlockScroll={false}>
+                <Dropdown shouldBlockScroll={false} className="lg:flex p-0">
                     <NavbarItem>
                         <DropdownTrigger>
                             <Button
@@ -58,7 +58,7 @@ export default function HeaderNav() {
                                 radius="sm"
                                 variant="solid"
                             >
-                                Features
+                                Profiles
                             </Button>
                         </DropdownTrigger>
                     </NavbarItem>
@@ -71,33 +71,19 @@ export default function HeaderNav() {
                     >
                         <DropdownItem
                             key="autoscaling"
-                            description="ACME scales apps based on demand and load"
+                            description="Information on participating artists"
+                            as={Link}
+                            href="/venues"
                         >
-                            Autoscaling
+                            Venues
                         </DropdownItem>
                         <DropdownItem
                             key="usage_metrics"
-                            description="Real-time metrics to debug issues"
+                            description="Information on hosting venues"
+                            as={Link}
+                            href="/artists"
                         >
-                            Usage Metrics
-                        </DropdownItem>
-                        <DropdownItem
-                            key="production_ready"
-                            description="ACME runs on ACME, join us at web scale"
-                        >
-                            Production Ready
-                        </DropdownItem>
-                        <DropdownItem
-                            key="99_uptime"
-                            description="High availability and uptime guarantees"
-                        >
-                            +99% Uptime
-                        </DropdownItem>
-                        <DropdownItem
-                            key="supreme_support"
-                            description="Support team ready to respond"
-                        >
-                            +Supreme Support
+                            Artists
                         </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>

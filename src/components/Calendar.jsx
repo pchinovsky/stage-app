@@ -73,9 +73,9 @@ export default function CalendarModal({ isOpen, onClose }) {
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            className="p-6 rounded-lg max-w-2xl bg-white"
+            className="absolute left-[500px] top-10 p-6 rounded-lg max-w-2xl bg-white z-[1000]"
         >
-            <div className="absolute left-10 top-10 z-[1000]">
+            <div className="absolute right-11 top-3 bottom-3 z-[1000] bg-white p-5 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold">
                         {viewMode === "mine"
@@ -99,35 +99,35 @@ export default function CalendarModal({ isOpen, onClose }) {
                     onClickDay={handleDateClick}
                     tileContent={({ date }) => {
                         const dateKey = date.toDateString();
-                        console.log("Tile dateKey:", dateKey);
-                        return eventMap[dateKey] ? (
-                            <div className="mt-1">
-                                {eventMap[dateKey].map((event, i) => (
-                                    <div
-                                        key={i}
-                                        style={{
-                                            // marginTop: 2,
-                                            // backgroundColor: "red", // red background to indicate data exists
-                                            // padding: "2px",
-                                            // borderRadius: "4px",
-                                            opacity: 0.8,
-                                        }}
+                        const eventsForThisDay = eventMap[dateKey];
+                        if (!eventsForThisDay) return null;
+
+                        return (
+                            <div>
+                                {eventsForThisDay.map((event) => (
+                                    <Link
+                                        key={event.id}
+                                        to={`/events/${event.id}`}
+                                        className="absolute bottom-[1px] left-[5px] block bg-blue-400 text-white text-xs text-left rounded-md px-3 py-2 mb-1 hover:underline"
+                                        style={{ lineHeight: 1.2 }}
                                     >
-                                        <Link
-                                            to={`/events/${event.id}`}
-                                            className="text-white hover:underline text-xs bg-blue-400 rounded-md px-3 py-2"
-                                        >
-                                            {event.title}
-                                        </Link>
-                                    </div>
+                                        {event.title}
+                                    </Link>
                                 ))}
                             </div>
-                        ) : null;
+                        );
                     }}
                     className={`font-sans ${styles.calendarCustom}`}
                 />
-                <div className="mt-4">
-                    <Button onPress={onClose}>Close</Button>
+                <div className="flex mt-4 w-full">
+                    <Button
+                        onPress={onClose}
+                        className="ml-auto"
+                        variant="bordered"
+                        color="danger"
+                    >
+                        Close
+                    </Button>
                 </div>
             </div>
         </Modal>

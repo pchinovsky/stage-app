@@ -9,6 +9,8 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Event from "./pages/event";
 import Edit from "./pages/edit";
+import ArtistsPage from "./pages/artists";
+import VenuesPage from "./pages/venues";
 
 function AnimatedRoutes() {
     const location = useLocation();
@@ -142,6 +144,48 @@ function AnimatedRoutes() {
                             }}
                         >
                             <CreatePage />
+                        </motion.div>
+                    }
+                />
+                <Route
+                    path="/venues"
+                    element={
+                        <motion.div
+                            initial={{
+                                opacity: 0,
+                                x: -50,
+                            }}
+                            animate={{
+                                opacity: 1,
+                                x: 0,
+                            }}
+                            exit={{ opacity: 0, x: 50 }}
+                            transition={{
+                                duration: 0.4,
+                            }}
+                        >
+                            <VenuesPage />
+                        </motion.div>
+                    }
+                />
+                <Route
+                    path="/artists"
+                    element={
+                        <motion.div
+                            initial={{
+                                opacity: 0,
+                                x: -50,
+                            }}
+                            animate={{
+                                opacity: 1,
+                                x: 0,
+                            }}
+                            exit={{ opacity: 0, x: 50 }}
+                            transition={{
+                                duration: 0.4,
+                            }}
+                        >
+                            <ArtistsPage />
                         </motion.div>
                     }
                 />

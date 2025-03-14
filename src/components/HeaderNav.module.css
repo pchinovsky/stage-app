@@ -22,7 +22,7 @@
 }
 
 .dropdownMenu {
-    @apply bg-white shadow-lg border border-gray-200 rounded-md;
+    @apply bg-white shadow-lg border border-gray-200 rounded-md w-full;
 }
 
 .dropdownMenu .dropdown-item {
@@ -30,5 +30,5 @@
 }
 
 .item {
-    @apply border-2 border-gray-600 rounded-2xl p-2 px-3 text-gray-800 hover:bg-gray-100 transition-all;
+    @apply border-1 border-gray-600 rounded-2xl p-2 px-3 text-gray-800 hover:bg-gray-100 transition-all;
 }

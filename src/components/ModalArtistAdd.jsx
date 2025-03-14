@@ -8,17 +8,28 @@ import {
     ModalFooter,
     ModalContent,
     ModalHeader,
+    Image,
+    Chip,
 } from "@heroui/react";
 import eventsApi from "../api/events-api";
+
+import { db } from "../firebase/firebaseConfig";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 
 export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
     const [artistData, setArtistData] = useState({
         name: "",
         description: "",
-        image: "",
+        profileImage: "",
         website: "",
     });
     const [loading, setLoading] = useState(false);
+    const [profileImageFile, setProfileImageFile] = useState(null);
+    const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
+    const [additionalImages, setAdditionalImages] = useState([]);
+
+    const MAX_ADDITIONAL_IMAGES = 5;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,27 +39,120 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
         }));
     };
 
+    const handleProfileImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setProfileImageFile(file);
+            const fileUrl = URL.createObjectURL(file);
+            setProfilePreviewUrl(fileUrl);
+
+            setArtistData((prev) => ({
+                ...prev,
+                profileImage: fileUrl,
+            }));
+        }
+    };
+
+    const handleAdditionalImagesChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length) {
+            if (
+                additionalImages.length + files.length <=
+                MAX_ADDITIONAL_IMAGES
+            ) {
+                const newImages = files.map((file) => ({
+                    file,
+                    preview: URL.createObjectURL(file),
+                }));
+
+                setAdditionalImages((prev) => [...prev, ...newImages]);
+            }
+        }
+    };
+
+    const removeAdditionalImage = (indexToRemove) => {
+        setAdditionalImages((prev) =>
+            prev.filter((_, index) => index !== indexToRemove)
+        );
+    };
+
     const handleCreateArtist = async () => {
         if (!artistData.name.trim()) return;
 
-        const newArtist = {
-            ...artistData,
-            eventsFeaturedIn: [],
-            followedBy: [],
-        };
-
         setLoading(true);
         try {
-            const createdArtist = await eventsApi.createArtist(newArtist);
+            // 1 - new doc -
+            const artistsCollection = collection(db, "artists");
+            const docRef = await addDoc(artistsCollection, {
+                name: artistData.name,
+                description: artistData.description,
+                website: artistData.website,
+                profileImage: "",
+                additionalImages: [],
+                eventsFeaturedIn: [],
+                followedBy: [],
+            });
 
+            // 2 - profile img to storage -
+            let profileImageUrl = "";
+            if (profileImageFile) {
+                const storage = getStorage();
+                const fileRef = ref(
+                    storage,
+                    `artists/${docRef.id}/profile.jpg`
+                );
+                await uploadBytes(fileRef, profileImageFile);
+                profileImageUrl = await getDownloadURL(fileRef);
+            }
+
+            // 3 - upload art imgs -
+            const additionalImageUrls = [];
+            if (additionalImages.length > 0) {
+                const storage = getStorage();
+                for (let i = 0; i < additionalImages.length; i++) {
+                    const file = additionalImages[i].file;
+                    const fileRef = ref(
+                        storage,
+                        `artists/${docRef.id}/additional_${i}.jpg`
+                    );
+                    await uploadBytes(fileRef, file);
+                    const downloadURL = await getDownloadURL(fileRef);
+                    additionalImageUrls.push(downloadURL);
+                }
+            }
+
+            // 4 - update doc with urls -
+            await updateDoc(docRef, {
+                profileImage: profileImageUrl,
+                additionalImages: additionalImageUrls,
+            });
+
+            // 5 - create artist obj -
+            const createdArtist = {
+                id: docRef.id,
+                name: artistData.name,
+                description: artistData.description,
+                website: artistData.website,
+                profileImage: profileImageUrl,
+                additionalImages: additionalImageUrls,
+                eventsFeaturedIn: [],
+                followedBy: [],
+            };
+
+            // 6 - callback & close modal -
             onArtistCreated(createdArtist);
             onClose();
+
+            // 7 - reset form -
             setArtistData({
                 name: "",
                 description: "",
-                image: "",
+                profileImage: "",
                 website: "",
             });
+            setProfileImageFile(null);
+            setProfilePreviewUrl("");
+            setAdditionalImages([]);
         } catch (error) {
             console.error("Error creating artist:", error);
         } finally {
@@ -86,20 +190,91 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
                                     onChange={handleChange}
                                     minRows={2}
                                 />
-                                <Input
-                                    label="Image URL"
-                                    name="image"
-                                    placeholder="Enter artist image URL"
-                                    value={artistData.image}
-                                    onChange={handleChange}
-                                />
+
+                                {/* Profile Image upload */}
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-sm font-medium">
+                                        Profile Image
+                                    </label>
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleProfileImageChange}
+                                        className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-primary-500 file:text-white hover:file:bg-primary-600"
+                                    />
+
+                                    {/* Profile image preview */}
+                                    {profilePreviewUrl && (
+                                        <div className="mt-2">
+                                            <Image
+                                                src={profilePreviewUrl}
+                                                alt="Artist profile preview"
+                                                className="max-h-40 object-contain rounded-md"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Art Imgs */}
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-sm font-medium">
+                                        Additional Images (
+                                        {additionalImages.length}/
+                                        {MAX_ADDITIONAL_IMAGES})
+                                    </label>
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={handleAdditionalImagesChange}
+                                        disabled={
+                                            additionalImages.length >=
+                                            MAX_ADDITIONAL_IMAGES
+                                        }
+                                        className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-primary-500 file:text-white hover:file:bg-primary-600"
+                                    />
+
+                                    {/* Art imgs preview */}
+                                    {additionalImages.length > 0 && (
+                                        <div className="mt-2 grid grid-cols-3 gap-2">
+                                            {additionalImages.map(
+                                                (img, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="relative"
+                                                    >
+                                                        <Image
+                                                            src={img.preview}
+                                                            alt={`Additional image ${index + 1}`}
+                                                            className="h-24 w-full object-cover rounded-md"
+                                                        />
+                                                        <Chip
+                                                            size="sm"
+                                                            color="danger"
+                                                            variant="solid"
+                                                            className="absolute top-1 right-1 cursor-pointer"
+                                                            onClose={() =>
+                                                                removeAdditionalImage(
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
+                                                            ✕
+                                                        </Chip>
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
                                 <Input
                                     label="Website"
                                     name="website"
                                     placeholder="Enter artist website"
                                     value={artistData.website}
                                     onChange={handleChange}
-                                />{" "}
+                                />
                             </div>
                         </ModalBody>
                         <ModalFooter>

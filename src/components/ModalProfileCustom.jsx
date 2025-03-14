@@ -7,7 +7,6 @@ import {
     CardBody,
     CardHeader,
     CardFooter,
-    user,
 } from "@heroui/react";
 import {
     doc,
@@ -18,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "../contexts/authContext";
+import { Link } from "@heroui/react";
 
 export default function ModalProfileCustom({ isOpen, onClose, data }) {
     const { isAuth, userId } = useContext(AuthContext);
@@ -98,7 +98,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                 }}
             >
                 <motion.div
-                    className="w-[90%] max-w-lg"
+                    className="w-[90%] max-w-2xl"
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -50, opacity: 0 }}
@@ -113,7 +113,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                             alt={data.name}
                             className="object-cover shadow-none rounded-md"
                             height={250}
-                            src={data.image}
+                            src={data.profileImage}
                             width="100%"
                         />
 
@@ -130,6 +130,42 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                                     {data.address}
                                 </p>
                             ) : null}
+                            {data.website ? (
+                                <p className="mt-4">
+                                    <span className="font-semibold">
+                                        External resource:
+                                    </span>{" "}
+                                    <Link
+                                        showAnchorIcon
+                                        href={data.website}
+                                        target="_blank"
+                                    >
+                                        {data.website}
+                                    </Link>
+                                </p>
+                            ) : null}
+
+                            {/* Gallery */}
+                            {data.additionalImages &&
+                                data.additionalImages.length > 0 && (
+                                    <div className="mt-4">
+                                        <h4 className="font-semibold mb-2">
+                                            Gallery
+                                        </h4>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {data.additionalImages.map(
+                                                (imgUrl, index) => (
+                                                    <Image
+                                                        key={index}
+                                                        alt={`Additional image ${index + 1}`}
+                                                        className="object-cover rounded-md w-full h-24"
+                                                        src={imgUrl}
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                         </CardBody>
 
                         <CardFooter className="flex justify-end">
