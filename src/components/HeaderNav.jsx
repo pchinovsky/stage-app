@@ -113,7 +113,7 @@ export default function HeaderNav() {
                             </Button>
                         </NavbarItem>
                         {/* User Avatar & Dropdown */}
-                        <Dropdown placement="top-end">
+                        <Dropdown shouldBlockScroll={false} placement="top-end">
                             <DropdownTrigger>
                                 <User
                                     as="button"

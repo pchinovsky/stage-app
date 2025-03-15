@@ -206,8 +206,6 @@ export default function Event() {
                         <CalendarModal
                             isOpen={isCalendarOpen}
                             onClose={() => setIsCalendarOpen(false)}
-                            events={events}
-                            followedEvents={followedUsersEvents}
                         />
                         <ButtonDynamicGroup
                             user={currentUser}
