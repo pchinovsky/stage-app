@@ -37,7 +37,6 @@ export default function Login() {
     return (
         <DefaultLayout>
             <div className={styles.container}>
-                <ButtonDynamic />
                 {featuredEvent && (
                     <Image
                         src={featuredEvent.image}

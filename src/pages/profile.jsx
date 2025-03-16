@@ -17,25 +17,43 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import CalendarModal from "../components/Calendar";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "../contexts/authContext";
+import { useVenue } from "../hooks/useVenue";
+import { useEvents } from "../hooks/useEvents";
+import { useUser } from "../hooks/useUser";
+import ProfileCard from "../components/ProfileCard";
+import ModalProfileCustom from "../components/ModalProfileCustom";
+import InvitationCard from "../components/InvitationCard";
+import { useLogout } from "../hooks/useAuth";
+import { useFollowing } from "../contexts/followingContext";
 
 export default function Profile() {
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false);
 
-    const userProfile = {
-        name: "Jane Doe",
-        bio: "Music lover, concert goer, and aspiring artist.",
-        imageUrl: "https://via.placeholder.com/150",
-        username: "janedoe",
-        email: "janedoe@example.com",
-        hasVenuePermissions: true,
-    };
+    const { currentUser: user, loading } = useUser();
+    const logout = useLogout();
 
+    if (!loading) console.log("--- profile user - ", user);
+
+    const {
+        venue,
+        loading: venueLoading,
+        error: venueError,
+    } = useVenue(user?.managedVenue);
+
+    if (loading || !user) {
+        return <div>Loading user data...</div>;
+    }
     const stats = {
-        artistsFollowed: 12,
-        venuesFollowed: 5,
-        eventsInterested: 8,
-        eventsAttending: 3,
+        Attending: user.attending?.length || 0,
+        Interested: user.interested?.length || 0,
+        Created: user.created?.length || 0,
+        "Following Users": user.followingUsers?.length || 0,
+        "Following Artists": user.followingArtists?.length,
+        "Following Venues": user.followingVenues?.length,
+        "Followed By": user.followedBy?.length || 0,
     };
 
     const preferences = {
@@ -44,47 +62,17 @@ export default function Profile() {
         showQuickFilters: true,
     };
 
-    const invitations = [
-        {
-            id: "inv1",
-            event: {
-                imageUrl:
-                    "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1Arz6g.img?w=800&h=435&q=60&m=2&f=jpg",
-                title: "Live Concert at The Opera House",
-            },
-            invitedBy: {
-                imageUrl:
-                    "https://th.bing.com/th?id=ORMS.3c0d82de9d96caa8937112747d621ec3&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1.2599999904632568&p=0",
-                name: "Alice",
-            },
-        },
-        {
-            id: "inv2",
-            event: {
-                imageUrl:
-                    "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1Arz6g.img?w=800&h=435&q=60&m=2&f=jpg",
-                title: "Indie Fest 2025",
-            },
-            invitedBy: {
-                imageUrl:
-                    "https://th.bing.com/th?id=ORMS.3c0d82de9d96caa8937112747d621ec3&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1.2599999904632568&p=0",
-                name: "Bob",
-            },
-        },
-    ];
-
-    const venue = {
-        name: "The Grand Venue",
-        description: "A beautiful venue for live events and concerts.",
-    };
-
-    const handleLogout = () => {
-        console.log("Log Out clicked");
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Profile updated");
+    };
+
+    const handleCardClick = () => {
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
     };
 
     return (
@@ -94,10 +82,9 @@ export default function Profile() {
                     {/* User info */}
                     <div className="md:col-span-1 flex flex-col justify-between items-start bg-white p-6 rounded-lg shadow-md">
                         <User
-                            name={userProfile.name}
-                            description={userProfile.bio}
+                            name={user.name}
                             avatarProps={{
-                                src: userProfile.imageUrl,
+                                src: user.image,
                                 size: "lg",
                                 radius: "md",
                                 showFallback: true,
@@ -109,7 +96,11 @@ export default function Profile() {
                             onClose={() => setIsCalendarOpen(false)}
                         />
                         <div className="mt-6 flex justify-between w-full items-end">
-                            <Button color="danger" onClick={handleLogout}>
+                            <Button
+                                color="danger"
+                                variant="bordered"
+                                onPress={logout}
+                            >
                                 Log Out
                             </Button>
                             <Button
@@ -130,49 +121,17 @@ export default function Profile() {
                     {/* Stats */}
                     <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md">
                         <h2 className="text-xl font-bold mb-4">Your Stats</h2>
-                        <div className="flex gap-4 w-full">
-                            <div className="flex gap-4 my-4 w-full">
-                                <Card className="w-[150px]">
+                        <div className="flex flex-wrap gap-4 w-full">
+                            {Object.entries(stats).map(([label, value]) => (
+                                <Card key={label} className="w-[150px]">
                                     <CardBody>
                                         <h3 className="text-lg font-bold">
-                                            Artists
+                                            {label}
                                         </h3>
-                                        <p className="text-2xl">
-                                            {stats.artistsFollowed}
-                                        </p>
+                                        <p className="text-2xl">{value}</p>
                                     </CardBody>
                                 </Card>
-                                <Card className="w-[150px]">
-                                    <CardBody>
-                                        <h3 className="text-lg font-bold">
-                                            Venues
-                                        </h3>
-                                        <p className="text-2xl">
-                                            {stats.venuesFollowed}
-                                        </p>
-                                    </CardBody>
-                                </Card>
-                                <Card className="w-[150px]">
-                                    <CardBody>
-                                        <h3 className="text-lg font-bold">
-                                            Interested
-                                        </h3>
-                                        <p className="text-2xl">
-                                            {stats.eventsInterested}
-                                        </p>
-                                    </CardBody>
-                                </Card>
-                                <Card className="w-[150px]">
-                                    <CardBody>
-                                        <h3 className="text-lg font-bold">
-                                            Attending
-                                        </h3>
-                                        <p className="text-2xl">
-                                            {stats.eventsAttending}
-                                        </p>
-                                    </CardBody>
-                                </Card>
-                            </div>
+                            ))}
                         </div>
                     </div>
 
@@ -192,7 +151,7 @@ export default function Profile() {
                                         name="username"
                                         label="Username"
                                         labelPlacement="outside"
-                                        defaultValue={userProfile.username}
+                                        defaultValue={user.name}
                                     />
 
                                     <Input
@@ -201,19 +160,19 @@ export default function Profile() {
                                         type="email"
                                         label="Email"
                                         labelPlacement="outside"
-                                        defaultValue={userProfile.email}
+                                        defaultValue={user.email}
                                     />
 
-                                    <Input
-                                        id="imageUrl"
-                                        name="imageUrl"
-                                        label="Profile Image URL"
-                                        labelPlacement="outside"
-                                        defaultValue={userProfile.imageUrl}
-                                    />
-                                    <div className="mt-2">
+                                    <div className="flex w-full gap-5 items-end">
+                                        <Input
+                                            id="imageUrl"
+                                            name="imageUrl"
+                                            label="Profile Image URL"
+                                            labelPlacement="outside"
+                                            defaultValue={user.image}
+                                        />
                                         <Avatar
-                                            src={userProfile.imageUrl}
+                                            src={user.image}
                                             size="md"
                                             showFallback={true}
                                         />
@@ -260,35 +219,34 @@ export default function Profile() {
                             </div>
                         </div>
 
-                        <div className="flex justify-between md:col-span-3 bg-white p-6 rounded-lg shadow-md">
+                        <div className="flex justify-between md:col-span-3 bg-white p-6 rounded-lg shadow-md w-full">
                             {/* Managed venue */}
-                            {userProfile.hasVenuePermissions && (
-                                <div className="md:col-span-3 bg-white p-6 rounded-lg">
-                                    {userProfile.hasVenuePermissions && (
-                                        <div className="my-6 flex justify-between items-start w-full gap-5">
-                                            <h2 className="text-xl font-bold mb-4">
+                            {user.managedVenue && (
+                                <div className="md:col-span-3 bg-white p-6 rounded-lg flex justify-between w-full">
+                                    {user.managedVenue && (
+                                        <div className="my-6 flex justify-between items-start w-full gap-10">
+                                            <h2 className="text-xl font-bold mb-4 w-[100px]">
                                                 Your Managed Venue
                                             </h2>
-                                            <Card className="ml-[200px]">
-                                                <CardHeader>
-                                                    <h3 className="text-lg font-bold">
-                                                        {venue.name}
-                                                    </h3>
-                                                </CardHeader>
-                                                <CardBody>
-                                                    <p>{venue.description}</p>
-                                                    <div className="mt-3">
-                                                        <Button
-                                                            color="primary"
-                                                            size="sm"
-                                                        >
-                                                            Manage Events
-                                                        </Button>
-                                                    </div>
-                                                </CardBody>
-                                            </Card>
+                                            {venueLoading ? (
+                                                <div>Loading venue...</div>
+                                            ) : venueError || !venue ? (
+                                                <div>Error loading venue.</div>
+                                            ) : (
+                                                <ProfileCard
+                                                    key={venue.id}
+                                                    data={venue}
+                                                    onClick={handleCardClick}
+                                                    className="self-end"
+                                                />
+                                            )}
                                         </div>
                                     )}
+                                    <ModalProfileCustom
+                                        isOpen={isModalOpen}
+                                        onClose={closeModal}
+                                        data={venue}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -302,86 +260,16 @@ export default function Profile() {
                                     Invitations
                                 </h2>
                                 <div className="flex flex-col gap-4">
-                                    {invitations.map((invitation) => (
-                                        <Card
-                                            key={invitation.id}
-                                            isPressable
-                                            className="relative h-[200px]"
-                                        >
-                                            <CardHeader className="p-0">
-                                                <img
-                                                    src={
-                                                        invitation.event
-                                                            .imageUrl
-                                                    }
-                                                    alt={invitation.event.title}
-                                                    className="w-full h-full object-cover"
-                                                />
-                                            </CardHeader>
-                                            <CardBody className="absolute left-[6px] bottom-[6px] w-[96.5%] z-10 bg-white h-[100px] rounded-lg py-2 px-3 overflow-hidden">
-                                                <h3 className="font-bold">
-                                                    {invitation.event.title}
-                                                </h3>
-                                                <div className="flex items-end justify-between mt-2">
-                                                    <div>
-                                                        <Avatar
-                                                            src={
-                                                                invitation
-                                                                    .invitedBy
-                                                                    .imageUrl
-                                                            }
-                                                            size="sm"
-                                                            className="mr-2"
-                                                        />
-                                                        <span className="text-sm">
-                                                            Invited by{" "}
-                                                            {
-                                                                invitation
-                                                                    .invitedBy
-                                                                    .name
-                                                            }
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="flex gap-1 mb-2">
-                                                        {" "}
-                                                        <Tooltip
-                                                            content={"Accept"}
-                                                            radius="sm"
-                                                        >
-                                                            <Button
-                                                                size="sm"
-                                                                color="success"
-                                                                isIconOnly
-                                                            >
-                                                                <Icon
-                                                                    icon="ci:check"
-                                                                    width="24"
-                                                                    height="24"
-                                                                />
-                                                            </Button>
-                                                        </Tooltip>
-                                                        <Tooltip
-                                                            content={"Decline"}
-                                                            radius="sm"
-                                                        >
-                                                            <Button
-                                                                size="sm"
-                                                                color="danger"
-                                                                isIconOnly
-                                                            >
-                                                                <Icon
-                                                                    icon="ci:close-md"
-                                                                    width="24"
-                                                                    height="24"
-                                                                />
-                                                            </Button>
-                                                        </Tooltip>
-                                                    </div>
-                                                </div>
-                                            </CardBody>
-                                        </Card>
-                                    ))}
+                                    {user.invitedTo.length > 0 ? (
+                                        user.invitedTo.map((invitation) => (
+                                            <InvitationCard
+                                                key={invitation.eventId}
+                                                invitation={invitation}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p>No invitations at the moment.</p>
+                                    )}
                                 </div>
                             </div>
                         </div>

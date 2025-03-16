@@ -6,13 +6,14 @@ const FollowingContext = createContext();
 
 export const FollowingProvider = ({ children, userId }) => {
     const [followingUsers, setFollowingUsers] = useState([]);
-    const [following, setFollowing] = useState([]);
+    const [followingArtists, setFollowingArtists] = useState([]);
+    const [followingVenues, setFollowingVenues] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!userId) return;
 
-        const fetchFollowingData = async () => {
+        (async () => {
             try {
                 const userRef = doc(db, "users", userId);
                 const userSnap = await getDoc(userRef);
@@ -20,7 +21,8 @@ export const FollowingProvider = ({ children, userId }) => {
                 if (userSnap.exists()) {
                     const userData = userSnap.data();
                     setFollowingUsers(userData.followingUsers || []);
-                    setFollowing(userData.following || []);
+                    setFollowingArtists(userData.followingArtists || []);
+                    setFollowingVenues(userData.followingVenues || []);
                 } else {
                     console.warn("User document not found.");
                 }
@@ -29,14 +31,17 @@ export const FollowingProvider = ({ children, userId }) => {
             } finally {
                 setLoading(false);
             }
-        };
-
-        fetchFollowingData();
+        })();
     }, [userId]);
 
     return (
         <FollowingContext.Provider
-            value={{ followingUsers, following, loading }}
+            value={{
+                followingUsers,
+                followingArtists,
+                followingVenues,
+                loading,
+            }}
         >
             {children}
         </FollowingContext.Provider>

@@ -62,18 +62,30 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
 
             if (isFollowing) {
                 // Unfollow
-                await updateDoc(userRef, {
-                    following: arrayRemove(data.id),
-                });
+                if (data.address) {
+                    await updateDoc(userRef, {
+                        followingVenues: arrayRemove(data.id),
+                    });
+                } else {
+                    await updateDoc(userRef, {
+                        followingArtists: arrayRemove(data.id),
+                    });
+                }
                 await updateDoc(followedRef, {
                     followedBy: arrayRemove(userId),
                 });
                 setIsFollowing(false);
             } else {
                 // Follow
-                await updateDoc(userRef, {
-                    following: arrayUnion(data.id),
-                });
+                if (data.address) {
+                    await updateDoc(userRef, {
+                        followingVenues: arrayUnion(data.id),
+                    });
+                } else {
+                    await updateDoc(userRef, {
+                        followingArtists: arrayUnion(data.id),
+                    });
+                }
                 await updateDoc(followedRef, {
                     followedBy: arrayUnion(userId),
                 });

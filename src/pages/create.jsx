@@ -34,6 +34,8 @@ import eventsApi from "../api/events-api";
 import DurationInput from "../components/DurationInput";
 import ModalArtistAdd from "../components/ModalArtistAdd";
 import { categories } from "../constants/generalConstants";
+import { doc, updateDoc, setDoc, arrayUnion } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 
 export default function CreatePage() {
     const initialValues = {
@@ -49,8 +51,6 @@ export default function CreatePage() {
         startTime: "",
         endTime: "",
         openingDate: "",
-        // openingDurationHours: "00",
-        // openingDurationMinutes: "00",
         eventEndDate: "",
         artists: [],
         venue: "",
@@ -58,6 +58,28 @@ export default function CreatePage() {
     };
 
     const route = "/events";
+
+    async function createEventWithUser(values, currentUserId) {
+        try {
+            const eventId = await eventsApi.createEvent(values);
+            console.log("Event created with id:", eventId);
+
+            await setDoc(
+                doc(db, "users", currentUserId),
+                { created: arrayUnion(eventId) },
+                { merge: true }
+            );
+            console.log("User document updated successfully");
+
+            return eventId;
+        } catch (err) {
+            console.error("Error in createEventWithUser:", err);
+            throw err;
+        }
+    }
+
+    const createEventWithUserWrapper = (values) =>
+        createEventWithUser(values, currentUser.id);
 
     const {
         formValues,
@@ -68,11 +90,10 @@ export default function CreatePage() {
         isSubmitting,
         resetForm,
         error,
-    } = useForm(initialValues, eventsApi.createEvent, route, eventSchema);
+    } = useForm(initialValues, createEventWithUserWrapper, route, eventSchema);
 
     const { artists: loadedArtists, loading: artistLoading } = useArtists();
     const { currentUser, loading: userLoading } = useUser();
-    // const venueId = currentUser.managedVenues?.[0] || null;
     const [venueId, setVenueId] = useState(null);
 
     useEffect(() => {
@@ -83,7 +104,7 @@ export default function CreatePage() {
 
     useEffect(() => {
         if (!userLoading && currentUser) {
-            setVenueId(currentUser.managedVenues?.[0] || null);
+            setVenueId(currentUser.managedVenue || null);
         }
     }, [userLoading, currentUser]);
 
@@ -208,6 +229,10 @@ export default function CreatePage() {
 
         setArtists((prev) => [...prev, newArtist]);
     };
+
+    if (userLoading) {
+        return <div>Loading user data...</div>;
+    }
 
     return (
         <DefaultLayout>

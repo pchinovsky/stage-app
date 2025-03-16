@@ -3,7 +3,7 @@ import { Card, CardFooter, Image, Button } from "@heroui/react";
 export default function TooltipProfile({ data, onClick }) {
     if (!data) return null;
 
-    const { name, image, description, type } = data;
+    const { name, profileImage, description, type } = data;
     const shortDescription =
         description?.length > 60
             ? description.slice(0, 60) + "..."
@@ -23,7 +23,7 @@ export default function TooltipProfile({ data, onClick }) {
                 alt={name}
                 className="object-cover shadow-none"
                 height={200}
-                src={image}
+                src={profileImage}
                 width={200}
             />
             <CardFooter className="justify-between bg-white border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-[10px] w-[calc(100%_-_20px)] shadow-none z-10">
@@ -33,15 +33,6 @@ export default function TooltipProfile({ data, onClick }) {
                         {shortDescription}
                     </p>
                 </div>
-                <Button
-                    className="text-tiny text-black bg-white/20"
-                    color="default"
-                    radius="lg"
-                    size="sm"
-                    variant="flat"
-                >
-                    Explore
-                </Button>
             </CardFooter>
         </Card>
     );

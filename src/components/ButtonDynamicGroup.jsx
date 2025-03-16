@@ -1,8 +1,10 @@
 import ButtonDynamic from "./ButtonDynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styles from "./ButtonDynamicGroup.module.css";
 import eventsApi from "../api/events-api";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 import Toast from "./Toast";
 
 export default function ButtonDynamicGroup({
@@ -11,6 +13,8 @@ export default function ButtonDynamicGroup({
     onModalOpen,
     setTrigger,
 }) {
+    console.log("--- btn grroup - user", user);
+
     const [toastMessage, setToastMessage] = useState("");
     const [isInterested, setIsInterested] = useState(false);
     const [isAttending, setIsAttending] = useState(false);
@@ -30,6 +34,12 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(user.id),
             };
             await eventsApi.updateEvent(event.id, updatedEvent);
+            const userUpdate = {
+                attending: isAttending
+                    ? arrayRemove(event.id)
+                    : arrayUnion(event.id),
+            };
+            await updateDoc(doc(db, "users", user.id), userUpdate);
             setIsAttending(!isAttending);
             setToastMessage(
                 isAttending
@@ -51,6 +61,12 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(user.id),
             };
             await eventsApi.updateEvent(event.id, updatedEvent);
+            const userUpdate = {
+                interested: isInterested
+                    ? arrayRemove(event.id)
+                    : arrayUnion(event.id),
+            };
+            await updateDoc(doc(db, "users", user.id), userUpdate);
             setIsInterested(!isInterested);
             setToastMessage(
                 isInterested
