@@ -136,7 +136,7 @@ export default function HeaderNav() {
                                     <p className="font-bold">
                                         {loading
                                             ? "Loading..."
-                                            : currentUser.name}
+                                            : currentUser?.name}
                                     </p>
                                 </DropdownItem>
                                 <DropdownItem

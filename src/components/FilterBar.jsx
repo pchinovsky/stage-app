@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef } from "react";
+import React, { useState, useRef, forwardRef, useEffect } from "react";
 import {
     Input,
     Select,
@@ -100,11 +100,11 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
     // --- last -
     const handleChipClick = (category, option) => {
-        const scrollY = window.scrollY;
-
         const filterKey = category.toLowerCase();
 
         const dynamicValue = getNormalizedFilterValue(filterKey, option);
+
+        sessionStorage.setItem("scrollPosition", window.scrollY);
 
         setSelectedChips((prevSelected) => {
             let updatedChips;
@@ -330,6 +330,11 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
         return option.toLowerCase();
     };
+
+    useEffect(() => {
+        console.log("FilterBar mounted");
+        return () => console.log("FilterBar unmounted");
+    }, []);
 
     return (
         <div

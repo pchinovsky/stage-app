@@ -1,16 +1,43 @@
 .panel {
-    @apply fixed z-[9999] bg-white border border-gray-300 rounded-lg w-56 
+    @apply fixed z-[9999] bg-white border border-gray-300 rounded-lg 
            backdrop-blur-md bg-opacity-10;
-    @apply hover:bg-opacity-100 transition-background ease-in-out duration-1000;
+    @apply hover:bg-opacity-100 hover:rounded-lg transition-background ease-in-out duration-1000;
+}
+
+.panelMin {
+    @apply w-36 h-[57px];
+    /* @apply transition-width ease-in-out duration-1000;
+    @apply transition-height ease-in-out duration-1000; */
+    /* @apply transition-all ease-in-out duration-1000; */
+    transition:
+        width 1s ease-in-out,
+        height 1s ease-in-out,
+        background-color 1s ease-in-out;
+}
+
+.panelMax {
+    @apply w-56 h-[200px];
+    /* @apply transition-width ease-in-out duration-1000;
+    @apply transition-height ease-in-out duration-1000; */
+    /* @apply transition-all ease-in-out duration-1000; */
+    transition:
+        width 1s ease-in-out,
+        height 1s ease-in-out,
+        background-color 1s ease-in-out;
 }
 
 .header {
-    @apply bg-gray-100 px-4 py-2 flex justify-between items-center rounded-t-lg 
+    @apply bg-gray-100 px-2 py-2 flex justify-between items-center rounded-t-lg 
            cursor-move backdrop-blur-md bg-opacity-10;
+    @apply rounded-lg;
 }
 
 .title {
-    @apply font-semibold text-gray-700;
+    @apply font-semibold text-gray-700 flex justify-between ml-2;
+}
+
+.sizeBtns {
+    @apply flex gap-2;
 }
 
 .content {

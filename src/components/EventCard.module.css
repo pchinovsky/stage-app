@@ -1,5 +1,5 @@
 .card {
-    @apply flex items-start py-2 px-2 w-[450px] z-[60] gap-3;
+    @apply flex items-start py-2 px-2 w-[450px] z-[60] gap-3 rounded-xl;
     @apply flex-row !important;
     @apply bg-white !important;
     @apply h-[250px] !important;

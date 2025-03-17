@@ -6,6 +6,7 @@ import {
     Image,
     Button,
     Divider,
+    Skeleton,
 } from "@heroui/react";
 import styles from "./EventCard.module.css";
 
@@ -17,18 +18,18 @@ export default function EventCard({ event, onPress }) {
             onPress={() => onPress(event.id)}
         >
             <CardHeader className={styles.cardHeader}>
-                <h4 className={styles.textLarge}>{event.title}</h4>
+                <h4 className={styles.textLarge}>{event?.title}</h4>
                 <small className={styles.textDefault}>
-                    {event.categories.join(", ")}
+                    {event?.categories.join(", ")}
                 </small>
                 <Divider className="my-4"></Divider>
-                <p className={styles.description}>{event.description}</p>
+                <p className={styles.description}>{event?.description}</p>
             </CardHeader>
             <CardBody className={styles.cardBody}>
                 <Image
-                    alt={event.title}
+                    alt={event?.title}
                     className={styles.image}
-                    src={event.image || "https://via.placeholder.com/370"}
+                    src={event?.image || "https://via.placeholder.com/370"}
                     width={370}
                     height={235}
                 />
