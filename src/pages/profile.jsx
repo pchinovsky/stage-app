@@ -17,7 +17,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import CalendarModal from "../components/Calendar";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/authContext";
 import { useVenue } from "../hooks/useVenue";
 import { useEvents } from "../hooks/useEvents";
@@ -27,15 +27,17 @@ import ModalProfileCustom from "../components/ModalProfileCustom";
 import InvitationCard from "../components/InvitationCard";
 import { useLogout } from "../hooks/useAuth";
 import { useFollowing } from "../contexts/followingContext";
+import useForm from "../hooks/useForm";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
+import { userSchema } from "../api/validationSchemas";
 
 export default function Profile() {
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
 
-    const { currentUser: user, loading } = useUser();
+    const { currentUser: user, setCurrentUser, loading } = useUser();
     const logout = useLogout();
-
-    if (!loading) console.log("--- profile user - ", user);
 
     const {
         venue,
@@ -43,28 +45,82 @@ export default function Profile() {
         error: venueError,
     } = useVenue(user?.managedVenue);
 
-    if (loading || !user) {
-        return <div>Loading user data...</div>;
-    }
-    const stats = {
-        Attending: user.attending?.length || 0,
-        Interested: user.interested?.length || 0,
-        Created: user.created?.length || 0,
-        "Following Users": user.followingUsers?.length || 0,
-        "Following Artists": user.followingArtists?.length,
-        "Following Venues": user.followingVenues?.length,
-        "Followed By": user.followedBy?.length || 0,
+    const initialValues = {
+        name: user?.name || "",
+        email: user?.email || "",
+        image: user?.image || "",
     };
+
+    const updateUser = async (values) => {
+        try {
+            const userRef = doc(db, "users", user.id);
+            await updateDoc(userRef, {
+                name: values.name,
+                email: values.email,
+                image: values.image,
+            });
+            console.log("User updated:", values);
+            setCurrentUser({
+                ...user,
+                name: values.name,
+                email: values.email,
+                image: values.image,
+            });
+            resetForm({
+                name: values.name,
+                email: values.email,
+                image: values.image,
+            });
+        } catch (error) {
+            console.error("Error updating user:", error);
+            throw error;
+        }
+    };
+
+    const {
+        formValues,
+        handleInputChange,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        error,
+    } = useForm(initialValues, updateUser, null, userSchema);
+
+    useEffect(() => {
+        if (user) {
+            if (
+                formValues.name !== user.name ||
+                formValues.email !== user.email ||
+                formValues.image !== user.image
+            ) {
+                resetForm({
+                    name: user.name,
+                    email: user.email,
+                    image: user.image,
+                });
+            }
+        }
+    }, [user]);
+
+    if (!loading) console.log("--- profile user - ", formValues.name);
+
+    let stats;
+    if (!loading && user) {
+        stats = {
+            Attending: user.attending?.length || 0,
+            Interested: user.interested?.length || 0,
+            Created: user.created?.length || 0,
+            "Following Users": user.followingUsers?.length || 0,
+            "Following Artists": user.followingArtists?.length,
+            "Following Venues": user.followingVenues?.length,
+            "Followed By": user.followedBy?.length || 0,
+        };
+    }
 
     const preferences = {
         showBulkActions: true,
         showAppearanceSettings: false,
         showQuickFilters: true,
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Profile updated");
     };
 
     const handleCardClick = () => {
@@ -74,6 +130,10 @@ export default function Profile() {
     const closeModal = () => {
         setModalOpen(false);
     };
+
+    if (loading || !user) {
+        return <div>Loading user data...</div>;
+    }
 
     return (
         <DefaultLayout>
@@ -147,11 +207,13 @@ export default function Profile() {
                                 </h2>
                                 <div className="space-y-10 w-[350px]">
                                     <Input
-                                        id="username"
-                                        name="username"
+                                        id="name"
+                                        name="name"
                                         label="Username"
+                                        key={formValues?.name}
                                         labelPlacement="outside"
-                                        defaultValue={user.name}
+                                        value={formValues?.name}
+                                        onChange={handleInputChange}
                                     />
 
                                     <Input
@@ -160,26 +222,36 @@ export default function Profile() {
                                         type="email"
                                         label="Email"
                                         labelPlacement="outside"
-                                        defaultValue={user.email}
+                                        value={formValues?.email}
+                                        onChange={handleInputChange}
                                     />
 
-                                    <div className="flex w-full gap-5 items-end">
+                                    <div className="flex w-full items-end gap-5">
                                         <Input
-                                            id="imageUrl"
-                                            name="imageUrl"
+                                            id="image"
+                                            name="image"
                                             label="Profile Image URL"
                                             labelPlacement="outside"
-                                            defaultValue={user.image}
+                                            value={formValues?.image}
+                                            onChange={handleInputChange}
                                         />
                                         <Avatar
-                                            src={user.image}
+                                            key={formValues?.image}
+                                            src={formValues?.image}
                                             size="md"
                                             showFallback={true}
+                                            className="flex-shrink-0"
                                         />
                                     </div>
 
-                                    <Button type="submit" color="primary">
-                                        Update Profile
+                                    <Button
+                                        type="submit"
+                                        color="primary"
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting
+                                            ? "Updating..."
+                                            : "Update Profile"}
                                     </Button>
                                 </div>
                             </Form>

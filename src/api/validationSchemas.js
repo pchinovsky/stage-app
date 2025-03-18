@@ -17,6 +17,12 @@ export const loginSchema = z.object({
     password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+export const userSchema = z.object({
+    name: z.string().min(3, "Username must be at least 3 characters"),
+    email: z.string().email("Invalid email address"),
+    image: z.string().url("Invalid URL"),
+});
+
 export const eventSchema = z
     .object({
         title: z.string().nonempty("Title is required"),

@@ -98,6 +98,7 @@ export function useUser() {
 
     return {
         currentUser: currentUserData,
+        setCurrentUser: setCurrentUserData,
         fetchUsersByIds,
         otherUsers: otherUsersData,
         allUsers,
