@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { NavProvider } from "./contexts/navContext.jsx";
 import { AuthProvider } from "./contexts/authContext.jsx";
 import { FollowingProvider } from "./contexts/followingContext.jsx";
+import { FloatingProvider } from "./contexts/floatingContext.jsx";
 
 import App from "./App.jsx";
 import { Provider } from "./provider.jsx";
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <AuthProvider>
                 <NavProvider>
                     <FollowingProvider>
-                        <App />
+                        <FloatingProvider>
+                            <App />
+                        </FloatingProvider>
                     </FollowingProvider>
                 </NavProvider>
             </AuthProvider>

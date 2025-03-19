@@ -5,7 +5,7 @@
 }
 
 .panelMin {
-    @apply w-36 h-[57px];
+    @apply w-48 h-[57px];
     /* @apply transition-width ease-in-out duration-1000;
     @apply transition-height ease-in-out duration-1000; */
     /* @apply transition-all ease-in-out duration-1000; */
@@ -16,7 +16,7 @@
 }
 
 .panelMax {
-    @apply w-56 h-[200px];
+    @apply w-56 h-[180px];
     /* @apply transition-width ease-in-out duration-1000;
     @apply transition-height ease-in-out duration-1000; */
     /* @apply transition-all ease-in-out duration-1000; */
@@ -36,16 +36,20 @@
     @apply font-semibold text-gray-700 flex justify-between ml-2;
 }
 
-.sizeBtns {
+.controlBtns {
     @apply flex gap-2;
 }
 
+.sizeBtn {
+    @apply hover:bg-slate-100;
+}
+
 .content {
-    @apply p-4;
+    @apply p-4 flex w-full justify-between;
 }
 
 .detachButton {
-    @apply bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600;
+    @apply text-white px-4 py-2 rounded-md hover:bg-slate-100;
 }
 
 .actions {

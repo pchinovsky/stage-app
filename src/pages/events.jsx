@@ -13,6 +13,7 @@ import eventsData2 from "../mockEventData2";
 import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import useRestoreScroll from "../hooks/useRestoreScroll";
+import EventList from "../components/EventList";
 
 export default function EventLayout() {
     const { setNavWhite } = useContext(NavContext);
@@ -68,10 +69,6 @@ export default function EventLayout() {
         }
     }, [filters]);
 
-    const handleEventPress = (eventId) => {
-        navigate(`/events/${eventId}`);
-    };
-
     useRestoreScroll([filters, loading]);
 
     return (
@@ -99,7 +96,7 @@ export default function EventLayout() {
                         setFilters={setFilters}
                     />
 
-                    {/* Event Cards */}
+                    {/* Event Cards
                     {loading ? (
                         <Skeleton className={styles.card}></Skeleton>
                     ) : error ? (
@@ -118,7 +115,11 @@ export default function EventLayout() {
                                 />
                             </Skeleton>
                         ))
-                    )}
+                    )} */}
+
+                    <div className={styles.eventsListContainer}>
+                        <EventList filters={filters} />
+                    </div>
 
                     {/* Mock data */}
                     {/* {events.map((event) => (

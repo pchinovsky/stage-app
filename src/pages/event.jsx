@@ -27,13 +27,16 @@ import StatsBox from "../components/Stats";
 import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
 import EventHead from "../components/EventHead";
 import { useUser } from "../hooks/useUser";
+import { useEventsRealtime } from "../hooks/useEventsRealtime";
 import useDeleteEvent from "../hooks/useDeleteEvent";
 import ModalInvite from "../components/ModalInvite";
 
 export default function Event() {
     const { eventId } = useParams();
     const navigate = useNavigate();
-    const { events, loading, error } = useEvents({ id: eventId });
+    // const { events, loading, error } = useEvents({ id: eventId });
+    const { events, loading, error } = useEventsRealtime({ id: eventId });
+
     const { deleteEvent, isDeleting } = useDeleteEvent();
 
     const event = events[0];
@@ -208,10 +211,13 @@ export default function Event() {
                             onClose={() => setIsCalendarOpen(false)}
                         />
                         <ButtonDynamicGroup
-                            user={currentUser}
+                            pos={{
+                                top: "top-[585px]",
+                                left: "left-[100px]",
+                                flex: "flex-col",
+                            }}
                             event={event}
                             onModalOpen={handleOpenModalInvite}
-                            setTrigger={setTrigger}
                         />
                         {/* <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick>

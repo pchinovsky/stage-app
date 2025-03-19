@@ -1,5 +1,5 @@
 .card {
-    @apply flex items-start py-2 px-2 w-[450px] z-[60] gap-3 rounded-xl;
+    @apply flex items-start py-2 px-2 w-[459px] z-[60] gap-3 rounded-xl;
     @apply flex-row !important;
     @apply bg-white !important;
     @apply h-[250px] !important;
@@ -45,4 +45,8 @@
 
 .image:hover {
     @apply rounded-3xl transition-all duration-500 ease-in-out;
+}
+
+.selected {
+    @apply outline-2 outline-blue-500 !important;
 }

@@ -5,38 +5,37 @@ import { Icon } from "@iconify/react";
 
 const MotionButton = motion(Button);
 
-export default function ButtonDynamicCombined({ text, icon, onPress, style }) {
+export default function ButtonDynamicCombined({
+    text,
+    icon,
+    onPress,
+    style,
+    disableExpand = false,
+    disabled,
+}) {
     const [hovered, setHovered] = useState(false);
 
     return (
         <motion.div
             className="relative"
-            onHoverStart={() => setHovered(true)}
-            onHoverEnd={() => setHovered(false)}
+            onHoverStart={() => !disableExpand && setHovered(true)}
+            onHoverEnd={() => !disableExpand && setHovered(false)}
         >
             <MotionButton
                 onPress={onPress}
                 isIconOnly
+                isDisabled={disabled}
                 // initial={{ width: "48px" }}
-                animate={{ width: hovered ? "160px" : "49px", height: "49px" }}
+                animate={{
+                    width: hovered && !disableExpand ? "160px" : "49px",
+                    height: "49px",
+                }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 className="flex items-center bg-white text-black px-2 py-2 rounded-full overflow-hidden shadow-lg z-[1000]"
             >
                 <Icon icon={icon} width={24} className="mx-2" style={style} />
-                {hovered && (
-                    <motion.span
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{
-                            type: "tween",
-                            duration: 0.3,
-                            ease: "easeInOut",
-                        }}
-                        className="whitespace-nowrap ml-2"
-                    >
-                        {text}
-                    </motion.span>
+                {hovered && !disableExpand && (
+                    <span className="whitespace-nowrap ml-2">{text}</span>
                 )}
             </MotionButton>
         </motion.div>
