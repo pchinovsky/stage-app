@@ -9,18 +9,129 @@ import {
     DropdownMenu,
     DropdownItem,
     Button,
+    Autocomplete,
+    AutocompleteItem,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { formatISO } from "date-fns";
 import { useFollowing } from "../contexts/followingContext";
 import styles from "./FilterBar.module.css";
+import { useArtists } from "../hooks/useArtists";
+import { useVenues } from "../hooks/useVenues";
+import { doc, collection, query, getDocs, where } from "firebase/firestore";
+import { db } from "../firebase/firebaseConfig";
 
 const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     const { followingUsers, following } = useFollowing();
+    const {
+        artists,
+        loading: artistsLoading,
+        error: artistsError,
+    } = useArtists();
+    const { venues, loading: venuesLoading, error: venuesError } = useVenues();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSearchType, setSelectedSearchType] = useState("events");
     const [selectedChips, setSelectedChips] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+
+    useEffect(() => {
+        if (selectedSearchType === "events") {
+            if (searchTerm) {
+                setFilters((prev) => ({
+                    ...prev,
+                    title: searchTerm,
+                }));
+            } else {
+                setFilters((prev) => {
+                    const { title, ...rest } = prev;
+                    return rest;
+                });
+            }
+        }
+        if (searchTerm === "") {
+            setFilters((prev) => {
+                const newFilters = { ...prev };
+
+                if (selectedSearchType === "events") {
+                    delete newFilters.title;
+                } else if (selectedSearchType === "artist") {
+                    delete newFilters.artists;
+                } else if (selectedSearchType === "venue") {
+                    delete newFilters.venues;
+                }
+
+                return newFilters;
+            });
+        }
+    }, [searchTerm, selectedSearchType, setFilters]);
+
+    function onArtistSelected(artistId) {
+        setFilters((prev) => ({
+            ...prev,
+            artists: [artistId],
+        }));
+    }
+
+    function onVenueSelected(venueId) {
+        console.log("---search venue id", venueId);
+
+        setFilters((prev) => ({
+            ...prev,
+            venue: venueId,
+        }));
+    }
+
+    function filterEventsToday() {
+        const isoDate = new Date().toISOString().slice(0, 10);
+        setFilters((prev) => ({
+            ...prev,
+            openingDate: { equalTo: isoDate },
+        }));
+    }
+
+    function filterEventsEnded() {
+        const isoDate = new Date().toISOString().slice(0, 10);
+        setFilters((prev) => ({
+            ...prev,
+            eventEndDate: { lessThan: isoDate },
+        }));
+    }
+
+    useEffect(() => {
+        if (selectedSearchType === "events") {
+            setSuggestions([]);
+        } else if (selectedSearchType === "venue") {
+            if (searchTerm.length > 0 && venues.length > 0) {
+                const filteredVenues = venues.filter((venue) =>
+                    venue.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                setSuggestions(
+                    filteredVenues.map((venue) => ({
+                        key: venue.id,
+                        label: venue.name,
+                    }))
+                );
+            } else {
+                setSuggestions([]);
+            }
+        } else if (selectedSearchType === "artist") {
+            if (searchTerm.length > 0 && artists.length > 0) {
+                const filteredArtists = artists.filter((artist) =>
+                    artist.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                setSuggestions(
+                    filteredArtists.map((artist) => ({
+                        key: artist.id,
+                        label: artist.name,
+                    }))
+                );
+            } else {
+                setSuggestions([]);
+            }
+        }
+        console.log("--- search - ", searchTerm, " - ", selectedSearchType);
+    }, [searchTerm, selectedSearchType, venues, artists]);
 
     const [activeFilters, setActiveFilters] = useState([
         {
@@ -37,19 +148,18 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
             ],
         },
         { id: 2, label: "Recommended", options: ["Trending", "AI Picks"] },
-        { id: 3, label: "Invitations", options: ["Sent", "Received"] },
         {
-            id: 4,
+            id: 3,
             label: "Time",
             options: ["Today", "Tomorrow", "Upcoming", "Past"],
         },
         {
-            id: 5,
+            id: 4,
             label: "Popular",
-            options: ["Today", "Tomorrow", "Upcoming", "Past"],
+            options: ["Interested", "Attended", "Invited", "Trending"],
         },
         {
-            id: 6,
+            id: 5,
             label: "Involved",
             options: ["Following", "Invited", "Inviting"],
         },
@@ -58,11 +168,9 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     const [availableFilters] = useState([
         "Categories",
         "Recommended",
-        "Invitations",
         "Time",
         "Popular",
         "Involved",
-        "Exhibitions",
     ]);
 
     const filtersRef = useRef(null);
@@ -98,8 +206,127 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }
     };
 
+    const getTimeChipValue = (option) => option.toLowerCase();
+
     // --- last -
     const handleChipClick = (category, option) => {
+        if (category === "Time") {
+            const chipId = getTimeChipValue(option);
+            if (selectedChips.includes(chipId)) {
+                setSelectedChips((prev) =>
+                    prev.filter((chip) => chip !== chipId)
+                );
+                if (option === "Past") {
+                    setFilters((prev) => {
+                        const { eventEndDate, ...rest } = prev;
+                        return rest;
+                    });
+                } else {
+                    setFilters((prev) => {
+                        const { openingDate, ...rest } = prev;
+                        return rest;
+                    });
+                }
+                return;
+            }
+            switch (option) {
+                case "Today": {
+                    const isoDate = new Date().toISOString().slice(0, 10);
+                    setFilters((prev) => ({
+                        ...prev,
+                        openingDate: { equalTo: isoDate },
+                    }));
+                    break;
+                }
+                case "Tomorrow": {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    const isoDate = tomorrow.toISOString().slice(0, 10);
+                    setFilters((prev) => ({
+                        ...prev,
+                        openingDate: { equalTo: isoDate },
+                    }));
+                    break;
+                }
+                case "Upcoming": {
+                    const isoToday = new Date().toISOString().slice(0, 10);
+                    setFilters((prev) => ({
+                        ...prev,
+                        openingDate: { greaterThan: isoToday },
+                    }));
+                    break;
+                }
+                case "Past": {
+                    const isoToday = new Date().toISOString().slice(0, 10);
+                    setFilters((prev) => ({
+                        ...prev,
+                        eventEndDate: { lessThan: isoToday },
+                    }));
+                    break;
+                }
+                default:
+                    break;
+            }
+            setSelectedChips((prev) => [...prev, chipId]);
+            return;
+        }
+
+        if (category === "Popular") {
+            const chipId = option.toLowerCase();
+            if (selectedChips.includes(chipId)) {
+                setSelectedChips((prev) =>
+                    prev.filter((chip) => chip !== chipId)
+                );
+                setFilters((prev) => {
+                    const { popular, ...rest } = prev;
+                    return rest;
+                });
+                return;
+            }
+            switch (option) {
+                case "Interested":
+                    setFilters((prev) => ({
+                        ...prev,
+                        popular: {
+                            field: "interested",
+                            greaterThan: 1,
+                            sort: "desc",
+                        },
+                    }));
+                    break;
+                case "Attended":
+                    setFilters((prev) => ({
+                        ...prev,
+                        popular: {
+                            field: "attending",
+                            greaterThan: 10,
+                            sort: "desc",
+                        },
+                    }));
+                    break;
+                case "Invited":
+                    setFilters((prev) => ({
+                        ...prev,
+                        popular: {
+                            field: "invited",
+                            greaterThan: 10,
+                            sort: "desc",
+                        },
+                    }));
+                    break;
+                case "Trending":
+                    setFilters((prev) => ({
+                        ...prev,
+                        popular: { field: "trending", limit: 10, sort: "desc" },
+                    }));
+                    break;
+                default:
+                    break;
+            }
+            setSelectedChips((prev) => [...prev, chipId]);
+            return;
+        }
+
         const filterKey = category.toLowerCase();
 
         const dynamicValue = getNormalizedFilterValue(filterKey, option);
@@ -172,131 +399,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }
     };
 
-    // --- with following -
-    // const handleChipClick = (category, option) => {
-    //     const filterKey = category.toLowerCase();
-    //     const dynamicValue = getNormalizedFilterValue(filterKey, option);
-
-    //     setSelectedChips((prevSelected) => {
-    //         let updatedChips;
-
-    //         if (prevSelected.includes(dynamicValue)) {
-    //             updatedChips = prevSelected.filter(
-    //                 (chip) => chip !== dynamicValue
-    //             );
-    //         } else {
-    //             updatedChips = [...prevSelected, dynamicValue];
-    //         }
-
-    //         if (updatedChips.length === 0) {
-    //             setFilters({});
-    //         }
-
-    //         return updatedChips;
-    //     });
-
-    //     if (dynamicValue === "following") {
-    //         if (selectedChips.includes(dynamicValue)) {
-    //             setFilters({});
-    //         } else {
-    //             console.log(
-    //                 "Using stored following data:",
-    //                 followingUsers,
-    //                 following
-    //             );
-    //             setFilters((prevFilters) => ({
-    //                 ...prevFilters,
-    //                 eventOwners: followingUsers,
-    //                 venueId: following,
-    //                 artists: following,
-    //                 attendees: followingUsers,
-    //             }));
-    //         }
-    //     } else {
-    //         setFilters((prevFilters) => {
-    //             const updatedFilters = { ...prevFilters };
-
-    //             if (!updatedFilters[filterKey]) {
-    //                 updatedFilters[filterKey] = [];
-    //             }
-
-    //             if (updatedFilters[filterKey].includes(dynamicValue)) {
-    //                 updatedFilters[filterKey] = updatedFilters[
-    //                     filterKey
-    //                 ].filter((item) => item !== dynamicValue);
-
-    //                 if (
-    //                     Object.keys(updatedFilters).every(
-    //                         (key) => updatedFilters[key].length === 0
-    //                     )
-    //                 ) {
-    //                     return {};
-    //                 }
-    //             } else {
-    //                 updatedFilters[filterKey] = [
-    //                     ...updatedFilters[filterKey],
-    //                     dynamicValue,
-    //                 ];
-    //             }
-
-    //             return updatedFilters;
-    //         });
-    //     }
-    // };
-
-    // --- initial -
-    // const handleChipClick = (category, option) => {
-    //     const scrollY = window.scrollY;
-
-    //     const filterKey = category.toLowerCase();
-
-    //     const dynamicValue = getNormalizedFilterValue(filterKey, option);
-
-    //     setSelectedChips((prevSelected) => {
-    //         let updatedChips;
-
-    //         if (prevSelected.includes(dynamicValue)) {
-    //             updatedChips = prevSelected.filter(
-    //                 (chip) => chip !== dynamicValue
-    //             );
-    //         } else {
-    //             updatedChips = [...prevSelected, dynamicValue];
-    //         }
-
-    //         setFilters((prevFilters) => {
-    //             const updatedFilters = { ...prevFilters };
-
-    //             if (!updatedFilters[filterKey]) {
-    //                 updatedFilters[filterKey] = [];
-    //             }
-
-    //             if (updatedFilters[filterKey].includes(dynamicValue)) {
-    //                 updatedFilters[filterKey] = updatedFilters[
-    //                     filterKey
-    //                 ].filter((item) => item !== dynamicValue);
-    //                 if (updatedFilters[filterKey].length === 0) {
-    //                     delete updatedFilters[filterKey];
-    //                 }
-    //             } else {
-    //                 updatedFilters[filterKey] = [
-    //                     ...updatedFilters[filterKey],
-    //                     dynamicValue,
-    //                 ];
-    //             }
-
-    //             console.log(
-    //                 updatedFilters
-    //             );
-
-    //             localStorage.setItem("scrollPosition", scrollY);
-
-    //             return updatedFilters;
-    //         });
-
-    //         return updatedChips;
-    //     });
-    // };
-
     const getDynamicFilterValue = (option, category = "") => {
         const today = new Date();
 
@@ -331,39 +433,116 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         return option.toLowerCase();
     };
 
-    useEffect(() => {
-        console.log("FilterBar mounted");
-        return () => console.log("FilterBar unmounted");
-    }, []);
+    const isLoading =
+        (selectedSearchType === "artist" && artistsLoading) ||
+        (selectedSearchType === "venue" && venuesLoading);
 
     return (
         <div
             ref={ref}
             className={`${styles.filterBar} ${searchFixed ? "fixed top-[70px] left-0 z-[1500]" : "relative z-[500]"}`}
         >
-            <div className="flex flex-col items-center justify-between gap-2 w-[300px]">
-                <Input
-                    placeholder="Search events"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className={styles.input}
-                />
+            <div className="flex flex-col items-center justify-between gap-1 w-[300px]">
+                {selectedSearchType === "events" ? (
+                    <Input
+                        placeholder="Search events"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        // className={styles.input}
+                        className={`${styles.input} no-focus-outline`}
+                        classNames={{
+                            inputWrapper: [
+                                "bg-white border-1 border-gray-300 overflow-hidden px-0",
+                                "data-[focus=true]:bg-white",
+                                "data-[focus-within=true]:bg-white",
+                                "data-[hover=true]:bg-white",
+                            ],
+                            innerWrapper: [
+                                "bg-white w-full",
+                                "data-[focus=true]:bg-white",
+                                "data-[focus-within=true]:bg-white",
+                            ],
+                            input: "bg-white, pl-3",
+                        }}
+                        variant="solid"
+                        radius="sm"
+                    />
+                ) : isLoading ? (
+                    <div className="text-gray-500">
+                        Loading {selectedSearchType}...
+                    </div>
+                ) : (
+                    <Autocomplete
+                        placeholder={`Search ${selectedSearchType}`}
+                        inputValue={searchTerm}
+                        onInputChange={setSearchTerm}
+                        listboxProps={{
+                            emptyContent: "Enter a search query.",
+                        }}
+                        className={styles.input}
+                        variant="flat"
+                        radius="sm"
+                        inputProps={{
+                            classNames: {
+                                inputWrapper: [
+                                    "bg-white border-1 border-gray-300 overflow-hidden px-0",
+                                    "data-[hover=true]:bg-white",
+                                    "data-[focus=true]:bg-white",
+                                    "data-[focus-within=true]:bg-white",
+                                    "data-[focus-visible=true]:bg-white",
+                                ],
+                                innerWrapper: [
+                                    "bg-white w-full",
+                                    "data-[focus=true]:bg-white",
+                                    "data-[focus-within=true]:bg-white",
+                                ],
+                                input: "bg-white pl-3 pr-3",
+                            },
+                        }}
+                        classNames={{
+                            endContentWrapper: "pr-3",
+                        }}
+                    >
+                        {suggestions.map((item) => (
+                            <AutocompleteItem
+                                key={item.key}
+                                value={item.label}
+                                onPress={() => {
+                                    if (selectedSearchType === "artist") {
+                                        onArtistSelected(item.key);
+                                    } else if (selectedSearchType === "venue") {
+                                        onVenueSelected(item.key);
+                                    }
+                                }}
+                            >
+                                {item.label}
+                            </AutocompleteItem>
+                        ))}
+                    </Autocomplete>
+                )}
 
+                {/*
+                 */}
                 <Select
-                    value={selectedSearchType}
-                    onChange={setSelectedSearchType}
+                    selectedKeys={[selectedSearchType]}
+                    onSelectionChange={(keys) => {
+                        const newValue = Array.from(keys)[0];
+                        setSelectedSearchType(newValue);
+                    }}
                     className={styles.select}
-                    defaultSelectedKeys={["events"]}
+                    variant="solid"
+                    radius="sm"
+                    classNames={{
+                        trigger: [
+                            "bg-white border-1 border-gray-300",
+                            "data-[focus=true]:bg-white",
+                            "data-[open=true]:bg-white",
+                        ],
+                    }}
                 >
-                    <SelectItem key="events" value="events">
-                        Event
-                    </SelectItem>
-                    <SelectItem key="users" value="users">
-                        Venue
-                    </SelectItem>
-                    <SelectItem key="locations" value="locations">
-                        Locations
-                    </SelectItem>
+                    <SelectItem key="events">Event</SelectItem>
+                    <SelectItem key="venue">Venue</SelectItem>
+                    <SelectItem key="artist">Artist</SelectItem>
                 </Select>
             </div>
 
@@ -407,11 +586,33 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                                         }
                                         radius="sm"
                                         variant="bordered"
-                                        className={`${styles.chip} ${selectedChips.includes(getDynamicFilterValue(option)) ? styles.activeChip : ""}`}
+                                        className={`${styles.chip} ${
+                                            (
+                                                filter.label === "Time"
+                                                    ? selectedChips.includes(
+                                                          getTimeChipValue(
+                                                              option
+                                                          )
+                                                      )
+                                                    : selectedChips.includes(
+                                                          getDynamicFilterValue(
+                                                              option
+                                                          )
+                                                      )
+                                            )
+                                                ? styles.activeChip
+                                                : ""
+                                        }`}
                                         startContent={
-                                            selectedChips.includes(
-                                                getDynamicFilterValue(option)
-                                            ) && (
+                                            (filter.label === "Time"
+                                                ? selectedChips.includes(
+                                                      getTimeChipValue(option)
+                                                  )
+                                                : selectedChips.includes(
+                                                      getDynamicFilterValue(
+                                                          option
+                                                      )
+                                                  )) && (
                                                 <Icon
                                                     icon="ci:check"
                                                     width="24"

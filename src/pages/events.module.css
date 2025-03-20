@@ -69,5 +69,5 @@
 }
 
 .eventsListContainer {
-    @apply w-full flex flex-wrap gap-2;
+    @apply w-full flex flex-wrap gap-2 h-screen content-start;
 }
