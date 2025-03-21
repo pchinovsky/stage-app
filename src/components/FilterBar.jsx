@@ -288,7 +288,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     setFilters((prev) => ({
                         ...prev,
                         popular: {
-                            field: "interested",
+                            field: "interestedCount",
                             greaterThan: 1,
                             sort: "desc",
                         },
@@ -298,7 +298,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     setFilters((prev) => ({
                         ...prev,
                         popular: {
-                            field: "attending",
+                            field: "attendingCount",
                             greaterThan: 10,
                             sort: "desc",
                         },
@@ -308,7 +308,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     setFilters((prev) => ({
                         ...prev,
                         popular: {
-                            field: "invited",
+                            field: "invitedCount",
                             greaterThan: 10,
                             sort: "desc",
                         },
@@ -317,9 +317,15 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 case "Trending":
                     setFilters((prev) => ({
                         ...prev,
-                        popular: { field: "trending", limit: 10, sort: "desc" },
+                        categories: ["popular"],
+                        popular: {
+                            field: "interestedCount",
+                            limit: 10,
+                            sort: "desc",
+                        },
                     }));
                     break;
+
                 default:
                     break;
             }

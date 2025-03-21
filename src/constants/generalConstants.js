@@ -7,3 +7,5 @@ export const categories = [
     { label: "Sound", value: "sound" },
     { label: "Other", value: "other" },
 ];
+
+export const POPULAR_THRESHOLD = 10;

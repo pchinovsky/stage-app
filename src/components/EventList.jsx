@@ -27,6 +27,14 @@ const EventsList = ({ filters }) => {
         return <p>Error loading events.</p>;
     }
 
+    if (events.length === 0) {
+        return (
+            <div className={styles.noResults}>
+                No events match your filter conditions.
+            </div>
+        );
+    }
+
     return events.map((event) => (
         <EventCard key={event.id} event={event} onPress={handleEventPress} />
     ));

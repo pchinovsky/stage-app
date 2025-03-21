@@ -7,8 +7,10 @@ import {
     arrayRemove,
     getDoc,
     updateDoc,
+    increment,
 } from "firebase/firestore";
 import { AuthContext } from "./authContext";
+import { calcTrending } from "../../utils/calcTrending";
 
 const FloatingContext = createContext();
 
@@ -57,11 +59,17 @@ export const FloatingProvider = ({ children }) => {
                           interested: isAlreadyInList
                               ? arrayRemove(userId)
                               : arrayUnion(userId),
+                          interestedCount: isAlreadyInList
+                              ? increment(-1)
+                              : increment(1),
                       }
                     : {
                           attending: isAlreadyInList
                               ? arrayRemove(userId)
                               : arrayUnion(userId),
+                          attendingCount: isAlreadyInList
+                              ? increment(-1)
+                              : increment(1),
                       };
 
             const userUpdate =
@@ -78,6 +86,9 @@ export const FloatingProvider = ({ children }) => {
                       };
 
             await eventsApi.updateEvent(eventId, eventUpdate);
+
+            await calcTrending(eventId);
+
             await updateDoc(userRef, userUpdate);
         });
 

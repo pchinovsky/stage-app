@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 
@@ -103,7 +103,16 @@ export function useEvents(filters = {}) {
                     console.log("Final conditions:", conditions);
                     console.log("Applying query with conditions:", conditions);
 
-                    const eventsQuery = conditions.length > 0 ? query(eventsRef, ...conditions) : eventsRef;
+                    let eventsQuery = conditions.length > 0 ? query(eventsRef, ...conditions) : eventsRef;
+
+                    // enables firebase sorting - 
+                    if (filters.popular && filters.popular.sort) {
+                        eventsQuery = query(eventsQuery, orderBy(filters.popular.field, filters.popular.sort));
+                        if (filters.popular.limit) {
+                            eventsQuery = query(eventsQuery, limit(filters.popular.limit));
+                        }
+                    }
+
                     const snapshot = await getDocs(eventsQuery);
                     fetchedEvents = snapshot.docs.map((doc) => ({
                         id: doc.id,

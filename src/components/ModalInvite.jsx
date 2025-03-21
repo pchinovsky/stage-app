@@ -12,8 +12,15 @@ import {
     Input,
 } from "@heroui/react";
 import { useState, useMemo, useEffect } from "react";
-import { arrayUnion, writeBatch, doc, getDoc } from "firebase/firestore";
+import {
+    arrayUnion,
+    writeBatch,
+    doc,
+    getDoc,
+    increment,
+} from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { calcTrending } from "../../utils/calcTrending";
 
 export default function ModalInvite({
     isOpen,
@@ -81,6 +88,7 @@ export default function ModalInvite({
             const eventRef = doc(db, "events", eventId);
             batch.update(eventRef, {
                 invited: arrayUnion(...userIds),
+                invitedCount: increment(userIds.length),
             });
 
             userIds.forEach((userId) => {
@@ -96,6 +104,8 @@ export default function ModalInvite({
             });
 
             await batch.commit();
+
+            await calcTrending(eventId);
 
             setAlreadyInvited([...alreadyInvited, ...userIds]);
             setSelectedUsers(new Set([]));

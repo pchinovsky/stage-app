@@ -3,11 +3,12 @@ import { useState, useEffect, useContext } from "react";
 import styles from "./ButtonDynamicGroup.module.css";
 import eventsApi from "../api/events-api";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import Toast from "./Toast";
 import { AuthContext } from "../contexts/authContext";
 import { useFloatingContext } from "../contexts/floatingContext";
+import { calcTrending } from "../../utils/calcTrending";
 
 export default function ButtonDynamicGroup({
     pos,
@@ -47,8 +48,12 @@ export default function ButtonDynamicGroup({
                 attending: isAttending
                     ? arrayRemove(userId)
                     : arrayUnion(userId),
+                attendingCount: isAttending ? increment(-1) : increment(1),
             };
             await eventsApi.updateEvent(event.id, updatedEvent);
+
+            await calcTrending(event.id);
+
             const userUpdate = {
                 attending: isAttending
                     ? arrayRemove(event.id)
@@ -78,8 +83,12 @@ export default function ButtonDynamicGroup({
                 interested: isInterested
                     ? arrayRemove(userId)
                     : arrayUnion(userId),
+                interestedCount: isInterested ? increment(-1) : increment(1),
             };
             await eventsApi.updateEvent(event.id, updatedEvent);
+
+            await calcTrending(event.id);
+
             const userUpdate = {
                 interested: isInterested
                     ? arrayRemove(event.id)
