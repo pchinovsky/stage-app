@@ -10,6 +10,7 @@ import {
     ListboxItem,
     Chip,
     Input,
+    Avatar,
 } from "@heroui/react";
 import { useState, useMemo, useEffect } from "react";
 import {
@@ -36,7 +37,7 @@ export default function ModalInvite({
 
     // fetch already invited -
     useEffect(() => {
-        const fetchEventDetails = async () => {
+        (async () => {
             if (isOpen && event) {
                 try {
                     const eventDoc = await getDoc(doc(db, "events", event));
@@ -47,15 +48,15 @@ export default function ModalInvite({
                     console.error("Error fetching event details:", error);
                 }
             }
-        };
-
-        fetchEventDetails();
+        })();
     }, [isOpen, event]);
 
     // search filter -
     const filteredUsers = useMemo(() => {
-        return users.filter((user) =>
-            user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        return users.filter(
+            (user) =>
+                user.id !== currentUser.id &&
+                user.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [users, searchQuery]);
 
@@ -172,6 +173,7 @@ export default function ModalInvite({
                                     selectedKeys={selectedUsers}
                                     onSelectionChange={handleSelectionChange}
                                     disabledKeys={alreadyInvited}
+                                    emptyContent="No users match your query."
                                     variant="flat"
                                 >
                                     {filteredUsers.map((user) => {
@@ -193,6 +195,11 @@ export default function ModalInvite({
                                                 }
                                             >
                                                 <div className="flex items-center gap-2">
+                                                    <Avatar
+                                                        className="flex shrink-0"
+                                                        size="sm"
+                                                        src={user.image}
+                                                    ></Avatar>
                                                     <span>{user.name}</span>
                                                 </div>
                                             </ListboxItem>
