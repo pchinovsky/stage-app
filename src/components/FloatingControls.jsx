@@ -18,15 +18,31 @@ export default function FloatingControls({ pos }) {
         selectedEvents,
         selectionMode,
         toggleSelectionMode,
-        bulkUpdate,
+        uniformAttending,
+        uniformInterested,
         clearSelection,
     } = useFloatingContext();
 
-    useEffect(() => {
-        console.log("- - panel - ", selectedEvents);
-    }, [selectedEvents]);
+    // useEffect(() => {
+    //     console.log("--- mode - ", selectionMode);
+    // }, [selectionMode]);
+
+    // useEffect(() => {
+    //     console.log("- - panel - ", selectedEvents);
+    // }, [selectedEvents]);
+
+    // useEffect(() => {
+    //     console.log("- - unif A - ", uniformAttending);
+    //     console.log("- - unif I - ", uniformInterested);
+    // }, [uniformAttending, uniformInterested]);
 
     const offset = useRef({ x: 0, y: 0 });
+
+    const disabled = {
+        interested: !selectionMode || !uniformInterested,
+        attending: !selectionMode || !uniformAttending,
+        selection: selectedEvents.length !== 0,
+    };
 
     const toggleDetach = () => {
         if (isDetached) {
@@ -181,7 +197,7 @@ export default function FloatingControls({ pos }) {
                             </div>
                         )} */}
 
-                        <div className="relative">
+                        <div className="relative flex">
                             <ButtonDynamicGroup
                                 pos={{
                                     top: "top-[0px]",
@@ -190,9 +206,37 @@ export default function FloatingControls({ pos }) {
                                 event={null}
                                 onModalOpen={() => {}}
                                 disableExpand
-                                disabled={!selectionMode}
+                                disabled={disabled}
                                 mode="bulk"
                             />
+                            <Tooltip
+                                placement="bottom"
+                                radius="sm"
+                                content="Clear selection"
+                                isDisabled={!selectionMode}
+                            >
+                                <Button
+                                    onPress={clearSelection}
+                                    disabled={!selectionMode}
+                                    disableRipple={!selectionMode}
+                                    className="left-40 top-1 p-1"
+                                    classNames={{
+                                        base: [
+                                            "data-[disabled=true]:bg-red-500",
+                                            "data-[disabled=true]:opacity-100",
+                                        ],
+                                    }}
+                                    variant="bordered"
+                                    isIconOnly
+                                >
+                                    <Icon
+                                        icon="iconoir:undo-action"
+                                        width="24"
+                                        height="24"
+                                        className={`${!selectionMode && "text-gray-400"}`}
+                                    />
+                                </Button>
+                            </Tooltip>
                         </div>
                     </motion.div>
                 )}

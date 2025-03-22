@@ -63,7 +63,7 @@ export default function EventCard({ event, onPress }) {
             placement="top-right"
             shape="rectangle"
             size="sm"
-            className="right-12 top-1 z-[1000] p-1.5 bg-white border-2 border-blue-500"
+            className="right-[39px] top-7 z-[1000] p-1.5 bg-white rounded-md border-0 border-blue-500 transition-all ease-in-out duration-500"
             isInvisible={!isSelected}
         >
             <Card

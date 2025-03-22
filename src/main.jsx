@@ -5,6 +5,7 @@ import { NavProvider } from "./contexts/navContext.jsx";
 import { AuthProvider } from "./contexts/authContext.jsx";
 import { FollowingProvider } from "./contexts/followingContext.jsx";
 import { FloatingProvider } from "./contexts/floatingContext.jsx";
+import { EventsProvider } from "./contexts/eventsContext.jsx";
 
 import App from "./App.jsx";
 import { Provider } from "./provider.jsx";
@@ -16,9 +17,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <AuthProvider>
                 <NavProvider>
                     <FollowingProvider>
-                        <FloatingProvider>
-                            <App />
-                        </FloatingProvider>
+                        <EventsProvider>
+                            <FloatingProvider>
+                                <App />
+                            </FloatingProvider>
+                        </EventsProvider>
                     </FollowingProvider>
                 </NavProvider>
             </AuthProvider>

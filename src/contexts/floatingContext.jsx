@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { AuthContext } from "./authContext";
 import { calcTrending } from "../../utils/calcTrending";
+import { useEventsStore } from "./eventsContext";
 
 const FloatingContext = createContext();
 
@@ -19,8 +20,38 @@ export const useFloatingContext = () => useContext(FloatingContext);
 export const FloatingProvider = ({ children }) => {
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [selectionMode, setSelectionMode] = useState(false);
+    const [uniformInterested, setUniformInterested] = useState(null);
+    const [uniformAttending, setUniformAttending] = useState(null);
 
     const { userId } = useContext(AuthContext);
+    const { events } = useEventsStore();
+
+    useEffect(() => {
+        if (selectedEvents.length === 0) {
+            setUniformInterested(null);
+            setUniformAttending(null);
+            return;
+        }
+
+        const selectedEventObjs = selectedEvents
+            .map((id) => events.find((event) => event.id === id))
+            .filter(Boolean);
+
+        const uniformInterested = selectedEventObjs.every(
+            (event) =>
+                (event.interested?.includes(userId) || false) ===
+                (selectedEventObjs[0].interested?.includes(userId) || false)
+        );
+
+        const uniformAttending = selectedEventObjs.every(
+            (event) =>
+                event.attending?.includes(userId || false) ===
+                (selectedEventObjs[0].attending?.includes(userId) || false)
+        );
+
+        setUniformInterested(uniformInterested);
+        setUniformAttending(uniformAttending);
+    }, [selectedEvents, events, userId]);
 
     const toggleSelectionMode = () => {
         setSelectionMode((prev) => {
@@ -122,6 +153,8 @@ export const FloatingProvider = ({ children }) => {
             value={{
                 selectedEvents,
                 selectionMode,
+                uniformAttending,
+                uniformInterested,
                 toggleEventSelection,
                 toggleSelectionMode,
                 clearSelection,

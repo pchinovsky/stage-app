@@ -30,7 +30,10 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
             const userSnap = await getDoc(userRef);
             if (userSnap.exists()) {
                 const userData = userSnap.data();
-                const following = userData.following || [];
+                // const following = userData.following || [];
+                const following = data.address
+                    ? userData.followingVenues
+                    : userData.followingArtists;
                 setIsFollowing(following.includes(data.id));
             } else {
                 console.log("No such document!");

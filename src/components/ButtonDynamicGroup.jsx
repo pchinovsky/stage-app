@@ -28,7 +28,8 @@ export default function ButtonDynamicGroup({
         selectionMode,
         toggleSelectionMode,
         bulkUpdate,
-        clearSelection,
+        uniformAttending,
+        uniformInterested,
     } = useFloatingContext();
 
     useEffect(() => {
@@ -143,7 +144,9 @@ export default function ButtonDynamicGroup({
                 onPress={handleInterested}
                 style={{ color: isInterested ? "blue" : "inherit" }}
                 disableExpand={disableExpand}
-                disabled={disabled}
+                disabled={disabled?.interested}
+                selectionMode={selectionMode}
+                selection={disabled.selection}
             />
             <ButtonDynamic
                 text="Attend"
@@ -153,7 +156,9 @@ export default function ButtonDynamicGroup({
                 onPress={handleAttend}
                 style={{ color: isAttending ? "blue" : "inherit" }}
                 disableExpand={disableExpand}
-                disabled={disabled}
+                disabled={disabled?.attending}
+                selectionMode={selectionMode}
+                selection={disabled.selection}
             />
             {toastMessage && (
                 <Toast message={toastMessage} onClose={handleCloseToast} />
