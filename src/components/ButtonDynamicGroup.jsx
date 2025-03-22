@@ -50,6 +50,11 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(userId),
                 attendingCount: isAttending ? increment(-1) : increment(1),
             };
+            if (isAttending && !isInterested) {
+                updatedEvent.involvedUsers = arrayRemove(userId);
+            } else if (!isAttending) {
+                updatedEvent.involvedUsers = arrayUnion(userId);
+            }
             await eventsApi.updateEvent(event.id, updatedEvent);
 
             await calcTrending(event.id);
@@ -85,6 +90,11 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(userId),
                 interestedCount: isInterested ? increment(-1) : increment(1),
             };
+            if (isInterested && !isAttending) {
+                updatedEvent.involvedUsers = arrayRemove(userId);
+            } else if (!isInterested) {
+                updatedEvent.involvedUsers = arrayUnion(userId);
+            }
             await eventsApi.updateEvent(event.id, updatedEvent);
 
             await calcTrending(event.id);
@@ -101,7 +111,6 @@ export default function ButtonDynamicGroup({
                     ? "You are no longer interested in this event."
                     : "You are now interested in this event."
             );
-            // setTrigger((prev) => prev + 1);
             console.log("User toggled interested status");
         } catch (error) {
             console.error("Error updating interested list:", error);

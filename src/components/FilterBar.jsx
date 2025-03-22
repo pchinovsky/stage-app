@@ -1,4 +1,10 @@
-import React, { useState, useRef, forwardRef, useEffect } from "react";
+import React, {
+    useState,
+    useRef,
+    forwardRef,
+    useEffect,
+    useContext,
+} from "react";
 import {
     Input,
     Select,
@@ -20,9 +26,12 @@ import { useArtists } from "../hooks/useArtists";
 import { useVenues } from "../hooks/useVenues";
 import { doc, collection, query, getDocs, where } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { AuthContext } from "../contexts/authContext";
 
 const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
-    const { followingUsers, following } = useFollowing();
+    const { userId } = useContext(AuthContext);
+    const { followingUsers, followingArtists, followingVenues } =
+        useFollowing();
     const {
         artists,
         loading: artistsLoading,
@@ -147,7 +156,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 "Other",
             ],
         },
-        { id: 2, label: "Recommended", options: ["Trending", "AI Picks"] },
+        { id: 2, label: "Recommended", options: ["For you", "AI Picks"] },
         {
             id: 3,
             label: "Time",
@@ -156,12 +165,18 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         {
             id: 4,
             label: "Popular",
-            options: ["Interested", "Attended", "Invited", "Trending"],
+            options: ["Interested", "Attended", "Invitations", "Trending"],
         },
         {
             id: 5,
             label: "Involved",
-            options: ["Following", "Invited", "Inviting"],
+            options: [
+                "Following Artists",
+                "Following Users",
+                "Following Venues",
+                "Invited",
+                "Inviting",
+            ],
         },
     ]);
 
@@ -278,7 +293,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     prev.filter((chip) => chip !== chipId)
                 );
                 setFilters((prev) => {
-                    const { popular, ...rest } = prev;
+                    const { popular, categories, ...rest } = prev;
                     return rest;
                 });
                 return;
@@ -299,12 +314,12 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                         ...prev,
                         popular: {
                             field: "attendingCount",
-                            greaterThan: 10,
+                            greaterThan: 2,
                             sort: "desc",
                         },
                     }));
                     break;
-                case "Invited":
+                case "Invitations":
                     setFilters((prev) => ({
                         ...prev,
                         popular: {
@@ -329,6 +344,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 default:
                     break;
             }
+
             setSelectedChips((prev) => [...prev, chipId]);
             return;
         }
@@ -353,23 +369,60 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
             return updatedChips;
         });
 
-        if (dynamicValue === "following") {
-            if (selectedChips.includes(dynamicValue)) {
-                setFilters({});
-            } else {
-                console.log(
-                    "Using stored following data:",
-                    followingUsers,
-                    following
+        if (category === "Involved") {
+            const involvedValue = option.toLowerCase();
+
+            if (selectedChips.includes(involvedValue)) {
+                setSelectedChips((prev) =>
+                    prev.filter((chip) => chip !== involvedValue)
                 );
-                setFilters((prevFilters) => ({
-                    ...prevFilters,
-                    eventOwners: followingUsers,
-                    venueId: following,
-                    artists: following,
-                    attendees: followingUsers,
+                setFilters((prev) => {
+                    const newFilters = { ...prev };
+                    if (involvedValue === "following artists") {
+                        delete newFilters.artists;
+                    } else if (involvedValue === "following venues") {
+                        delete newFilters.venue;
+                    } else if (involvedValue === "following users") {
+                        delete newFilters.involvedUsers;
+                    } else if (involvedValue === "invited") {
+                        delete newFilters.invited;
+                    } else if (involvedValue === "inviting") {
+                        delete newFilters.inviting;
+                    }
+                    return newFilters;
+                });
+                return;
+            }
+
+            if (involvedValue === "following artists") {
+                setFilters((prev) => ({
+                    ...prev,
+                    artists: followingArtists,
+                }));
+            } else if (involvedValue === "following venues") {
+                setFilters((prev) => ({
+                    ...prev,
+                    venue: followingVenues,
+                }));
+            } else if (involvedValue === "following users") {
+                setFilters((prev) => ({
+                    ...prev,
+                    involvedUsers: followingUsers,
+                }));
+            } else if (involvedValue === "invited") {
+                setFilters((prev) => ({
+                    ...prev,
+                    invited: [userId],
+                }));
+            } else if (involvedValue === "inviting") {
+                setFilters((prev) => ({
+                    ...prev,
+                    inviting: [userId],
                 }));
             }
+
+            setSelectedChips((prev) => [...prev, involvedValue]);
+            return;
         } else {
             setFilters((prevFilters) => {
                 const updatedFilters = { ...prevFilters };

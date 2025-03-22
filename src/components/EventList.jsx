@@ -24,7 +24,7 @@ const EventsList = ({ filters }) => {
     }
 
     if (error) {
-        return <p>Error loading events.</p>;
+        return <div className={styles.noResults}>Error loading events.</div>;
     }
 
     if (events.length === 0) {

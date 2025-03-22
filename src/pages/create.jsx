@@ -46,11 +46,13 @@ export default function CreatePage() {
         categories: [],
         associatedLinks: [],
         invited: [],
+        inviting: [],
         interested: [],
         attending: [],
         invitedCount: 0,
         interestedCount: 0,
         attendingCount: 0,
+        involvedUsers: [],
         startTime: "",
         endTime: "",
         openingDate: "",
@@ -131,6 +133,7 @@ export default function CreatePage() {
             setFormValues((prevValues) => ({
                 ...prevValues,
                 createdBy: currentUser.id,
+                involvedUsers: [currentUser.id],
             }));
         }
     }, [currentUser]);

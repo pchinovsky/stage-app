@@ -89,6 +89,8 @@ export default function ModalInvite({
             batch.update(eventRef, {
                 invited: arrayUnion(...userIds),
                 invitedCount: increment(userIds.length),
+                inviting: arrayUnion(currentUser.id),
+                involvedUsers: arrayUnion(...userIds),
             });
 
             userIds.forEach((userId) => {

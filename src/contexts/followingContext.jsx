@@ -1,10 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { AuthContext } from "./authContext";
 
 const FollowingContext = createContext();
 
-export const FollowingProvider = ({ children, userId }) => {
+export const FollowingProvider = ({ children }) => {
+    const { userId } = useContext(AuthContext);
+
     const [followingUsers, setFollowingUsers] = useState([]);
     const [followingArtists, setFollowingArtists] = useState([]);
     const [followingVenues, setFollowingVenues] = useState([]);
@@ -20,6 +23,8 @@ export const FollowingProvider = ({ children, userId }) => {
 
                 if (userSnap.exists()) {
                     const userData = userSnap.data();
+                    console.log("userData -", userData);
+
                     setFollowingUsers(userData.followingUsers || []);
                     setFollowingArtists(userData.followingArtists || []);
                     setFollowingVenues(userData.followingVenues || []);
@@ -33,6 +38,8 @@ export const FollowingProvider = ({ children, userId }) => {
             }
         })();
     }, [userId]);
+
+    console.log("following context - ", followingArtists);
 
     return (
         <FollowingContext.Provider

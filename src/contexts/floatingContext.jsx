@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import eventsApi from "../api/events-api";
 import { db } from "../firebase/firebaseConfig";
 import {
@@ -19,6 +19,7 @@ export const useFloatingContext = () => useContext(FloatingContext);
 export const FloatingProvider = ({ children }) => {
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [selectionMode, setSelectionMode] = useState(false);
+
     const { userId } = useContext(AuthContext);
 
     const toggleSelectionMode = () => {
@@ -72,6 +73,26 @@ export const FloatingProvider = ({ children }) => {
                               : increment(1),
                       };
 
+            let involvedUpdate = {};
+            if (actionType === "attending") {
+                if (isAlreadyInList) {
+                    if (!eventData.interested?.includes(userId)) {
+                        involvedUpdate = { involvedUsers: arrayRemove(userId) };
+                    }
+                } else {
+                    involvedUpdate = { involvedUsers: arrayUnion(userId) };
+                }
+            } else if (actionType === "interested") {
+                if (isAlreadyInList) {
+                    if (!eventData.attending?.includes(userId)) {
+                        involvedUpdate = { involvedUsers: arrayRemove(userId) };
+                    }
+                } else {
+                    involvedUpdate = { involvedUsers: arrayUnion(userId) };
+                }
+            }
+            const finalEventUpdate = { ...eventUpdate, ...involvedUpdate };
+
             const userUpdate =
                 actionType === "interested"
                     ? {
@@ -85,7 +106,7 @@ export const FloatingProvider = ({ children }) => {
                               : arrayUnion(eventId),
                       };
 
-            await eventsApi.updateEvent(eventId, eventUpdate);
+            await eventsApi.updateEvent(eventId, finalEventUpdate);
 
             await calcTrending(eventId);
 

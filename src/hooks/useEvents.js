@@ -62,11 +62,21 @@ export function useEvents(filters = {}) {
                             return;
                         }
 
+                        // allowing some-in-all array filtering - 
                         if (Array.isArray(value)) {
                             console.log("--- Value is an array:", value, "Length:", value.length);
                             if (value.length > 0) {
-                                console.log(`Adding "array-contains" filter: ${key} → ${value[0]}`);
-                                conditions.push(where(key, "array-contains", value[0]));
+
+                                if (key === "venue") {
+                                    console.log(`Adding "in" filter: ${key} → ${value}`);
+                                    conditions.push(where(key, "in", value));
+                                } else if (value.length > 1) {
+                                    console.log(`Adding "array-contains-any" filter: ${key} → ${value}`);
+                                    conditions.push(where(key, "array-contains-any", value));
+                                } else {
+                                    console.log(`Adding "array-contains" filter: ${key} → ${value[0]}`);
+                                    conditions.push(where(key, "array-contains", value[0]));
+                                }
                             }
                             return;
                         }
