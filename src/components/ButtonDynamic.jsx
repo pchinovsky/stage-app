@@ -17,13 +17,16 @@ export default function ButtonDynamicCombined({
 }) {
     const [hovered, setHovered] = useState(false);
 
-    const tooltipContent = !selectionMode
-        ? "Activate selection mode."
-        : !selection
-          ? "Make a selection."
-          : disabled
-            ? "Selection must consist of events with the same status."
-            : text;
+    let tooltipContent;
+    if (disableExpand) {
+        tooltipContent = !selectionMode
+            ? "Activate selection mode."
+            : !selection
+              ? "Make a selection."
+              : disabled
+                ? "Selection must consist of events with the same status."
+                : text;
+    }
 
     return (
         <motion.div

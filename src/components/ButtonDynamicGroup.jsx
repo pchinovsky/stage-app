@@ -146,7 +146,7 @@ export default function ButtonDynamicGroup({
                 disableExpand={disableExpand}
                 disabled={disabled?.interested}
                 selectionMode={selectionMode}
-                selection={disabled.selection}
+                selection={disabled?.selection}
             />
             <ButtonDynamic
                 text="Attend"
@@ -158,7 +158,7 @@ export default function ButtonDynamicGroup({
                 disableExpand={disableExpand}
                 disabled={disabled?.attending}
                 selectionMode={selectionMode}
-                selection={disabled.selection}
+                selection={disabled?.selection}
             />
             {toastMessage && (
                 <Toast message={toastMessage} onClose={handleCloseToast} />
