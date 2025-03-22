@@ -148,21 +148,21 @@ export default function Event() {
     const statsData = [
         {
             label: "Attendees",
-            value: "340",
+            value: event?.attendingCount,
             description: "People attending",
             icon: "mdi:account-group",
         },
         {
             label: "Interested",
-            value: "1.2K",
+            value: event?.interestedCount,
             description: "People interested",
             icon: "mdi:star-outline",
         },
         {
-            label: "Events Hosted",
-            value: "58",
-            description: "Total events organized",
-            icon: "mdi:calendar-check",
+            label: "Invited",
+            value: event?.invitedCount,
+            description: "People invited",
+            icon: "tabler:user-plus",
         },
     ];
 
