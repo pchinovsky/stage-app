@@ -19,7 +19,7 @@ export default function EventCard({ event, onPress }) {
     const [interested, setInterested] = useState(false);
     const [attending, setAttending] = useState(false);
 
-    const { selectionMode, selectedEvents, toggleEventSelection } =
+    const { selectionMode, selectedEvents, toggleEventSelection, applied } =
         useFloatingContext();
     const isSelected = selectedEvents.includes(event.id);
 
@@ -63,7 +63,9 @@ export default function EventCard({ event, onPress }) {
             placement="top-right"
             shape="rectangle"
             size="sm"
-            className="right-[39px] top-7 z-[1000] p-1.5 bg-white rounded-md border-0 border-blue-500 transition-all ease-in-out duration-500"
+            className={`right-[39px] top-7 z-[1000] p-1.5 bg-white rounded-md border-0 border-blue-500 transition-all ease-in-out duration-500 ${
+                applied ? "delay-500" : ""
+            }`}
             isInvisible={!isSelected}
         >
             <Card

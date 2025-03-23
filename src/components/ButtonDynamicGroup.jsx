@@ -30,6 +30,7 @@ export default function ButtonDynamicGroup({
         bulkUpdate,
         uniformAttending,
         uniformInterested,
+        setApplied,
     } = useFloatingContext();
 
     useEffect(() => {
@@ -80,6 +81,7 @@ export default function ButtonDynamicGroup({
     };
 
     const handleInterested = async () => {
+        setApplied(true);
         if (mode === "bulk") {
             bulkUpdate("interested");
             return;

@@ -22,6 +22,7 @@ export const FloatingProvider = ({ children }) => {
     const [selectionMode, setSelectionMode] = useState(false);
     const [uniformInterested, setUniformInterested] = useState(null);
     const [uniformAttending, setUniformAttending] = useState(null);
+    const [applied, setApplied] = useState(false);
 
     const { userId } = useContext(AuthContext);
     const { events } = useEventsStore();
@@ -63,6 +64,8 @@ export const FloatingProvider = ({ children }) => {
     };
 
     const toggleEventSelection = (eventId) => {
+        setApplied(false);
+
         setSelectedEvents((prev) =>
             prev.includes(eventId)
                 ? prev.filter((id) => id !== eventId)
@@ -155,6 +158,8 @@ export const FloatingProvider = ({ children }) => {
                 selectionMode,
                 uniformAttending,
                 uniformInterested,
+                applied,
+                setApplied,
                 toggleEventSelection,
                 toggleSelectionMode,
                 clearSelection,
