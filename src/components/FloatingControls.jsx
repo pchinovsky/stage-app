@@ -6,13 +6,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useFloatingContext } from "../contexts/floatingContext";
 import ButtonDynamicGroup from "./ButtonDynamicGroup";
 
-export default function FloatingControls({ pos }) {
+export default function FloatingControls({ pos, active }) {
     const [isDetached, setIsDetached] = useState(false);
     const panelRef = useRef(null);
     const initialPosition = useRef(pos);
     const [position, setPosition] = useState(initialPosition.current);
     const [isDragging, setIsDragging] = useState(false);
-    const [isMinimized, setIsMinimized] = useState(false);
+    const [isMinimized, setIsMinimized] = useState(true);
 
     const {
         selectedEvents,
@@ -101,6 +101,7 @@ export default function FloatingControls({ pos }) {
                             onPress={toggleDetach}
                             isIconOnly
                             variant="bordered"
+                            isDisabled={!active}
                         >
                             {isDetached ? (
                                 <Icon
@@ -133,6 +134,7 @@ export default function FloatingControls({ pos }) {
                                     ? () => setIsMinimized(false)
                                     : () => setIsMinimized(true)
                             }
+                            isDisabled={!active}
                         >
                             {isMinimized ? (
                                 <Icon
@@ -157,9 +159,16 @@ export default function FloatingControls({ pos }) {
                     <motion.div
                         key="panelContent"
                         initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.5 }}
+                        animate={{
+                            opacity: 1,
+                            y: 0,
+                            transition: { duration: 1 },
+                        }}
+                        exit={{
+                            opacity: 0,
+                            y: -10,
+                            transition: { duration: 0.2 },
+                        }}
                     >
                         <div className={styles.content}>
                             <span>Selection Mode</span>

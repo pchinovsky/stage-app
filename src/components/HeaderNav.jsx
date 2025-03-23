@@ -12,16 +12,25 @@ import {
     User,
 } from "@heroui/react";
 import styles from "./HeaderNav.module.css";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
 import { useLogout } from "../hooks/useAuth";
 import { useUser } from "../hooks/useUser";
+import FloatingControls from "./FloatingControls";
+import { useLocation } from "react-router-dom";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
     const { isAuth } = useContext(AuthContext);
     const { currentUser, loading } = useUser();
+
+    const { pathname } = useLocation();
+    const pathSegments = pathname.split("/");
+    const filteredSegments = pathSegments.filter((segment) => segment !== "");
+    const lastSegment = filteredSegments[filteredSegments.length - 1];
+
+    const panelActive = lastSegment === "events";
 
     const logout = useLogout();
 
@@ -36,6 +45,11 @@ export default function HeaderNav() {
                 "--navbar-bg": navWhite ? "white" : "transparent",
             }}
         >
+            <FloatingControls
+                pos={{ top: "13px", left: "16px" }}
+                active={panelActive}
+            />
+
             <NavbarBrand>
                 <Link
                     aria-current="page"
@@ -45,7 +59,6 @@ export default function HeaderNav() {
                     <p className={styles.brand}>STAGE</p>
                 </Link>
             </NavbarBrand>
-
             {/* Center Navbar Items */}
             <NavbarContent className={styles.navContent} justify="center">
                 <Dropdown shouldBlockScroll={false} className="lg:flex p-0">

@@ -1,5 +1,5 @@
 .panel {
-    @apply fixed z-[9999] bg-white border border-gray-300 rounded-lg 
+    @apply fixed z-[9999] bg-white border border-gray-300 rounded-xl 
            backdrop-blur-md bg-opacity-10;
     @apply hover:bg-opacity-100 hover:rounded-lg transition-background ease-in-out duration-1000;
 }
@@ -10,9 +10,9 @@
     @apply transition-height ease-in-out duration-1000; */
     /* @apply transition-all ease-in-out duration-1000; */
     transition:
-        width 1s ease-in-out,
-        height 1s ease-in-out,
-        background-color 1s ease-in-out;
+        width 0.7s ease-in-out,
+        height 0.7s ease-in-out,
+        background-color 0.5s ease-in-out;
 }
 
 .panelMax {
@@ -21,9 +21,9 @@
     @apply transition-height ease-in-out duration-1000; */
     /* @apply transition-all ease-in-out duration-1000; */
     transition:
-        width 1s ease-in-out,
-        height 1s ease-in-out,
-        background-color 1s ease-in-out;
+        width 0.3s ease-in-out,
+        height 0.3s ease-in-out,
+        background-color 0.5s ease-in-out;
 }
 
 .header {
@@ -33,7 +33,7 @@
 }
 
 .title {
-    @apply font-semibold text-gray-700 flex justify-between ml-2;
+    @apply font-semibold text-gray-700 flex justify-between ml-2 mb-1;
 }
 
 .controlBtns {
