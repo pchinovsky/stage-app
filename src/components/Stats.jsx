@@ -1,9 +1,16 @@
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
-export default function StatsBox({ stats }) {
+export default function StatsBox({ stats, pos, disableAbsolute = false }) {
+    const containerStyle = disableAbsolute
+        ? {}
+        : { position: "absolute", top: pos.top, left: pos.left };
+
     return (
-        <div className="absolute left-[70px] top-[410px] flex flex-wrap justify-end gap-4 z-[100] w-[400px]">
+        <div
+            className={`flex flex-wrap ${disableAbsolute ? "justify-start" : "justify-end"} gap-4 z-[100] w-[400px]`}
+            style={containerStyle}
+        >
             {stats.map((stat, index) => (
                 <Card
                     key={index}

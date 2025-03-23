@@ -151,7 +151,7 @@ export default function Event() {
             label: "Attendees",
             value: event?.attendingCount,
             description: "People attending",
-            icon: "mdi:account-group",
+            icon: "tabler:user-check",
         },
         {
             label: "Interested",
@@ -201,7 +201,7 @@ export default function Event() {
                             onClose={handleCloseModalInvite}
                             users={allUsers}
                             currentUser={currentUser}
-                            event={event.id}
+                            event={event}
                         />
                         <CalendarDate
                             date={event.openingDate}
@@ -258,7 +258,13 @@ export default function Event() {
                             alt={event.title}
                             className={styles.image}
                         />
-                        <StatsBox stats={statsData} />;
+                        <StatsBox
+                            stats={statsData}
+                            pos={{
+                                top: "410px",
+                                left: "70px",
+                            }}
+                        />
                         <SlidingSidebar event={event} venue={venue} />
                         {/* <FloatingCard className="absolute top-[500px] left-20 w-60 p-4 z-[100]">
                             <div className="flex items-center gap-2">
