@@ -4,36 +4,59 @@ import { Image, Tooltip, Spinner, Skeleton } from "@heroui/react";
 import TabbedCard from "./TabCard";
 import styles from "../pages/events.module.css";
 import { useEvents } from "../hooks/useEvents";
+import StatsBox from "./Stats";
+import { useEventsStore } from "../contexts/eventsContext";
+import { calcTrending } from "../../utils/calcTrending";
 
 const HeroSection = React.memo(() => {
-    const { events, loading, error } = useEvents({});
+    const { events, loading, error } = useEventsStore();
     const [randomEvent, setRandomEvent] = useState(null);
+    const [involved, setInvolved] = useState(0);
 
     useEffect(() => {
         if (!loading && events && events.length > 0) {
             const randomIndex = Math.floor(Math.random() * events.length);
             setRandomEvent(events[randomIndex]);
+
+            (async () => {
+                const trendingValues = await Promise.all(
+                    events.map((e) => calcTrending(e))
+                );
+                const involvedTotal = trendingValues.reduce(
+                    (acc, val) => acc + val,
+                    0
+                );
+                setInvolved(involvedTotal);
+            })();
         }
     }, [loading, events]);
 
     const circlePos = [
-        { top: "20%", left: "30%" },
-        { top: "50%", left: "60%" },
-        { top: "70%", left: "40%" },
+        { top: "30%", left: "30%" },
+        { top: "60%", left: "60%" },
+        { top: "100%", left: "40%" },
+    ];
+
+    const statsData = [
+        {
+            label: "Visitors involved",
+            value: involved,
+            description: "Total visitors involved",
+            icon: "tabler:user-check",
+        },
+        {
+            label: "Events",
+            value: events.length,
+            description: "Total number of events staged",
+            icon: "ci:calendar-check",
+        },
     ];
 
     return (
         <motion.div className={styles.heroSection}>
             <div className={styles.infoBoxes}>
-                <div className={styles.infoBox}>
-                    <h3 className={styles.infoTitle}>Real Time Data</h3>
-                    <p className={styles.infoText}>Staged events currently</p>
-                    <p className={styles.infoNumber}>
-                        {loading ? "..." : events.length}
-                    </p>
-                    <p className={styles.infoUpdate}>Last Update: 13:06:33</p>
-                </div>
-                <TabbedCard className={styles.cityBox} />
+                <StatsBox stats={statsData} disableAbsolute />
+                <TabbedCard />
             </div>
             {loading || !randomEvent ? (
                 // <Spinner
@@ -77,7 +100,7 @@ const HeroSection = React.memo(() => {
                             </a>
                         )
                     }
-                    placement="top"
+                    placement="bottom"
                 >
                     <div
                         className={styles.tooltipCircle}

@@ -142,7 +142,7 @@ export const FloatingProvider = ({ children }) => {
 
             await eventsApi.updateEvent(eventId, finalEventUpdate);
 
-            await calcTrending(eventId);
+            await calcTrending(eventData);
 
             await updateDoc(userRef, userUpdate);
         });

@@ -59,7 +59,7 @@ export default function ButtonDynamicGroup({
             }
             await eventsApi.updateEvent(event.id, updatedEvent);
 
-            await calcTrending(event.id);
+            await calcTrending(event);
 
             const userUpdate = {
                 attending: isAttending
@@ -100,7 +100,7 @@ export default function ButtonDynamicGroup({
             }
             await eventsApi.updateEvent(event.id, updatedEvent);
 
-            await calcTrending(event.id);
+            await calcTrending(event);
 
             const userUpdate = {
                 interested: isInterested

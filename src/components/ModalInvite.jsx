@@ -40,7 +40,7 @@ export default function ModalInvite({
         (async () => {
             if (isOpen && event) {
                 try {
-                    const eventDoc = await getDoc(doc(db, "events", event));
+                    const eventDoc = await getDoc(doc(db, "events", event.id));
                     if (eventDoc.exists()) {
                         setAlreadyInvited(eventDoc.data().invited || []);
                     }
@@ -80,7 +80,7 @@ export default function ModalInvite({
 
         setIsLoading(true);
         try {
-            const eventId = event;
+            const eventId = event.id;
 
             const userIds = Array.from(selectedUsers);
 
@@ -108,7 +108,7 @@ export default function ModalInvite({
 
             await batch.commit();
 
-            await calcTrending(eventId);
+            await calcTrending(event);
 
             setAlreadyInvited([...alreadyInvited, ...userIds]);
             setSelectedUsers(new Set([]));
