@@ -16,6 +16,23 @@
     @apply items-start !important;
 }
 
+.cardHeader {
+    @apply absolute left-4 bottom-4 z-[1000] pb-0 pt-2 px-4 flex h-[80px] bg-white overflow-hidden rounded-lg;
+    @apply z-[1000] !important;
+    @apply w-[93%] !important;
+    @apply justify-start !important;
+    @apply items-start !important;
+}
+
+.cardHeader {
+    @apply absolute left-4 bottom-4 z-[1000] pb-0 pt-2 px-4 flex h-[87%] bg-white overflow-hidden rounded-lg;
+    @apply z-[1000] !important;
+    @apply w-[100px] !important;
+    @apply rounded-t-lg !important;
+    @apply justify-start !important;
+    @apply items-start !important;
+}
+
 .cardBody {
     @apply flex overflow-hidden w-full p-0;
     @apply p-0 !important;

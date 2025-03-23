@@ -88,7 +88,7 @@ export default function EventCard({ event, onPress }) {
                         alt={event?.title}
                         className={styles.image}
                         src={event?.image || "https://via.placeholder.com/370"}
-                        width={370}
+                        width={470}
                         height={235}
                     />
                 </CardBody>

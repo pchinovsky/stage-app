@@ -40,6 +40,10 @@ export default function ArtistsPage() {
                             key={artist.id}
                             data={artist}
                             onClick={() => handleCardClick(artist)}
+                            size={{
+                                width: "480px",
+                                height: "288px",
+                            }}
                         />
                     ))}
                 </div>

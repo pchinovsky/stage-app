@@ -310,6 +310,10 @@ export default function Profile() {
                                                     data={venue}
                                                     onClick={handleCardClick}
                                                     className="self-end"
+                                                    size={{
+                                                        width: "480px",
+                                                        height: "288px",
+                                                    }}
                                                 />
                                             )}
                                         </div>

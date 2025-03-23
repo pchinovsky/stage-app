@@ -499,7 +499,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     return (
         <div
             ref={ref}
-            className={`${styles.filterBar} ${searchFixed ? "fixed top-[70px] left-0 z-[1500]" : "relative z-[500]"}`}
+            className={`${styles.filterBar} ${searchFixed ? "fixed top-[70px] left-0 z-[1500] rounded-t-none" : "relative z-[500]"}`}
         >
             <div className="flex flex-col items-center justify-between gap-1 w-[300px]">
                 {selectedSearchType === "events" ? (

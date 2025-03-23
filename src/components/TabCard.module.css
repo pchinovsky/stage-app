@@ -1,18 +1,22 @@
 .card {
-    @apply max-w-lg mx-0 mt-10 min-h-80 shadow-lg p-2 bg-slate-200;
-    /* min-height: 300px !important; */
+    @apply w-[370px] h-[140px] shadow-lg p-1.5 bg-slate-100 bg-opacity-30 backdrop:blur-md rounded-b-3xl !important;
+    /* @apply top-48 left-8 !important; */
 }
 
 .tabs {
-    @apply border-b bg-slate-50 rounded-t-lg;
+    @apply border-b bg-white rounded-t-xl h-[36.5px];
+}
+
+.tabs [data-selected="true"] {
+    color: blue !important;
 }
 
 .tab {
-    @apply bg-slate-50;
+    @apply bg-white rounded-b-2xl h-24 p-0 py-0;
 }
 
 .tabContent {
-    @apply p-4;
+    @apply p-0 rounded-lg;
 }
 
 .image {

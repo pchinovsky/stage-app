@@ -58,27 +58,27 @@ export default function EventLayout() {
     }, [searchFixed]);
 
     // for the scroll reset issue -
-    useEffect(() => {
-        const savedScrollY = localStorage.getItem("scrollPosition");
-        if (savedScrollY) {
-            setTimeout(() => {
-                window.scrollTo(0, parseInt(savedScrollY, 10));
-                console.log("📜 Restored scroll to:", savedScrollY);
-                localStorage.removeItem("scrollPosition");
-            }, 50);
-        }
-    }, [filters]);
+    // useEffect(() => {
+    //     const savedScrollY = localStorage.getItem("scrollPosition");
+    //     if (savedScrollY) {
+    //         setTimeout(() => {
+    //             window.scrollTo(0, parseInt(savedScrollY, 10));
+    //             console.log("📜 Restored scroll to:", savedScrollY);
+    //             localStorage.removeItem("scrollPosition");
+    //         }, 50);
+    //     }
+    // }, [filters]);
 
-    useRestoreScroll([filters, loading]);
+    // useRestoreScroll([filters, loading]);
 
     return (
         <DefaultLayout>
             <div className={styles.layout}>
                 <HeroSection events={events} loading={loading} />
                 {/* Floating Controls */}
-                <div className={styles.floatingControls}>
-                    <FloatingControls pos={{ top: "250px", left: "40px" }} />
-                </div>
+                {/* <div className={styles.floatingControls}>
+                    <FloatingControls pos={{ top: "220px", left: "40px" }} />
+                </div> */}
 
                 {/* Placeholder for Filter Bar */}
                 <div

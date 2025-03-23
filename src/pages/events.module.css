@@ -3,11 +3,11 @@
 }
 
 .heroSection {
-    @apply sticky top-0 h-[40vh] w-full bg-white text-white flex items-center justify-center text-3xl z-10;
+    @apply sticky top-0 h-[34.5vh] w-full bg-white text-white flex items-center justify-center text-3xl z-10;
 }
 
 .infoBoxes {
-    @apply fixed top-[20px] right-4 flex flex-col gap-4 z-[1000] mr-6;
+    @apply absolute top-[80px] right-[-17px] flex flex-col gap-3 z-[1000] mr-6;
 }
 
 .infoBox {
@@ -54,7 +54,7 @@
 }
 
 .eventsSection {
-    @apply relative p-4 z-20 bg-slate-50 w-[95%] rounded-t-lg mt-16 flex flex-wrap gap-4 left-10 overflow-hidden;
+    @apply relative p-4 z-20 bg-slate-50 w-[95%] rounded-t-lg mt-16 flex flex-wrap gap-4 left-9 overflow-hidden;
 }
 
 .tooltipCircle {
@@ -69,5 +69,5 @@
 }
 
 .eventsListContainer {
-    @apply w-full flex flex-wrap gap-2 h-screen content-start;
+    @apply w-full flex flex-wrap gap-2 min-h-screen content-start;
 }

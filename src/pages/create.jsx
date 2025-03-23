@@ -34,7 +34,13 @@ import eventsApi from "../api/events-api";
 import DurationInput from "../components/DurationInput";
 import ModalArtistAdd from "../components/ModalArtistAdd";
 import { categories } from "../constants/generalConstants";
-import { doc, updateDoc, setDoc, arrayUnion } from "firebase/firestore";
+import {
+    doc,
+    updateDoc,
+    setDoc,
+    arrayUnion,
+    serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 
 export default function CreatePage() {
@@ -60,6 +66,7 @@ export default function CreatePage() {
         artists: [],
         venue: "",
         createdBy: "",
+        createdAt: serverTimestamp(),
     };
 
     const route = "/events";

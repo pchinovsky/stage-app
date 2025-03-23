@@ -39,6 +39,10 @@ export default function VenuesPage() {
                             key={venue.id}
                             data={venue}
                             onClick={() => handleCardClick(venue)}
+                            size={{
+                                width: "480px",
+                                height: "288px",
+                            }}
                         />
                     ))}
                 </div>
