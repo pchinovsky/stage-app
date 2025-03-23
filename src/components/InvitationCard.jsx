@@ -15,13 +15,16 @@ import Toast from "./Toast";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "../contexts/authContext";
+import { useEvent } from "../hooks/useEvent";
 
 export default function InvitationCard({ invitation }) {
     const [hasAccepted, setHasAccepted] = useState(false);
     const [hasDeclined, setHasDeclined] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
 
-    const { events, loading, error } = useEvents({ id: invitation.eventId });
+    // const { events, loading, error } = useEvents({ id: invitation.eventId });
+    const { event, loading, error } = useEvent(invitation.eventId);
+
     const {
         fetchUsersByIds,
         currentUser: user,
@@ -44,7 +47,7 @@ export default function InvitationCard({ invitation }) {
     }, [user, invitation.eventId]);
 
     const inviter = otherUsers[invitation.invitedBy];
-    const event = events && events[0];
+    // const event = events && events[0];
 
     if (hasDeclined) {
         return null;

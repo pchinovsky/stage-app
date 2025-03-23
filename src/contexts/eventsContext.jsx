@@ -5,6 +5,7 @@ const EventsContext = createContext();
 
 export const EventsProvider = ({ children }) => {
     const { events, loading, error } = useEvents();
+    // const { events, loading, error } = useEventsRealtime();
 
     return (
         <EventsContext.Provider value={{ events, loading, error }}>

@@ -9,6 +9,7 @@ import { useEvents } from "../hooks/useEvents";
 import useFetch from "../hooks/useFetch";
 import eventsData2 from "../mockEventData2";
 import { useNavigate } from "react-router-dom";
+import { useEventsRelated } from "../hooks/useEventsRelated";
 
 // export default function SlidingSidebar({ data }) {
 export default function SlidingSidebar({ event, venue }) {
@@ -45,75 +46,77 @@ export default function SlidingSidebar({ event, venue }) {
         venue: event.venue || undefined,
     };
 
+    const { relatedEvents, loading } = useEventsRelated(event);
+
     // console.log("sidebar filters", filters);
 
     // const { events, loading, error } = useEvents(filters);
     // const eventss = eventsData2;
 
     // filter adapted to firebase query restrictions - to optimize
-    const fetchRelatedEvents = async () => {
-        try {
-            const eventsRef = collection(db, "events");
-            let queries = [];
+    // const fetchRelatedEvents = async () => {
+    //     try {
+    //         const eventsRef = collection(db, "events");
+    //         let queries = [];
 
-            if (event.artists.length > 0) {
-                queries.push(
-                    query(
-                        eventsRef,
-                        where("artists", "array-contains-any", event.artists)
-                    )
-                );
-            }
-            if (event.categories.length > 0) {
-                queries.push(
-                    query(
-                        eventsRef,
-                        where(
-                            "categories",
-                            "array-contains-any",
-                            event.categories
-                        )
-                    )
-                );
-            }
+    //         if (event.artists.length > 0) {
+    //             queries.push(
+    //                 query(
+    //                     eventsRef,
+    //                     where("artists", "array-contains-any", event.artists)
+    //                 )
+    //             );
+    //         }
+    //         if (event.categories.length > 0) {
+    //             queries.push(
+    //                 query(
+    //                     eventsRef,
+    //                     where(
+    //                         "categories",
+    //                         "array-contains-any",
+    //                         event.categories
+    //                     )
+    //                 )
+    //             );
+    //         }
 
-            let generalConditions = [];
-            if (event.createdBy) {
-                generalConditions.push(
-                    where("createdBy", "==", event.createdBy)
-                );
-            }
-            if (event.venue) {
-                generalConditions.push(where("venue", "==", event.venue));
-            }
+    //         let generalConditions = [];
+    //         if (event.createdBy) {
+    //             generalConditions.push(
+    //                 where("createdBy", "==", event.createdBy)
+    //             );
+    //         }
+    //         if (event.venue) {
+    //             generalConditions.push(where("venue", "==", event.venue));
+    //         }
 
-            if (queries.length === 0) {
-                queries.push(query(eventsRef, ...generalConditions));
-            }
+    //         if (queries.length === 0) {
+    //             queries.push(query(eventsRef, ...generalConditions));
+    //         }
 
-            let eventResults = new Set();
+    //         let eventResults = new Set();
 
-            for (let q of queries) {
-                const snapshot = await getDocs(q);
-                snapshot.docs.forEach((doc) =>
-                    eventResults.add(
-                        JSON.stringify({ id: doc.id, ...doc.data() })
-                    )
-                );
-            }
+    //         for (let q of queries) {
+    //             const snapshot = await getDocs(q);
+    //             snapshot.docs.forEach((doc) =>
+    //                 eventResults.add(
+    //                     JSON.stringify({ id: doc.id, ...doc.data() })
+    //                 )
+    //             );
+    //         }
 
-            return Array.from(eventResults).map((doc) => JSON.parse(doc));
-        } catch (err) {
-            console.error("Error fetching related events:", err);
-            return [];
-        }
-    };
+    //         return Array.from(eventResults).map((doc) => JSON.parse(doc));
+    //     } catch (err) {
+    //         console.error("Error fetching related events:", err);
+    //         return [];
+    //     }
+    // };
 
-    const { data: events, loading } = useFetch(fetchRelatedEvents, []);
+    // const { data: events, loading } = useFetch(fetchRelatedEvents, []);
 
     useEffect(() => {
-        if (!loading) console.log("sidebar events", events);
-    }, [events]);
+        if (!loading) console.log("sidebar events", relatedEvents);
+    }, [relatedEvents]);
 
     const handleEventPress = (eventId) => {
         navigate(`/events/${eventId}`);
@@ -151,7 +154,7 @@ export default function SlidingSidebar({ event, venue }) {
                     {loading ? (
                         <p>Loading events...</p>
                     ) : (
-                        events.map((event) => (
+                        relatedEvents.map((event) => (
                             <Card
                                 key={event.id}
                                 className={styles.eventCard}

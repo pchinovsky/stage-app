@@ -27,19 +27,20 @@ import StatsBox from "../components/Stats";
 import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
 import EventHead from "../components/EventHead";
 import { useUser } from "../hooks/useUser";
-import { useEventsRealtime } from "../hooks/useEventsRealtime";
 import useDeleteEvent from "../hooks/useDeleteEvent";
 import ModalInvite from "../components/ModalInvite";
+import { useEvent } from "../hooks/useEvent";
 
 export default function Event() {
     const { eventId } = useParams();
     const navigate = useNavigate();
     // const { events, loading, error } = useEvents({ id: eventId });
-    const { events, loading, error } = useEventsRealtime({ id: eventId });
+    // const { events, loading, error } = useEventsRealtime({ id: eventId });
+    const { event, loading, error } = useEvent(eventId);
+
+    // const event = events[0];
 
     const { deleteEvent, isDeleting } = useDeleteEvent();
-
-    const event = events[0];
 
     const [artistIds, setArtistIds] = useState(null);
     const [venueId, setVenueId] = useState(null);
@@ -50,12 +51,12 @@ export default function Event() {
     const [trigger, setTrigger] = useState(0);
 
     useEffect(() => {
-        if (!loading && events.length > 0) {
-            const event = events[0];
+        if (!loading && event) {
+            // const event = events[0];
             setArtistIds(event.artists || []);
             setVenueId(event.venue || null);
         }
-    }, [loading, events]);
+    }, [loading, event]);
 
     const { artists, loading: artistsLoading } = useArtists(artistIds);
     const { venue, loading: venueLoading } = useVenue(venueId);
@@ -191,7 +192,7 @@ export default function Event() {
                     <p className={styles.loading}>Loading...</p>
                 ) : error ? (
                     <p className={styles.error}>Error: {error.message}</p>
-                ) : !events.length ? (
+                ) : !event ? (
                     <p className={styles.notFound}>Event not found.</p>
                 ) : (
                     <>

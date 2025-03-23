@@ -211,21 +211,15 @@ export default function FloatingControls({ pos }) {
                             />
                             <Tooltip
                                 placement="bottom"
-                                radius="sm"
+                                className="rounded-md"
                                 content="Clear selection"
                                 isDisabled={!selectionMode}
                             >
                                 <Button
                                     onPress={clearSelection}
-                                    disabled={!selectionMode}
+                                    isDisabled={!selectionMode}
                                     disableRipple={!selectionMode}
-                                    className="left-40 top-1 p-1"
-                                    classNames={{
-                                        base: [
-                                            "data-[disabled=true]:bg-red-500",
-                                            "data-[disabled=true]:opacity-100",
-                                        ],
-                                    }}
+                                    className={styles.clearButton}
                                     variant="bordered"
                                     isIconOnly
                                 >
@@ -233,7 +227,7 @@ export default function FloatingControls({ pos }) {
                                         icon="iconoir:undo-action"
                                         width="24"
                                         height="24"
-                                        className={`${!selectionMode && "text-gray-400"}`}
+                                        className={`${!selectionMode && "text-gray-600"}`}
                                     />
                                 </Button>
                             </Tooltip>

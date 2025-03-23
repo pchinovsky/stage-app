@@ -63,3 +63,7 @@
 .createButton {
     @apply bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-800;
 }
+
+.clearButton {
+    @apply left-40 top-1 p-1 hover:bg-slate-100;
+}

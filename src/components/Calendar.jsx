@@ -6,16 +6,22 @@ import "react-calendar/dist/Calendar.css";
 import styles from "./Calendar.module.css";
 import { useEvents } from "../hooks/useEvents";
 import { useUser } from "../hooks/useUser";
+import { useEventsStore } from "../contexts/eventsContext";
 
 export default function CalendarModal({ isOpen, onClose }) {
     const [viewMode, setViewMode] = useState("mine");
     const { currentUser, loading: userLoading, error: userError } = useUser();
 
+    // const {
+    //     events,
+    //     loading: eventsLoading,
+    //     error: eventsError,
+    // } = useEvents({});
     const {
         events,
         loading: eventsLoading,
         error: eventsError,
-    } = useEvents({});
+    } = useEventsStore();
 
     if (userLoading || eventsLoading) {
         return <div>Loading...</div>;

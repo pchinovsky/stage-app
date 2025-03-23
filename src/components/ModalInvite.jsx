@@ -55,7 +55,7 @@ export default function ModalInvite({
     const filteredUsers = useMemo(() => {
         return users.filter(
             (user) =>
-                user.id !== currentUser.id &&
+                user.id !== currentUser?.id &&
                 user.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
     }, [users, searchQuery]);

@@ -1,6 +1,6 @@
 .card {
-    @apply max-w-lg mx-0 mt-10 shadow-lg p-2 bg-slate-200;
-    min-height: 80px !important;
+    @apply max-w-lg mx-0 mt-10 min-h-80 shadow-lg p-2 bg-slate-200;
+    /* min-height: 300px !important; */
 }
 
 .tabs {
