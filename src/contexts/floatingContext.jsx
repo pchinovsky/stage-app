@@ -12,6 +12,7 @@ import {
 import { AuthContext } from "./authContext";
 import { calcTrending } from "../../utils/calcTrending";
 import { useEventsStore } from "./eventsContext";
+import authApi from "../api/auth-api";
 
 const FloatingContext = createContext();
 
@@ -78,7 +79,7 @@ export const FloatingProvider = ({ children }) => {
     const bulkUpdate = async (actionType) => {
         const promises = selectedEvents.map(async (eventId) => {
             const eventRef = doc(db, "events", eventId);
-            const userRef = doc(db, "users", userId);
+            // const userRef = doc(db, "users", userId);
 
             const eventSnap = await getDoc(eventRef);
             const eventData = eventSnap.data();
@@ -144,7 +145,8 @@ export const FloatingProvider = ({ children }) => {
 
             await calcTrending(eventData);
 
-            await updateDoc(userRef, userUpdate);
+            // await updateDoc(userRef, userUpdate);
+            await authApi.updateUser(userId, userUpdate);
         });
 
         await Promise.all(promises);

@@ -42,10 +42,12 @@ export function useRegister() {
                 attending: [],
                 interested: [],
                 followedBy: [],
-                following: [],
+                followingArtists: [],
+                followingVenues: [],
                 followingUsers: [],
                 managedVenue: "",
                 eventsFeaturedIn: [],
+                activeFilters: []
             };
 
             await setDoc(doc(db, "users", authData.user.uid), newUser);

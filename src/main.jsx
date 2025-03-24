@@ -6,6 +6,7 @@ import { AuthProvider } from "./contexts/authContext.jsx";
 import { FollowingProvider } from "./contexts/followingContext.jsx";
 import { FloatingProvider } from "./contexts/floatingContext.jsx";
 import { EventsProvider } from "./contexts/eventsContext.jsx";
+import { UsersProvider } from "./contexts/usersContext.jsx";
 
 import App from "./App.jsx";
 import { Provider } from "./provider.jsx";
@@ -15,15 +16,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <BrowserRouter>
         <Provider>
             <AuthProvider>
-                <NavProvider>
-                    <FollowingProvider>
-                        <EventsProvider>
-                            <FloatingProvider>
-                                <App />
-                            </FloatingProvider>
-                        </EventsProvider>
-                    </FollowingProvider>
-                </NavProvider>
+                <UsersProvider>
+                    <NavProvider>
+                        <FollowingProvider>
+                            <EventsProvider>
+                                <FloatingProvider>
+                                    <App />
+                                </FloatingProvider>
+                            </EventsProvider>
+                        </FollowingProvider>
+                    </NavProvider>
+                </UsersProvider>
             </AuthProvider>
         </Provider>
     </BrowserRouter>

@@ -9,6 +9,7 @@ import Toast from "./Toast";
 import { AuthContext } from "../contexts/authContext";
 import { useFloatingContext } from "../contexts/floatingContext";
 import { calcTrending } from "../../utils/calcTrending";
+import authApi from "../api/auth-api";
 
 export default function ButtonDynamicGroup({
     pos,
@@ -61,12 +62,11 @@ export default function ButtonDynamicGroup({
 
             await calcTrending(event);
 
-            const userUpdate = {
+            await authApi.updateUser(userId, {
                 attending: isAttending
                     ? arrayRemove(event.id)
                     : arrayUnion(event.id),
-            };
-            await updateDoc(doc(db, "users", userId), userUpdate);
+            });
             setIsAttending(!isAttending);
             setToastMessage(
                 isAttending
@@ -102,12 +102,11 @@ export default function ButtonDynamicGroup({
 
             await calcTrending(event);
 
-            const userUpdate = {
+            await authApi.updateUser(userId, {
                 interested: isInterested
                     ? arrayRemove(event.id)
                     : arrayUnion(event.id),
-            };
-            await updateDoc(doc(db, "users", userId), userUpdate);
+            });
             setIsInterested(!isInterested);
             setToastMessage(
                 isInterested

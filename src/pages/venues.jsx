@@ -43,6 +43,7 @@ export default function VenuesPage() {
                                 width: "480px",
                                 height: "288px",
                             }}
+                            footer={true}
                         />
                     ))}
                 </div>

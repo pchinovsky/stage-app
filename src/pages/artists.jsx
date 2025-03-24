@@ -44,6 +44,7 @@ export default function ArtistsPage() {
                                 width: "480px",
                                 height: "288px",
                             }}
+                            footer={true}
                         />
                     ))}
                 </div>

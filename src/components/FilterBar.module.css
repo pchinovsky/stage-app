@@ -12,7 +12,7 @@
 }
 
 .filterContainer {
-    @apply flex items-center gap-2 max-w-[900px] h-[90px] mr-auto;
+    @apply flex items-center gap-2 h-[90px] mr-auto;
 }
 
 .arrowButton {
@@ -21,11 +21,11 @@
 }
 
 .filters {
-    @apply flex gap-3 overflow-hidden whitespace-nowrap scroll-smooth h-[100%] rounded-lg;
+    @apply flex gap-2 overflow-hidden whitespace-nowrap scroll-smooth h-[100%] rounded-lg;
 }
 
 .filterBox {
-    @apply relative bg-gray-50 hover:bg-gray-100 px-3 py-1 rounded-lg flex flex-col;
+    @apply relative bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-lg flex flex-col;
     @apply w-[200px] flex-shrink-0;
 }
 
@@ -60,5 +60,5 @@
 }
 
 .dropdown {
-    @apply ml-[300px];
+    @apply rounded-lg !important;
 }

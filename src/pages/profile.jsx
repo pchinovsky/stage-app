@@ -31,6 +31,7 @@ import useForm from "../hooks/useForm";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { userSchema } from "../api/validationSchemas";
+import authApi from "../api/auth-api";
 
 export default function Profile() {
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
@@ -53,12 +54,18 @@ export default function Profile() {
 
     const updateUser = async (values) => {
         try {
-            const userRef = doc(db, "users", user.id);
-            await updateDoc(userRef, {
+            // const userRef = doc(db, "users", user.id);
+            // await updateDoc(userRef, {
+            //     name: values.name,
+            //     email: values.email,
+            //     image: values.image,
+            // });
+            await authApi.updateUser(user.id, {
                 name: values.name,
                 email: values.email,
                 image: values.image,
             });
+
             console.log("User updated:", values);
             setCurrentUser({
                 ...user,
@@ -314,6 +321,7 @@ export default function Profile() {
                                                         width: "480px",
                                                         height: "288px",
                                                     }}
+                                                    footer={true}
                                                 />
                                             )}
                                         </div>
