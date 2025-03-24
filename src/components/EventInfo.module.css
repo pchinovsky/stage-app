@@ -1,6 +1,7 @@
 .card {
     @apply max-w-[200px] bottom-10 left-10 z-[100] 
-           bg-white backdrop-blur-md bg-opacity-20;
+           bg-white backdrop-blur-md bg-opacity-20 p-4;
+    @apply hover:scale-105;
 }
 
 .cardHeader {
@@ -12,7 +13,7 @@
 }
 
 .title {
-    @apply text-sm;
+    @apply text-medium font-bold;
 }
 
 .subtitle {
@@ -20,7 +21,7 @@
 }
 
 .cardBody {
-    @apply p-4;
+    @apply p-4 text-small;
 }
 
 .cardFooter {

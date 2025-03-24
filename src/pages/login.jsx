@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Input, Checkbox, Link, Form, Image } from "@heroui/react";
+import {
+    Button,
+    Input,
+    Checkbox,
+    Link,
+    Form,
+    Image,
+    Skeleton,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import eventsData from "../mockEventData";
 import EventInfo from "../components/EventInfo";
@@ -11,10 +19,14 @@ import { useLogin } from "../hooks/useAuth";
 import { loginSchema } from "../api/validationSchemas";
 import styles from "./login.module.css";
 import ButtonDynamic from "../components/ButtonDynamic";
+import { useEventsStore } from "../contexts/eventsContext";
+import { motion } from "framer-motion";
 
 export default function Login() {
     const [isVisible, setIsVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
+    const { events, loading } = useEventsStore();
+
     const log = useLogin();
     const route = "/events";
 
@@ -29,23 +41,32 @@ export default function Login() {
     const toggleVisibility = () => setIsVisible(!isVisible);
 
     useEffect(() => {
-        const randomEvent =
-            eventsData[Math.floor(Math.random() * eventsData.length)];
+        const randomEvent = events[Math.floor(Math.random() * events.length)];
         setFeaturedEvent(randomEvent);
-    }, []);
+    }, [events]);
 
     return (
         <DefaultLayout>
             <div className={styles.container}>
                 {featuredEvent && (
-                    <Image
-                        src={featuredEvent.image}
-                        alt={featuredEvent.title}
-                        className={styles.backgroundImage}
-                    />
+                    <motion.div
+                        initial={{ x: "-100%" }}
+                        animate={{ x: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <Image
+                            src={featuredEvent.image}
+                            alt={featuredEvent.title}
+                            className={styles.backgroundImage}
+                        />
+                    </motion.div>
                 )}
 
-                <EventInfo event={featuredEvent} />
+                {loading ? (
+                    <Skeleton className={styles.eventInfo} />
+                ) : (
+                    <EventInfo event={featuredEvent} />
+                )}
 
                 <div className={styles.loginBox}>
                     <p className={styles.title}>Log In 👋</p>
@@ -94,19 +115,6 @@ export default function Login() {
                         />
 
                         {error && <p className={styles.error}>{error}</p>}
-
-                        <div className={styles.rememberSection}>
-                            <Checkbox defaultSelected name="remember" size="sm">
-                                Remember me
-                            </Checkbox>
-                            <Link
-                                href="#"
-                                size="sm"
-                                className={styles.forgotLink}
-                            >
-                                Forgot password?
-                            </Link>
-                        </div>
 
                         <Button
                             className={styles.submitButton}

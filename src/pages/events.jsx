@@ -25,7 +25,6 @@ export default function EventLayout() {
 
     const navigate = useNavigate();
     const { events, loading, error } = useEvents(filters);
-    // const events = eventsData2;
     const [cachedEvents, setCachedEvents] = useState(events);
 
     useEffect(() => {
@@ -63,7 +62,6 @@ export default function EventLayout() {
     //     if (savedScrollY) {
     //         setTimeout(() => {
     //             window.scrollTo(0, parseInt(savedScrollY, 10));
-    //             console.log("📜 Restored scroll to:", savedScrollY);
     //             localStorage.removeItem("scrollPosition");
     //         }, 50);
     //     }
@@ -96,35 +94,12 @@ export default function EventLayout() {
                         setFilters={setFilters}
                     />
 
-                    {/* Event Cards
-                    {loading ? (
-                        <Skeleton className={styles.card}></Skeleton>
-                    ) : error ? (
-                        <p>Error loading events.</p>
-                    ) : (
-                        cachedEvents.map((event) => (
-                            <Skeleton
-                                isLoaded={!loading}
-                                className={styles.card}
-                                key={event.id}
-                            >
-                                <EventCard
-                                    key={event.id}
-                                    event={event}
-                                    onPress={handleEventPress}
-                                />
-                            </Skeleton>
-                        ))
-                    )} */}
-
-                    <div className={styles.eventsListContainer}>
+                    <div
+                        className={styles.eventsListContainer}
+                        style={{ paddingTop: searchFixed ? "112px" : "0px" }}
+                    >
                         <EventList filters={filters} />
                     </div>
-
-                    {/* Mock data */}
-                    {/* {events.map((event) => (
-                        <EventCard key={event.id} event={event} />
-                    ))} */}
                 </div>
             </div>
         </DefaultLayout>

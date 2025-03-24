@@ -91,22 +91,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }));
     }
 
-    function filterEventsToday() {
-        const isoDate = new Date().toISOString().slice(0, 10);
-        setFilters((prev) => ({
-            ...prev,
-            openingDate: { equalTo: isoDate },
-        }));
-    }
-
-    function filterEventsEnded() {
-        const isoDate = new Date().toISOString().slice(0, 10);
-        setFilters((prev) => ({
-            ...prev,
-            eventEndDate: { lessThan: isoDate },
-        }));
-    }
-
     useEffect(() => {
         if (selectedSearchType === "events") {
             setSuggestions([]);

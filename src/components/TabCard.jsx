@@ -52,6 +52,9 @@ export default function TabbedCard() {
                     tab: "pb-3 h-5",
                     tabContent: "text-gray-400 font-bold text-tiny",
                 }}
+                motionProps={{
+                    transition: { duration: 0.7 },
+                }}
             >
                 <Tab key="1" title="active venue" className={styles.tab}>
                     <div className={styles.tabContent}>

@@ -10,10 +10,15 @@ import useForm from "../hooks/useForm";
 import { useRegister } from "../hooks/useAuth";
 import { registerSchema } from "../api/validationSchemas";
 import styles from "./register.module.css";
+import { useEventsStore } from "../contexts/eventsContext";
+import { motion } from "framer-motion";
+import { Skeleton } from "@heroui/react";
+
 export default function Register() {
     const [isVisible, setIsVisible] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
+    const { events, loading } = useEventsStore();
 
     const register = useRegister();
     const initialValues = {
@@ -36,9 +41,7 @@ export default function Register() {
         setIsConfirmVisible(!isConfirmVisible);
 
     useEffect(() => {
-        // Random event for background
-        const randomEvent =
-            eventsData[Math.floor(Math.random() * eventsData.length)];
+        const randomEvent = events[Math.floor(Math.random() * events.length)];
         setFeaturedEvent(randomEvent);
     }, []);
 
@@ -47,15 +50,26 @@ export default function Register() {
             <div className={styles.container}>
                 {/* Background */}
                 {featuredEvent && (
-                    <Image
-                        src={featuredEvent.image}
-                        alt={featuredEvent.title}
-                        className={styles.backgroundImage}
-                    />
+                    <motion.div
+                        initial={{ x: "-100%" }}
+                        animate={{ x: 0 }}
+                        transition={{ duration: 0.5 }}
+                        // style={{ width: "100%", height: "100%" }}
+                    >
+                        <Image
+                            src={featuredEvent.image}
+                            alt={featuredEvent.title}
+                            className={styles.backgroundImage}
+                        />
+                    </motion.div>
                 )}
 
                 {/* Event Info */}
-                <EventInfo event={featuredEvent} />
+                {loading ? (
+                    <Skeleton className={styles.eventInfo} />
+                ) : (
+                    <EventInfo event={featuredEvent} />
+                )}
 
                 {/* Register Form */}
                 <div className={styles.registerBox}>
@@ -154,16 +168,6 @@ export default function Register() {
 
                         {error && <p className={styles.error}>{error}</p>}
 
-                        <Checkbox isRequired className={styles.checkbox}>
-                            I agree with the&nbsp;
-                            <Link href="#" size="sm">
-                                Terms
-                            </Link>
-                            &nbsp; and&nbsp;
-                            <Link href="#" size="sm">
-                                Privacy Policy
-                            </Link>
-                        </Checkbox>
                         <Button
                             className={styles.submitButton}
                             color="primary"

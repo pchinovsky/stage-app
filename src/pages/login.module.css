@@ -41,3 +41,9 @@
 .signupText {
     @apply text-center text-small;
 }
+
+.eventInfo {
+    @apply max-w-[200px] bottom-10 left-10 z-[100] 
+           bg-white backdrop-blur-md bg-opacity-20 p-4;
+    @apply hover:scale-105;
+}

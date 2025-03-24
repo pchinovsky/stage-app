@@ -8,7 +8,7 @@ import {
 } from "@heroui/react";
 import styles from "./EventInfo.module.css";
 
-export default function EventInfo() {
+export default function EventInfo({ event }) {
     return (
         <Card
             className={styles.card}
@@ -20,15 +20,16 @@ export default function EventInfo() {
         >
             <CardHeader className={styles.cardHeader}>
                 <div className={styles.headerContent}>
-                    <p className={styles.title}>HeroUI</p>
-                    <p className={styles.subtitle}>heroui.com</p>
+                    <p className={styles.title}>{event?.title}</p>
+                    <p className={styles.subtitle}>{event?.subtitle}</p>
                 </div>
             </CardHeader>
             <Divider />
             <CardBody className={styles.cardBody}>
                 <p>
-                    Make beautiful websites regardless of your design
-                    experience.
+                    {event?.description.length > 100
+                        ? event?.description.substring(0, 100) + "..."
+                        : event?.description}
                 </p>
             </CardBody>
             <Divider />
@@ -36,9 +37,9 @@ export default function EventInfo() {
                 <Link
                     isExternal
                     showAnchorIcon
-                    href="https://github.com/heroui-inc/heroui"
+                    href={event?.associatedLinks[0]}
                 >
-                    Visit source code on GitHub.
+                    Learn more.
                 </Link>
             </CardFooter>
         </Card>
