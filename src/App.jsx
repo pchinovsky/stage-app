@@ -11,6 +11,10 @@ import Event from "./pages/event";
 import Edit from "./pages/edit";
 import ArtistsPage from "./pages/artists";
 import VenuesPage from "./pages/venues";
+import ManagerGuard from "./guards/ManagerGuard";
+import AuthGuard from "./guards/authGuard";
+import OwnerGuard from "./guards/OwnerGuard";
+import { Navigate } from "react-router-dom";
 
 function AnimatedRoutes() {
     const location = useLocation();
@@ -59,7 +63,9 @@ function AnimatedRoutes() {
                                 duration: 0.4,
                             }}
                         >
-                            <Profile />
+                            <AuthGuard>
+                                <Profile />
+                            </AuthGuard>
                         </motion.div>
                     }
                 />
@@ -122,7 +128,11 @@ function AnimatedRoutes() {
                                 duration: 0.4,
                             }}
                         >
-                            <Edit />
+                            <AuthGuard>
+                                <OwnerGuard>
+                                    <Edit />
+                                </OwnerGuard>
+                            </AuthGuard>
                         </motion.div>
                     }
                 />
@@ -143,7 +153,11 @@ function AnimatedRoutes() {
                                 duration: 0.4,
                             }}
                         >
-                            <CreatePage />
+                            <AuthGuard>
+                                <ManagerGuard mode="route">
+                                    <CreatePage />
+                                </ManagerGuard>
+                            </AuthGuard>
                         </motion.div>
                     }
                 />
