@@ -34,7 +34,7 @@ import { useUser } from "../hooks/useUser-new";
 
 const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     const { userId, isAuth } = useContext(AuthContext);
-    const { currentUser } = useUser();
+    const { currentUser, loading: userLoading } = useUser();
 
     const { followingUsers, followingArtists, followingVenues } =
         useFollowing();
@@ -49,6 +49,12 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     const [selectedSearchType, setSelectedSearchType] = useState("events");
     const [selectedChips, setSelectedChips] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
+    const [filterWidth, setFilterWidth] = useState("1150px");
+
+    useEffect(() => {
+        const width = isAuth ? "950px" : "1150px";
+        setFilterWidth(width);
+    }, [isAuth]);
 
     useEffect(() => {
         if (selectedSearchType === "events") {
@@ -189,34 +195,29 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }
     };
 
+    const generateDefaultFilters = () =>
+        Object.entries(defaultFilterOptions).map(([label, options]) => ({
+            id: Date.now() + label,
+            label,
+            options,
+        }));
+
     useEffect(() => {
+        if (userLoading) return;
+
         if (currentUser) {
             if (
                 !currentUser.activeFilters ||
                 currentUser.activeFilters.length === 0
             ) {
-                const defaults = Object.entries(defaultFilterOptions).map(
-                    ([label, options]) => ({
-                        id: Date.now() + label,
-                        label,
-                        options,
-                    })
-                );
-                setActiveFilters(defaults);
+                setActiveFilters(generateDefaultFilters());
             } else {
                 setActiveFilters(currentUser.activeFilters);
             }
         } else {
-            const defaults = Object.entries(defaultFilterOptions).map(
-                ([label, options]) => ({
-                    id: Date.now() + label,
-                    label,
-                    options,
-                })
-            );
-            setActiveFilters(defaults);
+            setActiveFilters(generateDefaultFilters());
         }
-    }, [currentUser]);
+    }, [currentUser, userLoading]);
 
     useEffect(() => {
         if (activeFilters && activeFilters.length > 0) {
@@ -620,83 +621,61 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 </Select>
             </div>
 
-            {!currentUser ? (
-                <Skeleton className={styles.filterContainer}></Skeleton>
-            ) : (
-                <div
-                    className={styles.filterContainer}
-                    style={{
-                        width: currentUser ? "950px" : "1200px",
-                    }}
-                >
-                    {isAuth && (
-                        <button
-                            onClick={scrollLeft}
-                            className={styles.arrowButton}
+            <div
+                className={styles.filterContainer}
+                style={{
+                    width: filterWidth,
+                }}
+            >
+                {isAuth && (
+                    <button onClick={scrollLeft} className={styles.arrowButton}>
+                        <Icon
+                            icon="mdi:chevron-left"
+                            className="text-3xl z-[100]"
+                        />
+                    </button>
+                )}
+
+                <div ref={filtersRef} className={styles.filters}>
+                    {activeFilters.map((filter) => (
+                        <div
+                            key={filter.id}
+                            className={`${styles.filterBox} ${filter.label === "Categories" || filter.label === "Involved" ? styles.largerBox : ""}`}
                         >
-                            <Icon
-                                icon="mdi:chevron-left"
-                                className="text-3xl z-[100]"
-                            />
-                        </button>
-                    )}
-
-                    <div ref={filtersRef} className={styles.filters}>
-                        {activeFilters.map((filter) => (
-                            <div
-                                key={filter.id}
-                                className={`${styles.filterBox} ${filter.label === "Categories" ? styles.largerBox : ""}`}
-                            >
-                                {isAuth && (
-                                    <button
-                                        onClick={() => removeFilter(filter.id)}
-                                        className={styles.removeButton}
-                                    >
-                                        <Icon
-                                            icon="mdi:close"
-                                            className="text-xl"
-                                        />
-                                    </button>
-                                )}
-
-                                <span className={styles.filterLabel}>
-                                    {filter.label}
-                                </span>
-
-                                <div
-                                    className={`${filter.label === "Categories" ? styles.chipContainerLarger : styles.chipContainer}`}
+                            {isAuth && (
+                                <button
+                                    onClick={() => removeFilter(filter.id)}
+                                    className={styles.removeButton}
                                 >
-                                    {filter.options.map((option, index) => (
-                                        <Chip
-                                            key={index}
-                                            size="sm"
-                                            onClick={() =>
-                                                handleChipClick(
-                                                    filter.label,
-                                                    option
-                                                )
-                                            }
-                                            radius="sm"
-                                            variant="bordered"
-                                            className={`${styles.chip} ${
-                                                (
-                                                    filter.label === "Time"
-                                                        ? selectedChips.includes(
-                                                              getTimeChipValue(
-                                                                  option
-                                                              )
-                                                          )
-                                                        : selectedChips.includes(
-                                                              getDynamicFilterValue(
-                                                                  option
-                                                              )
-                                                          )
-                                                )
-                                                    ? styles.activeChip
-                                                    : ""
-                                            }`}
-                                            startContent={
-                                                (filter.label === "Time"
+                                    <Icon
+                                        icon="mdi:close"
+                                        className="text-sm hover:bg-white hover:rounded-full hover:p-[2px]"
+                                    />
+                                </button>
+                            )}
+
+                            <span className={styles.filterLabel}>
+                                {filter.label}
+                            </span>
+
+                            <div
+                                className={`${filter.label === "Categories" || filter.label === "Involved" ? styles.chipContainerLarger : styles.chipContainer}`}
+                            >
+                                {filter.options.map((option, index) => (
+                                    <Chip
+                                        key={index}
+                                        size="sm"
+                                        onClick={() =>
+                                            handleChipClick(
+                                                filter.label,
+                                                option
+                                            )
+                                        }
+                                        radius="sm"
+                                        variant="bordered"
+                                        className={`${styles.chip} ${
+                                            (
+                                                filter.label === "Time"
                                                     ? selectedChips.includes(
                                                           getTimeChipValue(
                                                               option
@@ -706,36 +685,49 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                                                           getDynamicFilterValue(
                                                               option
                                                           )
-                                                      )) && (
-                                                    <Icon
-                                                        icon="ci:check"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                )
-                                            }
-                                        >
-                                            {option}
-                                        </Chip>
-                                    ))}
-                                </div>
+                                                      )
+                                            )
+                                                ? styles.activeChip
+                                                : ""
+                                        }`}
+                                        startContent={
+                                            (filter.label === "Time"
+                                                ? selectedChips.includes(
+                                                      getTimeChipValue(option)
+                                                  )
+                                                : selectedChips.includes(
+                                                      getDynamicFilterValue(
+                                                          option
+                                                      )
+                                                  )) && (
+                                                <Icon
+                                                    icon="ci:check"
+                                                    width="14"
+                                                    height="14"
+                                                />
+                                            )
+                                        }
+                                    >
+                                        {option}
+                                    </Chip>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-
-                    {isAuth && (
-                        <button
-                            onClick={scrollRight}
-                            className={styles.arrowButton}
-                        >
-                            <Icon
-                                icon="mdi:chevron-right"
-                                className="text-3xl z-[100]"
-                            />
-                        </button>
-                    )}
+                        </div>
+                    ))}
                 </div>
-            )}
+
+                {isAuth && (
+                    <button
+                        onClick={scrollRight}
+                        className={styles.arrowButton}
+                    >
+                        <Icon
+                            icon="mdi:chevron-right"
+                            className="text-3xl z-[100]"
+                        />
+                    </button>
+                )}
+            </div>
 
             {isAuth && (
                 <Dropdown

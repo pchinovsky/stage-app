@@ -11,12 +11,20 @@ export default function ProfileCard({ data, onClick, size, footer }) {
             style={{
                 width: size.width,
                 height: size.height,
+                overflow: "hidden",
             }}
         >
             <Image
                 src={data?.profileImage || data?.image}
                 alt={data?.name}
-                className="w-[480px] h-full object-cover object-top"
+                className="w-[480px] h-full object-cover"
+                classNames={{
+                    wrapper: "h-full w-[480px]",
+                    img: "h-full w-[480px] object-cover",
+                }}
+                style={{
+                    height: "100%",
+                }}
             />
             <div className="absolute bottom-0 left-0 right-0 h-[100px] flex justify-center px-2 pb-2 z-10">
                 {footer && (

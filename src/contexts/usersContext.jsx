@@ -14,13 +14,20 @@ export const UsersProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!userId) return;
+        // if (!userId) return;
+        if (!userId) {
+            setCurrentUserData(null);
+            setLoading(false);
+            return;
+        }
         const userRef = doc(db, "users", userId);
         const unsubscribe = onSnapshot(
             userRef,
             (docSnap) => {
                 if (docSnap.exists()) {
                     setCurrentUserData({ id: docSnap.id, ...docSnap.data() });
+                } else {
+                    setCurrentUserData(null);
                 }
                 setLoading(false);
             },

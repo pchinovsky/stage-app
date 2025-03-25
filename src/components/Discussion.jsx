@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Tooltip, Avatar, Form, Input } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import useComments from "../hooks/useComments";
+import { AuthContext } from "../contexts/authContext";
+import OwnerGuard from "../guards/OwnerGuard";
 
 export default function Discussion({ eventId, authorData }) {
+    const { isAuth } = useContext(AuthContext);
     const {
         comments,
         loading,
@@ -47,35 +50,43 @@ export default function Discussion({ eventId, authorData }) {
                             <Avatar src={comment.authorImage} size="sm" />
                         </Tooltip>
                         <p className="text-black text-sm">{comment.content}</p>
-                        <Button
-                            onPress={() => handleRemoveComment(comment.id)}
-                            className="ml-auto hover:text-red-500"
-                            isIconOnly
-                        >
-                            <Icon icon="mdi:close" className="text-xl" />
-                        </Button>
+                        <OwnerGuard ownerId={comment.author} mode="display">
+                            <Button
+                                onPress={() => handleRemoveComment(comment.id)}
+                                className="ml-auto hover:text-red-500"
+                                isIconOnly
+                            >
+                                <Icon icon="mdi:close" className="text-xl" />
+                            </Button>
+                        </OwnerGuard>
                     </div>
                 ))}
             </div>
 
-            <Form
-                onSubmit={handleAddComment}
-                className="flex mt-3 gap-2 w-full"
-            >
-                <div className="flex gap-2 w-full">
-                    <Input
-                        type="text"
-                        name="content"
-                        className="flex-1"
-                        placeholder="Write a comment..."
-                        value={form.formValues.content}
-                        onChange={form.handleInputChange}
-                    />
-                    <Button type="submit" color="primary" className="self-end">
-                        Submit
-                    </Button>
-                </div>
-            </Form>
+            {isAuth && (
+                <Form
+                    onSubmit={handleAddComment}
+                    className="flex mt-3 gap-2 w-full"
+                >
+                    <div className="flex gap-2 w-full">
+                        <Input
+                            type="text"
+                            name="content"
+                            className="flex-1"
+                            placeholder="Write a comment..."
+                            value={form.formValues.content}
+                            onChange={form.handleInputChange}
+                        />
+                        <Button
+                            type="submit"
+                            color="primary"
+                            className="self-end"
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                </Form>
+            )}
         </div>
     );
 }

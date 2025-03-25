@@ -16,9 +16,11 @@ import { useContext, useState } from "react";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
 import { useLogout } from "../hooks/useAuth";
-import { useUser } from "../hooks/useUser";
+// import { useUser } from "../hooks/useUser";
+import { useUser } from "../hooks/useUser-new";
 import FloatingControls from "./FloatingControls";
 import { useLocation } from "react-router-dom";
+import ManagerGuard from "../guards/ManagerGuard";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
@@ -45,10 +47,12 @@ export default function HeaderNav() {
                 "--navbar-bg": navWhite ? "white" : "transparent",
             }}
         >
-            <FloatingControls
-                pos={{ top: "13px", left: "16px" }}
-                active={panelActive}
-            />
+            {isAuth && (
+                <FloatingControls
+                    pos={{ top: "13px", left: "16px" }}
+                    active={panelActive}
+                />
+            )}
 
             <NavbarBrand>
                 <Link
@@ -102,11 +106,13 @@ export default function HeaderNav() {
                 </Dropdown>
 
                 {isAuth && (
-                    <NavbarItem isActive className={styles.item}>
-                        <Link aria-current="page" href="/create">
-                            Create Event
-                        </Link>
-                    </NavbarItem>
+                    <ManagerGuard mode="display">
+                        <NavbarItem isActive className={styles.item}>
+                            <Link aria-current="page" href="/create">
+                                Create Event
+                            </Link>
+                        </NavbarItem>
+                    </ManagerGuard>
                 )}
             </NavbarContent>
 

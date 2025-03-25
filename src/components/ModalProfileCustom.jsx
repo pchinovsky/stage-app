@@ -187,12 +187,14 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                             <Button onPress={onClose} color="primary">
                                 Close
                             </Button>
-                            <Button
-                                onPress={handleFollow}
-                                color={isFollowing ? "danger" : "success"}
-                            >
-                                {isFollowing ? "Unfollow" : "Follow"}
-                            </Button>
+                            {isAuth && (
+                                <Button
+                                    onPress={handleFollow}
+                                    color={isFollowing ? "danger" : "success"}
+                                >
+                                    {isFollowing ? "Unfollow" : "Follow"}
+                                </Button>
+                            )}
                         </CardFooter>
                     </Card>
                 </motion.div>

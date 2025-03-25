@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [userId, setUserId] = useState(null);
     const [isAuth, setIsAuth] = useState(false);
+    const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -20,6 +21,7 @@ export function AuthProvider({ children }) {
                 setUserId(null);
                 setIsAuth(false);
             }
+            setAuthLoading(false);
         });
 
         return unsubscribe;
@@ -36,6 +38,7 @@ export function AuthProvider({ children }) {
         setUser,
         setIsAuth,
         getToken,
+        authLoading,
     };
 
     return (

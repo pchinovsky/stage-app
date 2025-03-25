@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
@@ -30,9 +30,12 @@ import { useUser } from "../hooks/useUser";
 import useDeleteEvent from "../hooks/useDeleteEvent";
 import ModalInvite from "../components/ModalInvite";
 import { useEvent } from "../hooks/useEvent";
+import OwnerGuard from "../guards/OwnerGuard";
+import { AuthContext } from "../contexts/authContext";
 
 export default function Event() {
     const { eventId } = useParams();
+    const { isAuth } = useContext(AuthContext);
     const navigate = useNavigate();
     // const { events, loading, error } = useEvents({ id: eventId });
     // const { events, loading, error } = useEventsRealtime({ id: eventId });
@@ -211,15 +214,17 @@ export default function Event() {
                             isOpen={isCalendarOpen}
                             onClose={() => setIsCalendarOpen(false)}
                         />
-                        <ButtonDynamicGroup
-                            pos={{
-                                top: "top-[585px]",
-                                left: "left-[100px]",
-                                flex: "flex-col",
-                            }}
-                            event={event}
-                            onModalOpen={handleOpenModalInvite}
-                        />
+                        {isAuth && (
+                            <ButtonDynamicGroup
+                                pos={{
+                                    top: "top-[585px]",
+                                    left: "left-[100px]",
+                                    flex: "flex-col",
+                                }}
+                                event={event}
+                                onModalOpen={handleOpenModalInvite}
+                            />
+                        )}
                         {/* <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick>
                         <ButtonDynamicClick></ButtonDynamicClick> */}
@@ -266,54 +271,7 @@ export default function Event() {
                             }}
                         />
                         <SlidingSidebar event={event} venue={venue} />
-                        {/* <FloatingCard className="absolute top-[500px] left-20 w-60 p-4 z-[100]">
-                            <div className="flex items-center gap-2">
-                                <Icon
-                                    icon="lucide:zap"
-                                    className="text-yellow-500"
-                                />
-                                <span>{event.title}</span>
-                            </div>
-                        </FloatingCard> */}
-                        {/* <MultiAccordion
-                            sections={[
-                                {
-                                    title: "Description",
-                                    content: "An amazing event happening soon!",
-                                },
-                                {
-                                    title: "Event Statistics",
-                                    content: "Attendees: 340, Interested: 1200",
-                                },
-                                {
-                                    title: "Venue",
-                                    content: "The Grand Arena, New York",
-                                },
-                            ]}
-                            className="absolute top-[300px] left-[700px] z-[100]"
-                        /> */}
-                        {/* <ModalProfile
-                            profile={{
-                                name: event.venue,
-                                image: "https://sarieva.org/data/i/2022-ECHO.jpg",
-                                description:
-                                    "This is an amazing venue for events.",
-                            }}
-                            isOpen={true}
-                            onClose={() => setIsModalOpen(false)}
-                        /> */}
-                        {/* always-visible modal */}
-                        {/* <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
-                            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                                <h2 className="text-xl font-bold">
-                                    Test Modal
-                                </h2>
-                                <p>This modal should always be visible.</p>
-                                <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
-                                    Close
-                                </button>
-                            </div>
-                        </div> */}
+
                         <ModalProfileCustom
                             isOpen={isModalOpen}
                             onClose={handleCloseModal}
@@ -364,20 +322,22 @@ export default function Event() {
                                 />
                             )}
                         </motion.div>
-                        <div className={styles.controlsColumn}>
-                            <Button onPress={handleEdit} color="primary">
-                                Edit Event
-                            </Button>
-                            <Button
-                                onPress={handleDelete}
-                                color="danger"
-                                disabled={isDeleting}
-                            >
-                                {isDeleting
-                                    ? "Deleting Event..."
-                                    : "Delete Event"}
-                            </Button>
-                        </div>
+                        <OwnerGuard ownerId={event.createdBy} mode="display">
+                            <div className={styles.controlsColumn}>
+                                <Button onPress={handleEdit} color="primary">
+                                    Edit Event
+                                </Button>
+                                <Button
+                                    onPress={handleDelete}
+                                    color="danger"
+                                    disabled={isDeleting}
+                                >
+                                    {isDeleting
+                                        ? "Deleting Event..."
+                                        : "Delete Event"}
+                                </Button>
+                            </div>
+                        </OwnerGuard>
                     </>
                 )}
             </div>

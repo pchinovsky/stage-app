@@ -1,7 +1,11 @@
 import React from "react";
 import { Card, Tooltip } from "@heroui/react";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/authContext";
 
 export default function CalendarDate({ date, onPress }) {
+    const { isAuth } = useContext(AuthContext);
+
     const options = {
         weekday: "short",
         year: "numeric",
@@ -20,6 +24,7 @@ export default function CalendarDate({ date, onPress }) {
             color="primary"
             offset={15}
             className="bg-slate-700 text-white rounded-lg"
+            isDisabled={!isAuth}
         >
             <Card
                 className="flex flex-col items-center justify-center p-4 w-28 h-[140px] bg-white text-black rounded-lg shadow-md"
@@ -29,7 +34,7 @@ export default function CalendarDate({ date, onPress }) {
                     left: "100px",
                     zIndex: 100,
                 }}
-                isPressable
+                isPressable={isAuth}
                 isHoverable
                 onPress={() => {
                     onPress(true);

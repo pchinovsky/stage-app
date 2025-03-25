@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Avatar, AvatarIcon, Tooltip, Button, Image } from "@heroui/react";
 import {
     doc,
@@ -8,8 +8,10 @@ import {
     arrayRemove,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { AuthContext } from "../contexts/authContext";
 
 export default function User({ user, currentUserId }) {
+    const { isAuth } = useContext(AuthContext);
     const [isFollowing, setIsFollowing] = useState(false);
     const [imageSrc, setImageSrc] = useState(user?.image);
 
@@ -84,6 +86,7 @@ export default function User({ user, currentUserId }) {
             }
             placement="left"
             className="py-0 px-0"
+            isDisabled={!isAuth}
         >
             <div className="flex items-center gap-2 cursor-pointer">
                 <Avatar

@@ -67,6 +67,7 @@ export default function CreatePage() {
         venue: "",
         createdBy: "",
         createdAt: serverTimestamp(),
+        activeFilters: [],
     };
 
     const route = "/events";

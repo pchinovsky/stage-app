@@ -4,12 +4,18 @@ import EventCard from "../components/EventCard";
 import styles from "./EventList.module.css";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
+import { useContext } from "react";
+import { NavContext } from "../contexts/navContext";
 
 const EventsList = ({ filters }) => {
+    const { setNavWhite } = useContext(NavContext);
+
     const navigate = useNavigate();
     const { events, loading, error } = useEvents(filters);
 
     const handleEventPress = (eventId) => {
+        setNavWhite(false);
+
         navigate(`/events/${eventId}`);
     };
 

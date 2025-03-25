@@ -61,6 +61,9 @@
     margin-left: 1em;
     /* width: 100% !important; */
     width: 285px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }
 
 .eventCard {
