@@ -14,7 +14,7 @@ import VenuesPage from "./pages/venues";
 import ManagerGuard from "./guards/ManagerGuard";
 import AuthGuard from "./guards/authGuard";
 import OwnerGuard from "./guards/OwnerGuard";
-import { Navigate } from "react-router-dom";
+import LogoutPage from "./pages/logout";
 
 function AnimatedRoutes() {
     const location = useLocation();
@@ -245,6 +245,7 @@ function AnimatedRoutes() {
                         </motion.div>
                     }
                 />
+                <Route path="/logout" element={<LogoutPage />} />
             </Routes>
         </AnimatePresence>
     );

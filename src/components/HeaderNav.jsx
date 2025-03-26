@@ -16,13 +16,14 @@ import { useContext, useState } from "react";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
 import { useLogout } from "../hooks/useAuth";
-// import { useUser } from "../hooks/useUser";
 import { useUser } from "../hooks/useUser-new";
 import FloatingControls from "./FloatingControls";
 import { useLocation } from "react-router-dom";
 import ManagerGuard from "../guards/ManagerGuard";
+import { useNavigate } from "react-router-dom";
 
 export default function HeaderNav() {
+    const navigate = useNavigate();
     const { navWhite } = useContext(NavContext);
     const { isAuth } = useContext(AuthContext);
     const { currentUser, loading } = useUser();
@@ -34,7 +35,9 @@ export default function HeaderNav() {
 
     const panelActive = lastSegment === "events";
 
-    const logout = useLogout();
+    const handleLogout = () => {
+        navigate("/logout");
+    };
 
     return (
         <Navbar
@@ -126,7 +129,7 @@ export default function HeaderNav() {
                                 color="secondary"
                                 href="/logout"
                                 variant="solid"
-                                onPress={logout}
+                                onPress={handleLogout}
                             >
                                 Logout
                             </Button>

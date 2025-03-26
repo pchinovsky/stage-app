@@ -6,6 +6,7 @@ import { setDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { useError } from "../contexts/errorContext";
 
+
 export function useLogin() {
     const { showError } = useError();
     const { setUser, setIsAuth } = useContext(AuthContext);
@@ -65,14 +66,12 @@ export function useRegister() {
 export function useLogout() {
     const { showError } = useError();
     const { setUser, setIsAuth } = useContext(AuthContext);
-    const navigate = useNavigate();
 
     const logout = async () => {
         try {
-            await authApi.logout();
             setUser(null);
             setIsAuth(false);
-            navigate("/events");
+            await authApi.logout();
         } catch (err) {
             const errMsg = err.message || "Error detected. Please try again.";
             showError(errMsg);
@@ -81,3 +80,5 @@ export function useLogout() {
 
     return logout;
 }
+
+
