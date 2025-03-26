@@ -13,7 +13,7 @@ export function useVenues() {
 
         (async () => {
             try {
-                setLoading(true);
+                if (venues.length === 0) setLoading(true);
                 const venuesRef = collection(db, "venues");
                 const snapshot = await getDocs(venuesRef);
 

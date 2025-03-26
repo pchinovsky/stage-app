@@ -13,7 +13,7 @@ export function useArtists(artistIds) {
 
         (async () => {
             try {
-                setLoading(true);
+                if (artists.length === 0) setLoading(true);
 
                 const artistRef = collection(db, "artists");
                 let artistQuery;
