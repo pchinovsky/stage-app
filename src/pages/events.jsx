@@ -89,7 +89,7 @@ export default function EventLayout() {
         <DefaultLayout>
             <ErrorModal />
             <div className={styles.layout}>
-                <HeroSection events={events} loading={loading} />
+                <HeroSection />
                 {/* Floating Controls */}
                 {/* <div className={styles.floatingControls}>
                     <FloatingControls pos={{ top: "220px", left: "40px" }} />

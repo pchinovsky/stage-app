@@ -14,10 +14,14 @@ const HeroSection = React.memo(() => {
     const [involved, setInvolved] = useState(0);
 
     useEffect(() => {
-        if (!loading && events && events.length > 0) {
+        if (!randomEvent && !loading && events && events.length > 0) {
             const randomIndex = Math.floor(Math.random() * events.length);
             setRandomEvent(events[randomIndex]);
+        }
+    }, [loading, events, randomEvent]);
 
+    useEffect(() => {
+        if (!loading && events.length > 0) {
             (async () => {
                 const trendingValues = await Promise.all(
                     events.map((e) => calcTrending(e))
