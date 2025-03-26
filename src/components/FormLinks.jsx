@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
-export function FormLinks({ links, onChange }) {
+export function FormLinks({ links, onChange, error }) {
     const [inputValue, setInputValue] = useState("");
 
     const handleKeyDown = (e) => {
@@ -32,6 +32,8 @@ export function FormLinks({ links, onChange }) {
                 onKeyDown={handleKeyDown}
                 description="Press Enter to add a link"
                 startContent={<Icon icon="lucide:link" />}
+                isInvalid={!!error?.associatedLinks}
+                errorMessage={error?.associatedLinks?.[0]}
             />
         </div>
     );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Select, SelectItem } from "@heroui/react";
 
-export function ArtistInput({ artistList, selectedArtists, onChange }) {
+export function ArtistInput({ artistList, selectedArtists, onChange, error }) {
     const handleSelect = (keys) => {
         const selectedId = Array.from(keys)[0];
 
@@ -24,6 +24,9 @@ export function ArtistInput({ artistList, selectedArtists, onChange }) {
             placeholder="Select artists"
             onSelectionChange={handleSelect}
             className="md:col-span-2"
+            isInvalid={!!error?.artists}
+            errorMessage={error?.artists?.[0]}
+            isRequired
         >
             {artistList.map((artist) => (
                 <SelectItem key={artist.id} value={artist.id}>
