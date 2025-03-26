@@ -26,7 +26,7 @@ import StatsBox from "../components/Stats";
 import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
 import EventHead from "../components/EventHead";
 import { useUser } from "../hooks/useUser";
-import useDeleteEvent from "../hooks/useDeleteEvent";
+import useEventDelete from "../hooks/useEventDelete";
 import ModalInvite from "../components/ModalInvite";
 import { useEvent } from "../hooks/useEvent";
 import OwnerGuard from "../guards/OwnerGuard";
@@ -42,7 +42,7 @@ export default function Event() {
 
     // const event = events[0];
 
-    const { deleteEvent, isDeleting } = useDeleteEvent();
+    const { deleteEvent, isDeleting } = useEventDelete();
 
     const [artistIds, setArtistIds] = useState(null);
     const [venueId, setVenueId] = useState(null);

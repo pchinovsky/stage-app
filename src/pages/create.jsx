@@ -43,9 +43,11 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { useError } from "../contexts/errorContext";
+import { useEventCreate } from "../hooks/useEventCreate";
 
 export default function CreatePage() {
     const { showError } = useError();
+    const createEvent = useEventCreate();
 
     const initialValues = {
         title: "",
@@ -75,24 +77,24 @@ export default function CreatePage() {
 
     const route = "/events";
 
-    async function createEventWithUser(values, currentUserId) {
-        try {
-            const eventId = await eventsApi.createEvent(values);
-            await setDoc(
-                doc(db, "users", currentUserId),
-                { created: arrayUnion(eventId) },
-                { merge: true }
-            );
-            return eventId;
-        } catch (err) {
-            const errMsg = err.message || "Failed to create event.";
-            showError(errMsg);
-            throw err;
-        }
-    }
+    // async function createEventWithUser(values, currentUserId) {
+    //     try {
+    //         const eventId = await eventsApi.createEvent(values);
+    //         await setDoc(
+    //             doc(db, "users", currentUserId),
+    //             { created: arrayUnion(eventId) },
+    //             { merge: true }
+    //         );
+    //         return eventId;
+    //     } catch (err) {
+    //         const errMsg = err.message || "Failed to create event.";
+    //         showError(errMsg);
+    //         throw err;
+    //     }
+    // }
 
-    const createEventWithUserWrapper = (values) =>
-        createEventWithUser(values, currentUser.id);
+    // const createEventWithUserWrapper = (values) =>
+    //     createEventWithUser(values, currentUser.id);
 
     const {
         formValues,
@@ -103,7 +105,7 @@ export default function CreatePage() {
         isSubmitting,
         resetForm,
         error,
-    } = useForm(initialValues, createEventWithUserWrapper, route, eventSchema);
+    } = useForm(initialValues, createEvent, route, eventSchema);
 
     const { artists: loadedArtists, loading: artistLoading } = useArtists();
     const { currentUser, loading: userLoading } = useUser();
@@ -286,7 +288,7 @@ export default function CreatePage() {
                                     handleInputChange={
                                         handleInputChangeExpanded
                                     }
-                                    errors={error}
+                                    error={error}
                                 />
 
                                 <Input
@@ -387,10 +389,7 @@ export default function CreatePage() {
                                         onChange={(updatedLinks) =>
                                             handleLinksChange(updatedLinks)
                                         }
-                                        isInvalid={!!error?.associatedLinks}
-                                        errorMessage={
-                                            error?.associatedLinks?.[0]
-                                        }
+                                        error={error}
                                     />
                                 </div>
 
@@ -577,8 +576,7 @@ export default function CreatePage() {
                                         onChange={(updatedArtists) =>
                                             handleArtistChange(updatedArtists)
                                         }
-                                        isInvalid={!!error?.artists}
-                                        errorMessage={error?.artists?.[0]}
+                                        error={error}
                                     />
                                     <Button
                                         color="primary"

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import eventsApi from "../api/events-api";
 import { useError } from "../contexts/errorContext";
 
-const useDeleteEvent = () => {
+const useEventDelete = () => {
     const { showError } = useError();
     const [isDeleting, setIsDeleting] = useState(false);
     const navigate = useNavigate();
@@ -37,4 +37,4 @@ const useDeleteEvent = () => {
     return { deleteEvent, isDeleting };
 };
 
-export default useDeleteEvent;
+export default useEventDelete;

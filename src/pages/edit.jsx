@@ -20,7 +20,7 @@ import { useArtists } from "../hooks/useArtists";
 import { useVenue } from "../hooks/useVenue";
 import { eventSchema } from "../api/validationSchemas";
 import useForm from "../hooks/useForm";
-import useEdit from "../hooks/useEdit";
+import useEventEdit from "../hooks/useEventEdit";
 import eventsApi from "../api/events-api";
 import { parseDate, parseTime } from "@internationalized/date";
 import { ArtistInput } from "../components/ArtistInput";
@@ -60,7 +60,7 @@ export default function Edit() {
         resetForm,
         error,
         loadingEvent,
-    } = useEdit(eventId, initialValues);
+    } = useEventEdit(eventId, initialValues);
 
     const { artists: allArtists, loading: loadingArtists } = useArtists();
     const { artists: selectedArtists } = useArtists(formValues.artists);
