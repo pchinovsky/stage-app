@@ -60,7 +60,7 @@ export default function SlidingSidebar({ event, venue }) {
         <div className={styles.container}>
             <motion.div
                 initial={{ x: 250 }}
-                animate={{ x: isOpen ? 80 : 370 }}
+                animate={{ x: isOpen ? 60 : 370 }}
                 transition={{
                     type: "tween",
                     duration: 0.5,
@@ -99,6 +99,7 @@ export default function SlidingSidebar({ event, venue }) {
                                 size={{ width: "260px", height: "200px" }}
                                 onClick={() => handleEventPress(event.id)}
                                 footer={true}
+                                className={styles.eventCard}
                             />
                         ))
                     )}

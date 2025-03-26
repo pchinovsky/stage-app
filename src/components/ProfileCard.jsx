@@ -12,6 +12,7 @@ export default function ProfileCard({ data, onClick, size, footer }) {
                 width: size.width,
                 height: size.height,
                 overflow: "hidden",
+                flexShrink: 0,
             }}
         >
             <Image
