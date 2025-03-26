@@ -21,14 +21,29 @@ import styles from "./login.module.css";
 import ButtonDynamic from "../components/ButtonDynamic";
 import { useEventsStore } from "../contexts/eventsContext";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import { useError } from "../contexts/errorContext";
+import ErrorModal from "../components/ModalError";
 
 export default function Login() {
+    const location = useLocation();
+    const { error: modalError, showError } = useError();
     const [isVisible, setIsVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
     const { events, loading } = useEventsStore();
 
     const log = useLogin();
     const route = "/events";
+
+    useEffect(() => {
+        if (location.state?.error) {
+            console.log("error - ", location.state.error);
+
+            if (!modalError) {
+                showError(location.state.error);
+            }
+        }
+    }, []);
 
     const initialValues = { email: "", password: "" };
     const { formValues, handleInputChange, handleSubmit, error } = useForm(
@@ -47,6 +62,7 @@ export default function Login() {
 
     return (
         <DefaultLayout>
+            <ErrorModal />
             <div className={styles.container}>
                 {featuredEvent && (
                     <motion.div

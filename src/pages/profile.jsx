@@ -32,8 +32,10 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { userSchema } from "../api/validationSchemas";
 import authApi from "../api/auth-api";
+import { useError } from "../contexts/errorContext";
 
 export default function Profile() {
+    const { showError } = useError();
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -80,6 +82,7 @@ export default function Profile() {
             });
         } catch (error) {
             console.error("Error updating user:", error);
+            showError(error.message || "Failed to update user.");
             throw error;
         }
     };

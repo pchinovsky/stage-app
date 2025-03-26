@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import useForm from "./useForm";
 import commentsApi from "../api/comments-api";
+import { useError } from "../contexts/errorContext";
 
 const initialValues = {
     author: "",
@@ -11,22 +12,32 @@ const initialValues = {
 };
 
 export default function useComments(eventId, authorData) {
-
-    console.log('author data', authorData);
-
+    const { showError } = useError();
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const fetchComments = async () => {
         setLoading(true);
         try {
             const commentsList = await commentsApi.getCommentsByEventId(eventId);
-            setComments(commentsList);
+            if (isMounted.current) {
+                setComments(commentsList);
+            }
         } catch (err) {
-            setError(err.message || "An error occurred.");
+            if (isMounted.current) {
+                showError(err.message || "An error occurred while fetching comments.");
+            }
         } finally {
-            setLoading(false);
+            if (isMounted.current) {
+                setLoading(false);
+            }
         }
     };
 
@@ -35,8 +46,6 @@ export default function useComments(eventId, authorData) {
     }, [eventId]);
 
     const handleCreateComment = async (formValues) => {
-        console.log("--- useComments - handleCreateComment", formValues);
-
         try {
             const commentData = {
                 ...formValues,
@@ -46,27 +55,27 @@ export default function useComments(eventId, authorData) {
                 event: eventId,
             };
             await commentsApi.createComment(commentData);
-            fetchComments();
+            await fetchComments();
         } catch (err) {
-            setError(err.message || "An error occurred.");
+            showError(err.message || "An error occurred while creating comment.");
         }
     };
 
     const handleUpdateComment = async (commentId, updatedData) => {
         try {
             await commentsApi.updateComment(commentId, updatedData);
-            fetchComments();
+            await fetchComments();
         } catch (err) {
-            setError(err.message || "An error occurred.");
+            showError(err.message || "An error occurred while updating comment.");
         }
     };
 
     const handleRemoveComment = async (commentId) => {
         try {
             await commentsApi.removeComment(commentId);
-            fetchComments();
+            await fetchComments();
         } catch (err) {
-            setError(err.message || "An error occurred.");
+            showError(err.message || "An error occurred while removing comment.");
         }
     };
 
@@ -75,7 +84,6 @@ export default function useComments(eventId, authorData) {
     return {
         comments,
         loading,
-        error,
         form,
         handleUpdateComment,
         handleRemoveComment,

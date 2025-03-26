@@ -6,7 +6,7 @@ import ModalProfileCustom from "../components/ModalProfileCustom";
 import ProfileCard from "../components/ProfileCard";
 
 export default function ArtistsPage() {
-    const { artists, loading, error } = useArtists();
+    const { artists, loading } = useArtists();
     const [selectedArtist, setSelectedArtist] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -22,9 +22,6 @@ export default function ArtistsPage() {
 
     if (loading) {
         return <div className="p-4">Loading artists…</div>;
-    }
-    if (error) {
-        return <div className="p-4">Error loading artists.</div>;
     }
 
     return (

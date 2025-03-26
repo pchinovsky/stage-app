@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
     collection,
     query,
@@ -11,20 +11,22 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { getFiltersKey } from "../../utils/getFiltersKey";
-
+import { useError } from "../contexts/errorContext";
 
 export function useEvents(filters = {}) {
+    const { showError } = useError();
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     console.log("use events filters", filters);
+    const isMounted = useRef(true);
 
     const filtersKey = useMemo(() => getFiltersKey(filters), [filters]);
 
     useEffect(() => {
+        isMounted.current = true;
+
         setLoading(true);
-        setError(null);
 
         let unsubscribe;
 
@@ -113,25 +115,29 @@ export function useEvents(filters = {}) {
         unsubscribe = onSnapshot(
             eventsQuery,
             (snapshot) => {
+                if (!isMounted.current) return;
+
                 const fetchedEvents = snapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
                 }));
-                console.log("Fetched Events:", fetchedEvents);
                 setEvents(fetchedEvents);
                 setLoading(false);
             },
             (err) => {
+                if (!isMounted.current) return;
+
                 console.error("Error fetching events:", err);
-                setError(err);
+                showError(err.message || "Error fetching events.");
                 setLoading(false);
             }
         );
 
         return () => {
+            isMounted.current = false;
             if (unsubscribe) unsubscribe();
         };
     }, [filtersKey]);
 
-    return { events, loading, error };
+    return { events, loading };
 }

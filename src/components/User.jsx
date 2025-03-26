@@ -9,8 +9,10 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "../contexts/authContext";
+import { useError } from "../contexts/errorContext";
 
 export default function User({ user, currentUserId }) {
+    const { showError } = useError();
     const { isAuth } = useContext(AuthContext);
     const [isFollowing, setIsFollowing] = useState(false);
     const [imageSrc, setImageSrc] = useState(user?.image);
@@ -29,12 +31,17 @@ export default function User({ user, currentUserId }) {
     useEffect(() => {
         (async () => {
             if (!user || !currentUserId) return;
-            const currentUserRef = doc(db, "users", currentUserId);
-            const currentUserSnap = await getDoc(currentUserRef);
-            if (currentUserSnap.exists()) {
-                const followingUsers =
-                    currentUserSnap.data().followingUsers || [];
-                setIsFollowing(followingUsers.includes(user.id));
+            try {
+                const currentUserRef = doc(db, "users", currentUserId);
+                const currentUserSnap = await getDoc(currentUserRef);
+                if (currentUserSnap.exists()) {
+                    const followingUsers =
+                        currentUserSnap.data().followingUsers || [];
+                    setIsFollowing(followingUsers.includes(user.id));
+                }
+            } catch (err) {
+                console.error("Error fetching follow status:", err);
+                showError(err.message || "Error fetching follow status.");
             }
         })();
     }, [user, currentUserId]);
@@ -68,6 +75,7 @@ export default function User({ user, currentUserId }) {
             }
         } catch (error) {
             console.error("Error updating follow status:", error);
+            showError(error.message || "Error updating follow status.");
         }
     };
 

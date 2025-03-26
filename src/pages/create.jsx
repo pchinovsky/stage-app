@@ -42,8 +42,11 @@ import {
     serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { useError } from "../contexts/errorContext";
 
 export default function CreatePage() {
+    const { showError } = useError();
+
     const initialValues = {
         title: "",
         subtitle: "",
@@ -75,18 +78,15 @@ export default function CreatePage() {
     async function createEventWithUser(values, currentUserId) {
         try {
             const eventId = await eventsApi.createEvent(values);
-            console.log("Event created with id:", eventId);
-
             await setDoc(
                 doc(db, "users", currentUserId),
                 { created: arrayUnion(eventId) },
                 { merge: true }
             );
-            console.log("User document updated successfully");
-
             return eventId;
         } catch (err) {
-            console.error("Error in createEventWithUser:", err);
+            const errMsg = err.message || "Failed to create event.";
+            showError(errMsg);
             throw err;
         }
     }

@@ -1,12 +1,13 @@
-// src/contexts/UsersContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "./authContext";
+import { useError } from "./errorContext";
 
 const UsersContext = createContext();
 
 export const UsersProvider = ({ children }) => {
+    const { showError } = useError();
     const { userId } = useContext(AuthContext);
     const [currentUserData, setCurrentUserData] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
@@ -33,6 +34,8 @@ export const UsersProvider = ({ children }) => {
             },
             (err) => {
                 console.error("Err fetching current user - ", err);
+                showError(`User loading failed: ${err.message}`);
+
                 setError(err);
                 setLoading(false);
             }
@@ -53,6 +56,8 @@ export const UsersProvider = ({ children }) => {
             },
             (err) => {
                 console.error("Error fetching all users:", err);
+                showError(`Failed to load users list: ${err.message}`); // ✅
+
                 setError(err);
             }
         );

@@ -1,12 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { getFiltersKey } from "../../utils/getFiltersKey";
+import { useError } from "../contexts/errorContext";
 
 export function useEventsRelated(event) {
+    const { showError } = useError();
     const [relatedEvents, setRelatedEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // const [error, setError] = useState(null);
+    const isMounted = useRef(true);
 
     const filters = useMemo(() => {
         const queries = {};
@@ -22,10 +25,12 @@ export function useEventsRelated(event) {
     const filtersKey = useMemo(() => getFiltersKey(filters), [filters]);
 
     useEffect(() => {
+        isMounted.current = true;
+
         const fetchRelatedEvents = async () => {
             try {
                 setLoading(true);
-                setError(null);
+                // setError(null);
                 const eventsRef = collection(db, "events");
 
                 let eventResults = new Set();
@@ -57,13 +62,19 @@ export function useEventsRelated(event) {
                 setLoading(false);
             } catch (err) {
                 console.error("Error fetching related events:", err);
-                setError(err);
-                setLoading(false);
+                if (isMounted.current) {
+                    showError(err.message || "Error fetching related events.");
+                    setLoading(false);
+                }
             }
         };
 
         fetchRelatedEvents();
+        return () => {
+            isMounted.current = false;
+        };
+
     }, [filtersKey, event.id]);
 
-    return { relatedEvents, loading, error };
+    return { relatedEvents, loading };
 }

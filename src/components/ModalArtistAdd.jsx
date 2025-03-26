@@ -16,8 +16,11 @@ import eventsApi from "../api/events-api";
 import { db } from "../firebase/firebaseConfig";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
+import { useError } from "../contexts/errorContext";
+import { MAX_ADDITIONAL_IMAGES } from "../constants/generalConstants";
 
 export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
+    const { showError } = useError();
     const [artistData, setArtistData] = useState({
         name: "",
         description: "",
@@ -28,8 +31,6 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
     const [profileImageFile, setProfileImageFile] = useState(null);
     const [profilePreviewUrl, setProfilePreviewUrl] = useState("");
     const [additionalImages, setAdditionalImages] = useState([]);
-
-    const MAX_ADDITIONAL_IMAGES = 5;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -155,6 +156,9 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
             setAdditionalImages([]);
         } catch (error) {
             console.error("Error creating artist:", error);
+            showError(
+                error.message || "An error occurred while creating the artist."
+            );
         } finally {
             setLoading(false);
         }

@@ -2,11 +2,13 @@ import { Link } from "@heroui/link";
 import HeaderNav from "../components/HeaderNav";
 import SlidingSidebar from "../components/Sidebar";
 import styles from "./default.module.css";
+import ErrorModal from "../components/ModalError";
 
 export default function DefaultLayout({ children }) {
     return (
         <div className={styles.layout}>
             <HeaderNav />
+            <ErrorModal />
             {/* <SlidingSidebar /> */}
             <main className={styles.main}>{children}</main>
             {/* <footer className={styles.footer}>

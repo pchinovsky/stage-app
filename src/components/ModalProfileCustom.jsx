@@ -18,8 +18,10 @@ import {
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "../contexts/authContext";
 import { Link } from "@heroui/react";
+import { useError } from "../contexts/errorContext";
 
 export default function ModalProfileCustom({ isOpen, onClose, data }) {
+    const { showError } = useError();
     const { isAuth, userId } = useContext(AuthContext);
     const [isFollowing, setIsFollowing] = useState(false);
 
@@ -27,16 +29,21 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
         (async () => {
             if (!isAuth || !userId || !data) return;
             const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                // const following = userData.following || [];
-                const following = data.address
-                    ? userData.followingVenues
-                    : userData.followingArtists;
-                setIsFollowing(following.includes(data.id));
-            } else {
-                console.log("No such document!");
+
+            try {
+                const userSnap = await getDoc(userRef);
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const following = data.address
+                        ? userData.followingVenues
+                        : userData.followingArtists;
+                    setIsFollowing(following.includes(data.id));
+                } else {
+                    console.log("No such document!");
+                }
+            } catch (err) {
+                console.error("Error fetching follow status:", err);
+                showError(err.message || "Error fetching follow status.");
             }
         })();
     }, [isAuth, userId, data]);
@@ -96,6 +103,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
             }
         } catch (error) {
             console.error("Error updating follow status:", error);
+            showError(error.message || "Error updating follow status.");
         }
     };
 

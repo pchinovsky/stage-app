@@ -16,8 +16,10 @@ import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { AuthContext } from "../contexts/authContext";
 import { useEvent } from "../hooks/useEvent";
+import { useError } from "../contexts/errorContext";
 
 export default function InvitationCard({ invitation }) {
+    const { showError } = useError();
     const [hasAccepted, setHasAccepted] = useState(false);
     const [hasDeclined, setHasDeclined] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -102,6 +104,7 @@ export default function InvitationCard({ invitation }) {
             setHasAccepted(true);
         } catch (err) {
             console.error("Error accepting invitation:", err);
+            showError(err.message || "Error accepting invitation.");
         }
     };
 
@@ -123,6 +126,7 @@ export default function InvitationCard({ invitation }) {
             setHasDeclined(true);
         } catch (err) {
             console.error("Error declining invitation:", err);
+            showError(err.message || "Error declining invitation.");
         }
     };
 

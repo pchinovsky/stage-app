@@ -22,6 +22,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { calcTrending } from "../../utils/calcTrending";
+import { useError } from "../contexts/errorContext";
 
 export default function ModalInvite({
     isOpen,
@@ -30,6 +31,7 @@ export default function ModalInvite({
     currentUser,
     event,
 }) {
+    const { showError } = useError();
     const [selectedUsers, setSelectedUsers] = useState(new Set([]));
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,7 @@ export default function ModalInvite({
                     }
                 } catch (error) {
                     console.error("Error fetching event details:", error);
+                    showError(error.message || "Error fetching event details.");
                 }
             }
         })();
@@ -116,6 +119,7 @@ export default function ModalInvite({
             onClose();
         } catch (error) {
             console.error("Error inviting users:", error);
+            showError(error.message || "Error inviting users.");
         } finally {
             setIsLoading(false);
         }

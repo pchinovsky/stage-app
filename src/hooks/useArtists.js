@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { collection, query, where, getDocs, documentId } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { useError } from "../contexts/errorContext";
 
 export function useArtists(artistIds) {
+    const showError = useError();
     const [artists, setArtists] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
+        let isMounted = true;
+
         (async () => {
             try {
                 setLoading(true);
@@ -23,20 +26,30 @@ export function useArtists(artistIds) {
 
                 const snapshot = await getDocs(artistQuery);
 
-                if (snapshot.empty) {
-                    console.warn("No matching documents");
-                    setArtists([]);
-                } else {
-                    const fetchedArtists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    setArtists(fetchedArtists);
+                // apply state updates only if mounted - 
+                if (isMounted) {
+                    if (snapshot.empty) {
+                        console.warn("No matching documents");
+                        setArtists([]);
+                    } else {
+                        const fetchedArtists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        setArtists(fetchedArtists);
+                    }
+                    setLoading(false);
                 }
-                setLoading(false);
             } catch (err) {
-                setError(err);
-                setLoading(false);
+                if (isMounted) {
+                    const errMsg = err.message || "Error detected. Please try again.";
+                    showError(errMsg);
+                    setLoading(false);
+                }
             }
         })();
-    }, [artistIds]);
 
-    return { artists, loading, error };
+        return () => {
+            isMounted = false;
+        };
+    }, [artistIds, showError]);
+
+    return { artists, loading };
 }

@@ -5,7 +5,7 @@ import ModalProfileCustom from "../components/ModalProfileCustom";
 import ProfileCard from "../components/ProfileCard";
 
 export default function VenuesPage() {
-    const { venues, loading, error } = useVenues();
+    const { venues, loading } = useVenues();
     const [selectedVenue, setSelectedVenue] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -21,9 +21,6 @@ export default function VenuesPage() {
 
     if (loading) {
         return <div className="p-4">Loading venues…</div>;
-    }
-    if (error) {
-        return <div className="p-4">Error loading venues.</div>;
     }
 
     return (

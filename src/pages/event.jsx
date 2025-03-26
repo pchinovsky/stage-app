@@ -14,7 +14,6 @@ import styles from "./event.module.css";
 import DefaultLayout from "../layouts/default";
 import { FloatingCard } from "../components/FloatingCard";
 import TooltipProfile from "../components/TooltipProfile";
-import ModalProfile from "../components/ModalProfile";
 import ModalProfileCustom from "../components/ModalProfileCustom";
 import Engaged from "../components/Engaged";
 import Toggle from "../components/Toggle";

@@ -38,12 +38,8 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
     const { followingUsers, followingArtists, followingVenues } =
         useFollowing();
-    const {
-        artists,
-        loading: artistsLoading,
-        error: artistsError,
-    } = useArtists();
-    const { venues, loading: venuesLoading, error: venuesError } = useVenues();
+    const { artists, loading: artistsLoading } = useArtists();
+    const { venues, loading: venuesLoading } = useVenues();
 
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedSearchType, setSelectedSearchType] = useState("events");

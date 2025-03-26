@@ -4,9 +4,10 @@ import authApi from "../api/auth-api";
 import { AuthContext } from "../contexts/authContext";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { useError } from "../contexts/errorContext";
 
 export function useLogin() {
-    const [error, setError] = useState(null);
+    const { showError } = useError();
     const { setUser, setIsAuth } = useContext(AuthContext);
 
     const log = async (data) => {
@@ -15,7 +16,8 @@ export function useLogin() {
             setUser(authData.user);
             setIsAuth(true);
         } catch (err) {
-            setError(err.message);
+            const errMsg = err.message || "Error detected. Please try again.";
+            showError(errMsg);
         }
     };
 
@@ -23,7 +25,7 @@ export function useLogin() {
 }
 
 export function useRegister() {
-    const [error, setError] = useState(null);
+    const { showError } = useError();
     const { setUser, setIsAuth } = useContext(AuthContext);
 
     const reg = async (data) => {
@@ -52,7 +54,8 @@ export function useRegister() {
 
             await setDoc(doc(db, "users", authData.user.uid), newUser);
         } catch (err) {
-            setError(err.message);
+            const errMsg = err.message || "Error detected. Please try again.";
+            showError(errMsg);
         }
     };
 
@@ -60,6 +63,7 @@ export function useRegister() {
 }
 
 export function useLogout() {
+    const { showError } = useError();
     const { setUser, setIsAuth } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -69,8 +73,9 @@ export function useLogout() {
             setUser(null);
             setIsAuth(false);
             navigate("/events");
-        } catch (error) {
-            console.error("Logout Error:", error);
+        } catch (err) {
+            const errMsg = err.message || "Error detected. Please try again.";
+            showError(errMsg);
         }
     };
 

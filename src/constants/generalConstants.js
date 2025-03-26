@@ -9,3 +9,5 @@ export const categories = [
 ];
 
 export const POPULAR_THRESHOLD = 10;
+
+export const MAX_ADDITIONAL_IMAGES = 5;

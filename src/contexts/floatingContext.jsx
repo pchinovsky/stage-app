@@ -13,12 +13,14 @@ import { AuthContext } from "./authContext";
 import { calcTrending } from "../../utils/calcTrending";
 import { useEventsStore } from "./eventsContext";
 import authApi from "../api/auth-api";
+import { useError } from "./errorContext";
 
 const FloatingContext = createContext();
 
 export const useFloatingContext = () => useContext(FloatingContext);
 
 export const FloatingProvider = ({ children }) => {
+    const { showError } = useError();
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [selectionMode, setSelectionMode] = useState(false);
     const [uniformInterested, setUniformInterested] = useState(null);
@@ -77,80 +79,84 @@ export const FloatingProvider = ({ children }) => {
     const clearSelection = () => setSelectedEvents([]);
 
     const bulkUpdate = async (actionType) => {
-        const promises = selectedEvents.map(async (eventId) => {
-            const eventRef = doc(db, "events", eventId);
-            // const userRef = doc(db, "users", userId);
+        try {
+            const promises = selectedEvents.map(async (eventId) => {
+                const eventRef = doc(db, "events", eventId);
+                const eventSnap = await getDoc(eventRef);
+                const eventData = eventSnap.data();
 
-            const eventSnap = await getDoc(eventRef);
-            const eventData = eventSnap.data();
+                const isAlreadyInList =
+                    actionType === "interested"
+                        ? eventData.interested?.includes(userId)
+                        : eventData.attending?.includes(userId);
 
-            const isAlreadyInList =
-                actionType === "interested"
-                    ? eventData.interested?.includes(userId)
-                    : eventData.attending?.includes(userId);
+                const eventUpdate =
+                    actionType === "interested"
+                        ? {
+                              interested: isAlreadyInList
+                                  ? arrayRemove(userId)
+                                  : arrayUnion(userId),
+                              interestedCount: isAlreadyInList
+                                  ? increment(-1)
+                                  : increment(1),
+                          }
+                        : {
+                              attending: isAlreadyInList
+                                  ? arrayRemove(userId)
+                                  : arrayUnion(userId),
+                              attendingCount: isAlreadyInList
+                                  ? increment(-1)
+                                  : increment(1),
+                          };
 
-            const eventUpdate =
-                actionType === "interested"
-                    ? {
-                          interested: isAlreadyInList
-                              ? arrayRemove(userId)
-                              : arrayUnion(userId),
-                          interestedCount: isAlreadyInList
-                              ? increment(-1)
-                              : increment(1),
-                      }
-                    : {
-                          attending: isAlreadyInList
-                              ? arrayRemove(userId)
-                              : arrayUnion(userId),
-                          attendingCount: isAlreadyInList
-                              ? increment(-1)
-                              : increment(1),
-                      };
-
-            let involvedUpdate = {};
-            if (actionType === "attending") {
-                if (isAlreadyInList) {
-                    if (!eventData.interested?.includes(userId)) {
-                        involvedUpdate = { involvedUsers: arrayRemove(userId) };
+                let involvedUpdate = {};
+                if (actionType === "attending") {
+                    if (isAlreadyInList) {
+                        if (!eventData.interested?.includes(userId)) {
+                            involvedUpdate = {
+                                involvedUsers: arrayRemove(userId),
+                            };
+                        }
+                    } else {
+                        involvedUpdate = { involvedUsers: arrayUnion(userId) };
                     }
-                } else {
-                    involvedUpdate = { involvedUsers: arrayUnion(userId) };
-                }
-            } else if (actionType === "interested") {
-                if (isAlreadyInList) {
-                    if (!eventData.attending?.includes(userId)) {
-                        involvedUpdate = { involvedUsers: arrayRemove(userId) };
+                } else if (actionType === "interested") {
+                    if (isAlreadyInList) {
+                        if (!eventData.attending?.includes(userId)) {
+                            involvedUpdate = {
+                                involvedUsers: arrayRemove(userId),
+                            };
+                        }
+                    } else {
+                        involvedUpdate = { involvedUsers: arrayUnion(userId) };
                     }
-                } else {
-                    involvedUpdate = { involvedUsers: arrayUnion(userId) };
                 }
-            }
-            const finalEventUpdate = { ...eventUpdate, ...involvedUpdate };
 
-            const userUpdate =
-                actionType === "interested"
-                    ? {
-                          interested: isAlreadyInList
-                              ? arrayRemove(eventId)
-                              : arrayUnion(eventId),
-                      }
-                    : {
-                          attending: isAlreadyInList
-                              ? arrayRemove(eventId)
-                              : arrayUnion(eventId),
-                      };
+                const finalEventUpdate = { ...eventUpdate, ...involvedUpdate };
+                const userUpdate =
+                    actionType === "interested"
+                        ? {
+                              interested: isAlreadyInList
+                                  ? arrayRemove(eventId)
+                                  : arrayUnion(eventId),
+                          }
+                        : {
+                              attending: isAlreadyInList
+                                  ? arrayRemove(eventId)
+                                  : arrayUnion(eventId),
+                          };
 
-            await eventsApi.updateEvent(eventId, finalEventUpdate);
+                await eventsApi.updateEvent(eventId, finalEventUpdate);
+                await calcTrending(eventData);
+                await authApi.updateUser(userId, userUpdate);
+            });
 
-            await calcTrending(eventData);
-
-            // await updateDoc(userRef, userUpdate);
-            await authApi.updateUser(userId, userUpdate);
-        });
-
-        await Promise.all(promises);
-        clearSelection();
+            await Promise.all(promises);
+            clearSelection();
+        } catch (err) {
+            console.error("Error during bulk update:", err);
+            showError(err.message || "An error occurred during bulk update.");
+        }
     };
 
     return (

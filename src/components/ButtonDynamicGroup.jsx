@@ -10,6 +10,7 @@ import { AuthContext } from "../contexts/authContext";
 import { useFloatingContext } from "../contexts/floatingContext";
 import { calcTrending } from "../../utils/calcTrending";
 import authApi from "../api/auth-api";
+import { useError } from "../contexts/errorContext";
 
 export default function ButtonDynamicGroup({
     pos,
@@ -19,6 +20,7 @@ export default function ButtonDynamicGroup({
     disabled,
     mode = "single",
 }) {
+    const { showError } = useError();
     const [toastMessage, setToastMessage] = useState("");
     const [isInterested, setIsInterested] = useState(false);
     const [isAttending, setIsAttending] = useState(false);
@@ -77,6 +79,9 @@ export default function ButtonDynamicGroup({
             console.log("User toggled attending status");
         } catch (error) {
             console.error("Error updating attending list:", error);
+            showError(
+                error.message || "An error occurred while updating attendance."
+            );
         }
     };
 
@@ -116,6 +121,9 @@ export default function ButtonDynamicGroup({
             console.log("User toggled interested status");
         } catch (error) {
             console.error("Error updating interested list:", error);
+            showError(
+                error.message || "An error occurred while updating interest."
+            );
         }
     };
 

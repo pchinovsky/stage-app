@@ -14,9 +14,15 @@ import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import useRestoreScroll from "../hooks/useRestoreScroll";
 import EventList from "../components/EventList";
+import ErrorModal from "../components/ModalError";
+import { useError } from "../contexts/errorContext";
+import { useLocation } from "react-router-dom";
 
 export default function EventLayout() {
     const { setNavWhite } = useContext(NavContext);
+    const { error: modalError, showError } = useError();
+    const location = useLocation();
+
     const [searchFixed, setSearchFixed] = useState(false);
     const searchBarRef = useRef(null);
     const placeholderRef = useRef(null);
@@ -32,6 +38,16 @@ export default function EventLayout() {
             setCachedEvents(events);
         }
     }, [loading, events]);
+
+    useEffect(() => {
+        if (location.state?.error) {
+            console.log("error - ", location.state.error);
+
+            if (!modalError) {
+                showError(location.state.error);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -71,6 +87,7 @@ export default function EventLayout() {
 
     return (
         <DefaultLayout>
+            <ErrorModal />
             <div className={styles.layout}>
                 <HeroSection events={events} loading={loading} />
                 {/* Floating Controls */}

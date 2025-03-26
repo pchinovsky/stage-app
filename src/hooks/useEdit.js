@@ -6,20 +6,29 @@ import useForm from "../hooks/useForm";
 import eventsApi from "../api/events-api";
 import { eventSchema } from "../api/validationSchemas";
 import { parseTime } from "@internationalized/date";
+import { useError } from "../contexts/errorContext";
+import { useRef } from "react";
 
 export default function useEdit(eventId, initialValues) {
+    const { showError } = useError();
     const navigate = useNavigate();
     const [loadingEvent, setLoadingEvent] = useState(true);
+    const isMounted = useRef(true);
+
+
+    const route = `/events/${eventId}`;
 
     const form = useForm(
         initialValues,
         (updatedEvent) => eventsApi.updateEvent(eventId, updatedEvent),
-        `/events/${eventId}`,
+        route,
         eventSchema
     );
 
     useEffect(() => {
-        (async () => {
+        isMounted.current = true;
+
+        const fetchEvent = async () => {
             try {
                 const docRef = doc(db, "events", eventId);
                 const docSnap = await getDoc(docRef);
@@ -34,18 +43,30 @@ export default function useEdit(eventId, initialValues) {
                         ? parseTime(eventData.endTime)
                         : "";
 
-                    form.setFormValues(eventData);
+                    if (isMounted.current) {
+                        form.setFormValues(eventData);
+                    }
                 } else {
-                    console.error("Event not found");
+                    showError("Event not found.");
                     navigate("/events");
                 }
             } catch (err) {
-                console.error("Err fetching event:", err);
+                if (isMounted.current) {
+                    showError(err.message || "Error fetching event.");
+                }
             } finally {
-                setLoadingEvent(false);
+                if (isMounted.current) {
+                    setLoadingEvent(false);
+                }
             }
-        })();
-    }, [eventId, form.setFormValues, navigate]);
+        };
+
+        fetchEvent();
+
+        return () => {
+            isMounted.current = false;
+        };
+    }, [eventId, form.setFormValues, navigate, showError]);
 
     return { ...form, loadingEvent };
 }
