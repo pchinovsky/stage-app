@@ -44,10 +44,11 @@ import {
 import { db } from "../firebase/firebaseConfig";
 import { useError } from "../contexts/errorContext";
 import { useEventCreate } from "../hooks/useEventCreate";
+import { ImageUploadInput } from "../components/Image2";
 
 export default function CreatePage() {
-    const { showError } = useError();
     const createEvent = useEventCreate();
+    const [previewImage, setPreviewImage] = useState("");
 
     const initialValues = {
         title: "",
@@ -72,7 +73,6 @@ export default function CreatePage() {
         venue: "",
         createdBy: "",
         createdAt: serverTimestamp(),
-        activeFilters: [],
     };
 
     const route = "/events";
@@ -148,14 +148,24 @@ export default function CreatePage() {
         }
     }, [currentUser]);
 
-    const backgroundStyle = formValues.image
-        ? {
-              backgroundImage: `url(${formValues.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              color: "white",
-          }
-        : {};
+    // const backgroundStyle = formValues.image
+    //     ? {
+    //           backgroundImage: `url(${formValues.image})`,
+    //           backgroundSize: "cover",
+    //           backgroundPosition: "center",
+    //           color: "white",
+    //       }
+    //     : {};
+
+    const backgroundStyle =
+        previewImage || formValues.image
+            ? {
+                  backgroundImage: `url(${previewImage || formValues.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  color: "white",
+              }
+            : {};
 
     const [selectedArtists, setSelectedArtists] = useState([]);
     const [showArtistModal, setShowArtistModal] = useState(false);
@@ -253,15 +263,21 @@ export default function CreatePage() {
     return (
         <DefaultLayout>
             <div
-                className="min-h-screen w-full transition-all duration-500 ease-in-out pt-10"
+                className="min-h-screen w-full transition-all duration-700 ease-in-out pt-10"
+                // style={{
+                //     backgroundImage: `url(${formValues?.image})`,
+                //     backgroundSize: "cover",
+                //     backgroundPosition: "center",
+                //     color: "white",
+                // }}
                 style={backgroundStyle}
             >
                 <div className="container mx-auto py-8 px-4">
                     <div
-                        className={`w-[1200px] h-[700px] max-w-5xl mx-auto rounded-xl p-6 ${formValues.image ? "bg-gray-50/20 backdrop-blur-md" : "bg-white border border-slate-300"}`}
+                        className={`w-[1200px] h-[700px] max-w-5xl mx-auto rounded-xl p-6 ${previewImage ? "bg-gray-50/20 backdrop-blur-md" : "bg-white border border-slate-300"}`}
                     >
                         <h1
-                            className={`text-3xl font-bold mb-6 ${formValues.image ? "text-white" : "text-gray-800"}`}
+                            className={`text-3xl font-bold mb-6 ${previewImage ? "text-white" : "text-gray-800"}`}
                         >
                             Create Event
                         </h1>
@@ -280,14 +296,13 @@ export default function CreatePage() {
                             onSubmit={handleSubmit}
                             validationBehavior="aria"
                         >
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-[500px]">
                                 <div className="md:col-span-2"></div>
-
-                                <ImageUrlInput
+                                <ImageUploadInput
                                     formValues={formValues}
-                                    handleInputChange={
-                                        handleInputChangeExpanded
-                                    }
+                                    setFormValues={setFormValues}
+                                    previewImage={previewImage}
+                                    setPreviewImage={setPreviewImage}
                                     error={error}
                                 />
 

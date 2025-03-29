@@ -169,19 +169,6 @@ export default function Event() {
         },
     ];
 
-    const yourEvents = [
-        { title: "Art Show-mow", date: "2025-03-10" },
-        { title: "Music Festival-val", date: "2025-03-15" },
-    ];
-
-    const followedUsersEvents = [
-        { title: "Gallery Opening with Protein Bars", date: "2025-03-12" },
-        {
-            title: "Tech Meetup with Bear Grills eating eyeballs",
-            date: "2025-03-20",
-        },
-    ];
-
     console.log("calendar open - ", isCalendarOpen);
 
     return (

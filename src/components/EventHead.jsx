@@ -8,10 +8,21 @@ export default function EventHead({
     isModalOpen,
     handleOpenModal,
 }) {
+    console.log("event head", event);
+
     return (
         <div className="absolute left-[250px] top-[120px] z-[100] flex flex-col items-start gap-2">
-            <h1 className="font-bold text-6xl">{event.title}</h1>
-            <h3 className="font-bold text-2xl">{event.subtitle}</h3>
+            <h1
+                className={`font-bold text-6xl outlined-text ${event.isDark ? "text-gray-300" : "text-gray-900"}`}
+            >
+                {event.title}
+            </h1>
+            <h3
+                className={`font-bold text-2xl ${event.isDark ? "text-gray-300" : "text-gray-900"}`}
+            >
+                {event.subtitle}
+            </h3>
+
             <Tooltip
                 content={
                     <TooltipProfile
