@@ -250,11 +250,14 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
                                                         <Image
                                                             src={img.preview}
                                                             alt={`Additional image ${index + 1}`}
-                                                            className="h-24 w-full object-cover rounded-md"
+                                                            className="object-cover rounded-md"
+                                                            classNames={{
+                                                                wrapper:
+                                                                    "min-w-full h-full",
+                                                            }}
                                                         />
                                                         <Chip
                                                             size="sm"
-                                                            color="danger"
                                                             variant="solid"
                                                             className="absolute top-1 right-1 cursor-pointer"
                                                             onClose={() =>

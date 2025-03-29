@@ -9,6 +9,8 @@ import { useEventsStore } from "../contexts/eventsContext";
 import { calcTrending } from "../../utils/calcTrending";
 
 const HeroSection = React.memo(() => {
+    const [isFixed, setIsFixed] = useState(false);
+
     const { events, loading, error } = useEventsStore();
     const [randomEvent, setRandomEvent] = useState(null);
     const [involved, setInvolved] = useState(0);
@@ -62,31 +64,43 @@ const HeroSection = React.memo(() => {
                 <StatsBox stats={statsData} disableAbsolute />
                 <TabbedCard />
             </div>
-            {loading || !randomEvent ? (
-                // <Spinner
-                //     classNames={{ label: "text-foreground mt-4" }}
-                //     label="simple"
-                //     variant="simple"
-                // />
-                <Skeleton
-                    className={`${styles.heroImage} h-[1080px] w-[1920px]`}
-                />
-            ) : (
-                <motion.div
-                    initial={{ x: "-100%" }}
-                    animate={{ x: 0 }}
-                    transition={{ duration: 0.5 }}
-                    // style={{ width: "100%", height: "100%" }}
+            <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                transition={{ duration: 1 }}
+                onAnimationComplete={() => setIsFixed(true)}
+                className={styles.heroSection}
+            >
+                <div
+                    style={{
+                        position: isFixed ? "fixed" : "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        zIndex: -1,
+                    }}
                 >
-                    <Image
-                        src={randomEvent.image}
-                        alt="Hero Image"
-                        className={styles.heroImage}
-                        width={1920}
-                        height={1080}
-                    />
-                </motion.div>
-            )}
+                    {loading || !randomEvent ? (
+                        <Skeleton
+                            className={`${styles.heroImage} h-[1080px] w-[1920px]`}
+                        />
+                    ) : (
+                        <Image
+                            src={randomEvent.image}
+                            alt="Hero Image"
+                            className={styles.heroImage}
+                            width={1920}
+                            height={1080}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                            }}
+                        />
+                    )}
+                </div>
+            </motion.div>
             {circlePos.map((pos, index) => (
                 <Tooltip
                     key={index}

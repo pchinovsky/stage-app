@@ -75,7 +75,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 } else if (selectedSearchType === "artist") {
                     delete newFilters.artists;
                 } else if (selectedSearchType === "venue") {
-                    delete newFilters.venues;
+                    delete newFilters.venue;
                 }
 
                 return newFilters;
@@ -216,7 +216,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     }, [currentUser, userLoading]);
 
     useEffect(() => {
-        if (activeFilters && activeFilters.length > 0) {
+        if (userId && activeFilters && activeFilters.length > 0) {
             authApi.updateUser(userId, { activeFilters });
         }
     }, [activeFilters, userId]);
