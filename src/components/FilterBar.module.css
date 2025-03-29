@@ -26,7 +26,7 @@
 
 .filterBox {
     @apply relative bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-lg flex flex-col;
-    @apply w-[180px] flex-shrink-0;
+    @apply w-[200px] flex-shrink-0;
 }
 
 .largerBox {

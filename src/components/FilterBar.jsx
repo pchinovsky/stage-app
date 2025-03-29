@@ -144,7 +144,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
             "Exhibition",
             "Other",
         ],
-        Recommended: ["For you", "AI Picks"],
         Time: ["Today", "Tomorrow", "Upcoming", "Past"],
         Popular: ["Interested", "Attended", "Invitations", "Trending"],
         Involved: [
@@ -160,7 +159,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
     const [availableFilters] = useState([
         "Categories",
-        "Recommended",
         "Time",
         "Popular",
         "Involved",
@@ -621,6 +619,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 className={styles.filterContainer}
                 style={{
                     width: filterWidth,
+                    marginLeft: isAuth ? "0" : "64px",
                 }}
             >
                 {isAuth && (

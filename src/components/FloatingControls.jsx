@@ -145,19 +145,28 @@ export default function FloatingControls({ pos, active, dock }) {
         };
     }, [position, currentUser]);
 
-    const getPanelStyle = (settings) => ({
-        backgroundColor: settings.isTransparent
+    // const getPanelStyle = (settings) => ({
+    //     backgroundColor: settings.isTransparent
+    //         ? "rgba(255, 255, 255, 0.1)"
+    //         : "rgba(255, 255, 255, 1)",
+    //     backdropFilter: settings.isTransparent ? "blur(10px)" : "none",
+    //     borderRadius: "9px",
+    //     border: "2px solid rgba(209 213 219, 1)",
+    // });
+
+    // const panelStyle = useMemo(() => {
+    //     if (!currentUser?.floatingPanelSettings) return {};
+    //     return getPanelStyle(currentUser.floatingPanelSettings);
+    // }, [currentUser?.floatingPanelSettings]);
+
+    const panelStyle = {
+        "--panel-bg-color": currentUser?.floatingPanelSettings?.isTransparent
             ? "rgba(255, 255, 255, 0.1)"
             : "rgba(255, 255, 255, 1)",
-        backdropFilter: settings.isTransparent ? "blur(10px)" : "none",
-        borderRadius: "9px",
-        border: "2px solid rgba(209 213 219, 1)",
-    });
-
-    const panelStyle = useMemo(() => {
-        if (!currentUser?.floatingPanelSettings) return {};
-        return getPanelStyle(currentUser.floatingPanelSettings);
-    }, [currentUser?.floatingPanelSettings]);
+        "--panel-top": position.top,
+        "--panel-left": position.left,
+        "--panel-border-radius": "9px",
+    };
 
     return (
         <div
@@ -165,15 +174,16 @@ export default function FloatingControls({ pos, active, dock }) {
             className={`${styles.panel} ${
                 isMinimized ? styles.panelMin : styles.panelMax
             }`}
-            style={{
-                ...panelStyle,
-                // opacity: currentUser.floatingPanelSettings.isTransparent
-                //     ? 0.2
-                //     : 1,
-                cursor: isDocked ? "grab" : "default",
-                top: position.top,
-                left: position.left,
-            }}
+            // style={{
+            //     ...panelStyle,
+            //     // opacity: currentUser.floatingPanelSettings.isTransparent
+            //     //     ? 0.2
+            //     //     : 1,
+            //     cursor: isDocked ? "grab" : "default",
+            //     top: position.top,
+            //     left: position.left,
+            // }}
+            style={panelStyle}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
         >

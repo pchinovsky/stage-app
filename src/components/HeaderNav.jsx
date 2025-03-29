@@ -20,6 +20,7 @@ import { useUser } from "../hooks/useUser-new";
 import FloatingControls from "./FloatingControls";
 import { useLocation } from "react-router-dom";
 import ManagerGuard from "../guards/ManagerGuard";
+import { getPanelState } from "../../utils/getPanelState";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
@@ -29,34 +30,32 @@ export default function HeaderNav() {
     const location = useLocation();
     const { pathname } = location;
     const isEventsPage = pathname === "/events";
-    // const { pathname } = useLocation();
 
-    // const pathSegments = pathname.split("/");
-    // const filteredSegments = pathSegments.filter((segment) => segment !== "");
-    // const lastSegment = filteredSegments[filteredSegments.length - 1];
+    const { floatingPanelSettings: settings } = currentUser ?? {};
+    const { pos, docked } = getPanelState(settings, isEventsPage);
 
-    // const panelActive = lastSegment === "events";
+    const dockPosition = settings?.dockPosition ?? "top-left";
+    // const persistPosition = settings?.persistPosition;
+    // const lastPosition = settings?.lastPosition ?? {
+    //     top: "13px",
+    //     left: "16px",
+    // };
 
-    const dockPosition = currentUser?.floatingPanelSettings?.dockPosition;
+    // const docked =
+    //     !persistPosition ||
+    //     (lastPosition?.top === "13px" &&
+    //         (lastPosition?.left === "16px" || lastPosition?.left === "72.8%"));
 
-    const persistPosition = currentUser?.floatingPanelSettings?.persistPosition;
-    const docked =
-        (currentUser?.floatingPanelSettings?.lastPosition?.top === "13px" &&
-            currentUser?.floatingPanelSettings?.lastPosition?.left ===
-                "16px") ||
-        (currentUser?.floatingPanelSettings?.lastPosition?.top === "13px" &&
-            currentUser?.floatingPanelSettings?.lastPosition?.left === "72.8%");
-
-    const pos =
-        isEventsPage && persistPosition
-            ? {
-                  top: `${currentUser?.floatingPanelSettings?.lastPosition?.top || "13px"}`,
-                  left: `${currentUser?.floatingPanelSettings?.lastPosition?.left || "16px"}`,
-              }
-            : {
-                  top: "13px",
-                  left: dockPosition === "top-left" ? "16px" : "72.8%",
-              };
+    // const pos =
+    //     isEventsPage && persistPosition
+    //         ? {
+    //               top: lastPosition?.top || "13px",
+    //               left: lastPosition?.left || "16px",
+    //           }
+    //         : {
+    //               top: "13px",
+    //               left: dockPosition === "top-left" ? "16px" : "72.8%",
+    //           };
 
     return (
         <Navbar
@@ -77,7 +76,8 @@ export default function HeaderNav() {
                     //     left: "72.8%" }}
                     pos={pos}
                     active={isEventsPage}
-                    dock={!(persistPosition && !docked)}
+                    // dock={!(persistPosition && !docked)}
+                    dock={docked}
                 />
             )}
 
@@ -85,7 +85,7 @@ export default function HeaderNav() {
                 <Link
                     aria-current="page"
                     href="/events"
-                    className={`bg-white px-4 py-2 rounded-lg ${dockPosition === "top-left" && "ml-[195px]"}`}
+                    className={`bg-white px-4 py-2 rounded-lg ${dockPosition === "top-left" && "ml-[225px]"}`}
                 >
                     <p className={styles.brand}>STAGE</p>
                 </Link>

@@ -1,7 +1,23 @@
-.panel {
+/* .panel {
     @apply fixed z-[9999] bg-white border border-gray-300 rounded-xl 
            backdrop-blur-md;
     @apply hover:bg-opacity-100 hover:rounded-lg transition-background ease-in-out duration-1000;
+} */
+
+.panel {
+    @apply fixed z-[9999] border border-gray-300 rounded-xl backdrop-blur-md;
+    background-color: var(--panel-bg-color, rgba(255, 255, 255, 1));
+    top: var(--panel-top, 13px);
+    left: var(--panel-left, 16px);
+    border-radius: var(--panel-border-radius, 9px);
+    transition:
+        background-color 0.3s ease-in-out,
+        top 0.3s ease-in-out,
+        left 0.3s ease-in-out;
+}
+
+.panel:hover {
+    background-color: rgba(255, 255, 255, 1);
 }
 
 .panelMin {

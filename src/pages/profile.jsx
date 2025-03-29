@@ -81,13 +81,40 @@ export default function Profile() {
     //     }
     // };
 
-    const handleSwitchToggle = async (newSettings) => {
-        setFloatingPanelSettings((prev) => ({ ...prev, ...newSettings }));
+    // const handleSwitchToggle = async (newSettings) => {
+    //     setFloatingPanelSettings((prev) => ({ ...prev, ...newSettings }));
+    //     setSwitchLoading(true);
+    //     try {
+    //         await updateFloatingPanelSettings(newSettings);
+    //     } catch (err) {
+    //         showError("Failed to update setting");
+    //     } finally {
+    //         setSwitchLoading(false);
+    //     }
+    // };
+
+    const handleToggleSetting = async (key, value) => {
+        if (!user?.id) return;
+
         setSwitchLoading(true);
+
         try {
-            await updateFloatingPanelSettings(newSettings);
-        } catch (err) {
-            showError("Failed to update setting");
+            const updatedSettings = {
+                ...user.floatingPanelSettings,
+                [key]: value,
+            };
+
+            await authApi.updateUser(user.id, {
+                floatingPanelSettings: updatedSettings,
+            });
+
+            setCurrentUser({
+                ...user,
+                floatingPanelSettings: updatedSettings,
+            });
+        } catch (error) {
+            console.error("Error updating floating panel settings:", error);
+            showError("Failed to update settings. Please try again.");
         } finally {
             setSwitchLoading(false);
         }
@@ -328,6 +355,55 @@ export default function Profile() {
                                     <Switch
                                         id="transparency"
                                         isSelected={
+                                            user.floatingPanelSettings
+                                                .isTransparent
+                                        }
+                                        onChange={(e) =>
+                                            handleToggleSetting(
+                                                "isTransparent",
+                                                e.target.checked
+                                            )
+                                        }
+                                        isDisabled={switchLoading}
+                                    >
+                                        Transparent Mode
+                                    </Switch>
+
+                                    <Switch
+                                        id="locked"
+                                        isSelected={
+                                            user.floatingPanelSettings.isLocked
+                                        }
+                                        onChange={(e) =>
+                                            handleToggleSetting(
+                                                "isLocked",
+                                                e.target.checked
+                                            )
+                                        }
+                                        isDisabled={switchLoading}
+                                    >
+                                        Locked Mode
+                                    </Switch>
+
+                                    <Switch
+                                        id="persistPosition"
+                                        isSelected={
+                                            user.floatingPanelSettings
+                                                .persistPosition
+                                        }
+                                        onChange={(e) =>
+                                            handleToggleSetting(
+                                                "persistPosition",
+                                                e.target.checked
+                                            )
+                                        }
+                                        isDisabled={switchLoading}
+                                    >
+                                        Persist Position
+                                    </Switch>
+                                    {/* <Switch
+                                        id="transparency"
+                                        isSelected={
                                             floatingPanelSettings.isTransparent
                                         }
                                         onChange={(e) =>
@@ -368,8 +444,8 @@ export default function Profile() {
                                         isDisabled={switchLoading}
                                     >
                                         Persist Position
-                                    </Switch>
-                                    <Select
+                                    </Switch> */}
+                                    {/* <Select
                                         label="Dock Position"
                                         selectedKeys={[
                                             floatingPanelSettings.dockPosition,
@@ -388,6 +464,29 @@ export default function Profile() {
                                         }}
                                         isDisabled={switchLoading}
                                         // className="border rounded-md p-2"
+                                    >
+                                        <SelectItem key="top-left">
+                                            Top Left
+                                        </SelectItem>
+                                        <SelectItem key="top-right">
+                                            Top Right
+                                        </SelectItem>
+                                    </Select> */}
+                                    <Select
+                                        label="Dock Position"
+                                        selectedKeys={[
+                                            user.floatingPanelSettings
+                                                .dockPosition,
+                                        ]}
+                                        onSelectionChange={(keys) => {
+                                            const selectedKey =
+                                                Array.from(keys)[0];
+                                            handleToggleSetting(
+                                                "dockPosition",
+                                                selectedKey
+                                            );
+                                        }}
+                                        isDisabled={switchLoading}
                                     >
                                         <SelectItem key="top-left">
                                             Top Left
