@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, Input, Checkbox, Link, Image, Form } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import eventsData from "../mockEventData";
@@ -13,12 +13,22 @@ import styles from "./register.module.css";
 import { useEventsStore } from "../contexts/eventsContext";
 import { motion } from "framer-motion";
 import { Skeleton } from "@heroui/react";
+import { AuthContext } from "../contexts/authContext";
 
 export default function Register() {
+    const { accessRegRef } = useContext(AuthContext);
     const [isVisible, setIsVisible] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
     const { events, loading } = useEventsStore();
+
+    // useEffect(() => {
+    //     accessRegRef.current = true;
+
+    //     return () => {
+    //         accessRegRef.current = false;
+    //     };
+    // }, []);
 
     const register = useRegister();
     const initialValues = {

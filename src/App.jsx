@@ -1,7 +1,7 @@
 import { Route, Routes, Router, useLocation } from "react-router-dom";
+import { useContext, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import IndexPage from "@/pages/index";
 import Profile from "./pages/profile";
 import EventLayout from "./pages/events";
 import CreatePage from "./pages/create";
@@ -13,11 +13,29 @@ import ArtistsPage from "./pages/artists";
 import VenuesPage from "./pages/venues";
 import ManagerGuard from "./guards/ManagerGuard";
 import AuthGuard from "./guards/authGuard";
+import NonAuthGuard from "./guards/NonAuthGuard";
 import OwnerGuard from "./guards/OwnerGuard";
 import LogoutPage from "./pages/logout";
+import { AuthContext } from "./contexts/authContext";
+import RegisterWrapper from "./pages/registerWrapper";
+import LoginWrapper from "./pages/loginWrapper";
 
 function AnimatedRoutes() {
     const location = useLocation();
+    const { accessRegRef, accessLogRef } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (location.pathname === "/register") {
+            accessRegRef.current = true;
+            accessLogRef.current = false;
+        } else if (location.pathname === "/login") {
+            accessLogRef.current = true;
+            accessRegRef.current = false;
+        } else {
+            accessLogRef.current = false;
+            accessRegRef.current = false;
+        }
+    }, [location.pathname]);
 
     return (
         <AnimatePresence mode="wait">
@@ -39,7 +57,7 @@ function AnimatedRoutes() {
                                 duration: 0.4,
                             }}
                         >
-                            <IndexPage />
+                            <EventLayout />
                         </motion.div>
                     }
                 />
@@ -203,7 +221,7 @@ function AnimatedRoutes() {
                         </motion.div>
                     }
                 />
-                <Route
+                {/* <Route
                     path="/login"
                     element={
                         <motion.div
@@ -220,11 +238,13 @@ function AnimatedRoutes() {
                                 duration: 0.4,
                             }}
                         >
-                            <Login />
+                            <NonAuthGuard>
+                                <Login />
+                            </NonAuthGuard>
                         </motion.div>
                     }
-                />
-                <Route
+                /> */}
+                {/* <Route
                     path="/register"
                     element={
                         <motion.div
@@ -241,10 +261,14 @@ function AnimatedRoutes() {
                                 duration: 0.4,
                             }}
                         >
-                            <Register />
+                            <NonAuthGuard>
+                                <Register />
+                            </NonAuthGuard>
                         </motion.div>
                     }
-                />
+                /> */}
+                <Route path="/login" element={<LoginWrapper />} />
+                <Route path="/register" element={<RegisterWrapper />} />
                 <Route path="/logout" element={<LogoutPage />} />
             </Routes>
         </AnimatePresence>

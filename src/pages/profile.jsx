@@ -14,6 +14,9 @@ import {
     Calendar,
     Switch,
     Tooltip,
+    Select,
+    SelectItem,
+    Link,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import CalendarModal from "../components/Calendar";
@@ -33,14 +36,62 @@ import { db } from "../firebase/firebaseConfig";
 import { userSchema } from "../api/validationSchemas";
 import authApi from "../api/auth-api";
 import { useError } from "../contexts/errorContext";
+import { useFloatingContext } from "../contexts/floatingContext";
 
 export default function Profile() {
     const { showError } = useError();
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    const [isModalOpen, setModalOpen] = useState(false);
+    const {
+        updateFloatingPanelSettings,
+        floatingPanelSettings,
+        setFloatingPanelSettings,
+    } = useFloatingContext();
 
     const { currentUser: user, setCurrentUser, loading } = useUser();
+
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [switchLoading, setSwitchLoading] = useState(false);
+
     const logout = useLogout();
+
+    // useEffect(() => {
+    //     if (!loading && user) {
+    //         setFloatingPanelSettings(
+    //             user.floatingPanelSettings || floatingPanelSettings
+    //         );
+    //     }
+    // }, [user, loading]);
+
+    // const updateFloatingPanelSettings = async (newSettings) => {
+    //     setFloatingPanelSettings((prev) => ({ ...prev, ...newSettings }));
+
+    //     try {
+    //         setSwitchLoading(true);
+    //         await authApi.updateUser(user.id, {
+    //             floatingPanelSettings: {
+    //                 ...floatingPanelSettings,
+    //                 ...newSettings,
+    //             },
+    //         });
+    //     } catch (error) {
+    //         console.error("Error updating floating panel settings:", error);
+    //         showError("Failed to update settings. Please try again.");
+    //     } finally {
+    //         setSwitchLoading(false);
+    //     }
+    // };
+
+    const handleSwitchToggle = async (newSettings) => {
+        setFloatingPanelSettings((prev) => ({ ...prev, ...newSettings }));
+        setSwitchLoading(true);
+        try {
+            await updateFloatingPanelSettings(newSettings);
+        } catch (err) {
+            showError("Failed to update setting");
+        } finally {
+            setSwitchLoading(false);
+        }
+    };
 
     const {
         venue,
@@ -127,12 +178,6 @@ export default function Profile() {
         };
     }
 
-    const preferences = {
-        showBulkActions: true,
-        showAppearanceSettings: false,
-        showQuickFilters: true,
-    };
-
     const handleCardClick = () => {
         setModalOpen(true);
     };
@@ -152,9 +197,10 @@ export default function Profile() {
                     {/* User info */}
                     <div className="md:col-span-1 flex flex-col justify-between items-start bg-white p-6 rounded-lg shadow-md">
                         <User
-                            name={user.name}
+                            key={formValues?.image}
+                            name={formValues?.name}
                             avatarProps={{
-                                src: user.image,
+                                src: user?.image,
                                 size: "lg",
                                 radius: "md",
                                 showFallback: true,
@@ -166,10 +212,18 @@ export default function Profile() {
                             onClose={() => setIsCalendarOpen(false)}
                         />
                         <div className="mt-6 flex justify-between w-full items-end">
-                            <Button
+                            {/* <Button
                                 color="danger"
                                 variant="bordered"
                                 onPress={logout}
+                            >
+                                Log Out
+                            </Button> */}
+                            <Button
+                                color="danger"
+                                variant="bordered"
+                                as={Link}
+                                href="/logout"
                             >
                                 Log Out
                             </Button>
@@ -220,7 +274,7 @@ export default function Profile() {
                                         id="name"
                                         name="name"
                                         label="Username"
-                                        key={formValues?.name}
+                                        // key={formValues?.name}
                                         labelPlacement="outside"
                                         value={formValues?.name}
                                         onChange={handleInputChange}
@@ -272,31 +326,76 @@ export default function Profile() {
                                 </h2>
                                 <div className="space-y-3 flex flex-col">
                                     <Switch
-                                        id="bulkActions"
-                                        defaultSelected={
-                                            preferences.showBulkActions
+                                        id="transparency"
+                                        isSelected={
+                                            floatingPanelSettings.isTransparent
                                         }
+                                        onChange={(e) =>
+                                            handleSwitchToggle({
+                                                isTransparent: e.target.checked,
+                                            })
+                                        }
+                                        isDisabled={switchLoading}
                                     >
-                                        Show Bulk Actions
+                                        Transparent Mode
+                                    </Switch>
+                                    <Switch
+                                        id="locked"
+                                        isSelected={
+                                            floatingPanelSettings.isLocked
+                                        }
+                                        onChange={(e) =>
+                                            handleSwitchToggle({
+                                                isLocked: e.target.checked,
+                                            })
+                                        }
+                                        isDisabled={switchLoading}
+                                    >
+                                        Locked Mode
                                     </Switch>
 
                                     <Switch
-                                        id="appearanceSettings"
-                                        defaultSelected={
-                                            preferences.showAppearanceSettings
+                                        id="transparency"
+                                        isSelected={
+                                            floatingPanelSettings.persistPosition
                                         }
+                                        onChange={(e) =>
+                                            handleSwitchToggle({
+                                                persistPosition:
+                                                    e.target.checked,
+                                            })
+                                        }
+                                        isDisabled={switchLoading}
                                     >
-                                        Show Appearance Settings
+                                        Persist Position
                                     </Switch>
+                                    <Select
+                                        label="Dock Position"
+                                        selectedKeys={[
+                                            floatingPanelSettings.dockPosition,
+                                        ]}
+                                        onSelectionChange={(keys) => {
+                                            const selectedKey =
+                                                Array.from(keys)[0];
+                                            console.log(
+                                                "selectedKey",
+                                                selectedKey
+                                            );
 
-                                    <Switch
-                                        id="quickFilters"
-                                        defaultSelected={
-                                            preferences.showQuickFilters
-                                        }
+                                            updateFloatingPanelSettings({
+                                                dockPosition: selectedKey,
+                                            });
+                                        }}
+                                        isDisabled={switchLoading}
+                                        // className="border rounded-md p-2"
                                     >
-                                        Show Quick Filters
-                                    </Switch>
+                                        <SelectItem key="top-left">
+                                            Top Left
+                                        </SelectItem>
+                                        <SelectItem key="top-right">
+                                            Top Right
+                                        </SelectItem>
+                                    </Select>
                                 </div>
                             </div>
                         </div>

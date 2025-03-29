@@ -9,13 +9,14 @@ import { useError } from "../contexts/errorContext";
 
 export function useLogin() {
     const { showError } = useError();
-    const { setUser, setIsAuth } = useContext(AuthContext);
+    const { setUser, setIsAuth, justLogRef } = useContext(AuthContext);
 
     const log = async (data) => {
         try {
             const authData = await authApi.login(data);
             setUser(authData.user);
             setIsAuth(true);
+            justLogRef.current = true;
         } catch (err) {
             const errMsg = err.message || "Error detected. Please try again.";
             showError(errMsg);
@@ -27,11 +28,17 @@ export function useLogin() {
 
 export function useRegister() {
     const { showError } = useError();
-    const { setUser, setIsAuth } = useContext(AuthContext);
+    const { setUser, setIsAuth, justRegRef } = useContext(AuthContext);
 
     const reg = async (data) => {
         try {
             const authData = await authApi.register(data);
+
+            await new Promise((res) => setTimeout(res, 100));
+
+            console.log("useRegister - about to set justRegRef to true");
+
+            justRegRef.current = true;
             setUser(authData.user);
             setIsAuth(true);
 
@@ -50,7 +57,13 @@ export function useRegister() {
                 followingUsers: [],
                 managedVenue: "",
                 eventsFeaturedIn: [],
-                activeFilters: []
+                activeFilters: [],
+                floatingPanelSettings: {
+                    isLocked: false,
+                    isTransparent: true,
+                    dockPosition: "top-left",
+                    persistPosition: false,
+                }
             };
 
             await setDoc(doc(db, "users", authData.user.uid), newUser);

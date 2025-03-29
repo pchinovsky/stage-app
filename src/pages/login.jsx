@@ -42,6 +42,8 @@ export default function Login() {
             if (!modalError) {
                 showError(location.state.error);
             }
+
+            window.history.replaceState({}, document.title);
         }
     }, []);
 

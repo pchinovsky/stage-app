@@ -8,15 +8,20 @@ const UsersContext = createContext();
 
 export const UsersProvider = ({ children }) => {
     const { showError } = useError();
-    const { userId } = useContext(AuthContext);
+    const { userId, authLoading } = useContext(AuthContext);
     const [currentUserData, setCurrentUserData] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        console.log("--- user 1st - userId", userId);
+
+        if (authLoading) return;
+
         // if (!userId) return;
         if (!userId) {
+            console.log("--- user 2nd - userId", userId);
             setCurrentUserData(null);
             setLoading(false);
             return;
