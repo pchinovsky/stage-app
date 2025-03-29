@@ -14,6 +14,7 @@ import { calcTrending } from "../../utils/calcTrending";
 import { useEventsStore } from "./eventsContext";
 import authApi from "../api/auth-api";
 import { useError } from "./errorContext";
+import { useUser } from "../hooks/useUser-new";
 
 const FloatingContext = createContext();
 
@@ -26,8 +27,15 @@ export const FloatingProvider = ({ children }) => {
     const [uniformInterested, setUniformInterested] = useState(null);
     const [uniformAttending, setUniformAttending] = useState(null);
     const [applied, setApplied] = useState(false);
+    const [floatingPanelSettings, setFloatingPanelSettings] = useState({
+        isLocked: false,
+        isTransparent: true,
+        dockPosition: "top-left",
+        persistPosition: false,
+    });
 
     const { userId } = useContext(AuthContext);
+    const { currentUser } = useUser();
     const { events } = useEventsStore();
 
     useEffect(() => {
@@ -159,6 +167,87 @@ export const FloatingProvider = ({ children }) => {
         }
     };
 
+    // - 1
+    // const updateFloatingPanelSettings = async (newSettings) => {
+    //     if (!userId) return;
+
+    //     try {
+    //         await authApi.updateUser(userId, {
+    //             floatingPanelSettings: newSettings,
+    //         });
+    //     } catch (error) {
+    //         console.error("Error updating floating panel settings:", error);
+    //         throw error;
+    //     }
+    // };
+
+    // - 2
+    // const updateFloatingPanelSettings = async (newSettings) => {
+    //     if (!userId || !currentUser?.floatingPanelSettings) return;
+
+    //     const updatedSettings = {
+    //         ...currentUser.floatingPanelSettings,
+    //         ...newSettings,
+    //     };
+
+    //     try {
+    //         await authApi.updateUser(userId, {
+    //             floatingPanelSettings: updatedSettings,
+    //         });
+    //     } catch (error) {
+    //         console.error("Error updating floating panel settings:", error);
+    //         throw error;
+    //     }
+    // };
+
+    // - 3
+    // const updateFloatingPanelSettings = async (newSettings) => {
+    //     if (!userId || !currentUser?.floatingPanelSettings) return;
+
+    //     const updatedSettings = {
+    //         ...currentUser.floatingPanelSettings,
+    //         ...newSettings, // Overwrite with new settings
+    //     };
+
+    //     try {
+    //         setFloatingPanelSettings(updatedSettings);
+
+    //         await authApi.updateUser(userId, {
+    //             floatingPanelSettings: updatedSettings,
+    //         });
+    //     } catch (error) {
+    //         console.error("Error updating floating panel settings:", error);
+    //         throw error;
+    //     }
+    // };
+
+    // - 4
+    const isEqual = (obj1, obj2) =>
+        JSON.stringify(obj1) === JSON.stringify(obj2);
+
+    const updateFloatingPanelSettings = async (newSettings) => {
+        if (!userId || !currentUser?.floatingPanelSettings) return;
+
+        const updatedSettings = {
+            ...currentUser.floatingPanelSettings,
+            ...newSettings,
+        };
+
+        if (isEqual(currentUser.floatingPanelSettings, updatedSettings)) {
+            return;
+        }
+
+        try {
+            setFloatingPanelSettings(updatedSettings);
+            await authApi.updateUser(userId, {
+                floatingPanelSettings: updatedSettings,
+            });
+        } catch (error) {
+            console.error("Error updating floating panel settings:", error);
+            throw error;
+        }
+    };
+
     return (
         <FloatingContext.Provider
             value={{
@@ -172,6 +261,9 @@ export const FloatingProvider = ({ children }) => {
                 toggleSelectionMode,
                 clearSelection,
                 bulkUpdate,
+                floatingPanelSettings,
+                setFloatingPanelSettings,
+                updateFloatingPanelSettings,
             }}
         >
             {children}

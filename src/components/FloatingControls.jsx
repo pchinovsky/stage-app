@@ -1,15 +1,65 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Button, Switch, Tooltip } from "@heroui/react";
 import styles from "./FloatingControls.module.css";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
 import { useFloatingContext } from "../contexts/floatingContext";
 import ButtonDynamicGroup from "./ButtonDynamicGroup";
+import { useUser } from "../hooks/useUser-new";
 
-export default function FloatingControls({ pos, active }) {
-    const [isDetached, setIsDetached] = useState(false);
+export function TablerLock(props) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={24}
+            height={24}
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <g
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+            >
+                <path d="M5 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"></path>
+                <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0-2 0m-3-5V7a4 4 0 1 1 8 0v4"></path>
+            </g>
+        </svg>
+    );
+}
+
+export function TablerLockOpen(props) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={24}
+            height={24}
+            viewBox="0 0 24 24"
+            {...props}
+        >
+            <g
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+            >
+                <path d="M5 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"></path>
+                <path d="M11 16a1 1 0 1 0 2 0a1 1 0 1 0-2 0m-3-5V6a4 4 0 0 1 8 0"></path>
+            </g>
+        </svg>
+    );
+}
+
+export default function FloatingControls({ pos, active, dock }) {
+    const { currentUser, loading } = useUser();
+    const [isDocked, setIsDocked] = useState(dock);
+    const [isLocked, setIsLocked] = useState(false);
     const panelRef = useRef(null);
     const initialPosition = useRef(pos);
+    const dockedPosition = useRef({ top: "13px", left: "16px" });
     const [position, setPosition] = useState(initialPosition.current);
     const [isDragging, setIsDragging] = useState(false);
     const [isMinimized, setIsMinimized] = useState(true);
@@ -21,6 +71,7 @@ export default function FloatingControls({ pos, active }) {
         uniformAttending,
         uniformInterested,
         clearSelection,
+        updateFloatingPanelSettings,
     } = useFloatingContext();
 
     // useEffect(() => {
@@ -44,15 +95,15 @@ export default function FloatingControls({ pos, active }) {
         selection: selectedEvents.length !== 0,
     };
 
-    const toggleDetach = () => {
-        if (isDetached) {
-            setPosition(initialPosition.current);
+    const toggleDock = () => {
+        if (!isDocked) {
+            setPosition(dockedPosition.current);
         }
-        setIsDetached(!isDetached);
+        setIsDocked(!isDocked);
     };
 
     const handleMouseDown = (e) => {
-        if (!isDetached) return;
+        if (isDocked || isLocked) return;
         setIsDragging(true);
         offset.current = {
             x: e.clientX - panelRef.current.offsetLeft,
@@ -72,6 +123,42 @@ export default function FloatingControls({ pos, active }) {
         setIsDragging(false);
     };
 
+    const handleLock = () => {
+        setIsLocked((prev) => !prev);
+    };
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            if (currentUser?.floatingPanelSettings?.persistPosition) {
+                updateFloatingPanelSettings({ lastPosition: position });
+            }
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+
+            if (currentUser?.floatingPanelSettings?.persistPosition) {
+                updateFloatingPanelSettings({ lastPosition: position });
+            }
+        };
+    }, [position, currentUser]);
+
+    const getPanelStyle = (settings) => ({
+        backgroundColor: settings.isTransparent
+            ? "rgba(255, 255, 255, 0.1)"
+            : "rgba(255, 255, 255, 1)",
+        backdropFilter: settings.isTransparent ? "blur(10px)" : "none",
+        borderRadius: "9px",
+        border: "2px solid rgba(209 213 219, 1)",
+    });
+
+    const panelStyle = useMemo(() => {
+        if (!currentUser?.floatingPanelSettings) return {};
+        return getPanelStyle(currentUser.floatingPanelSettings);
+    }, [currentUser?.floatingPanelSettings]);
+
     return (
         <div
             ref={panelRef}
@@ -79,18 +166,24 @@ export default function FloatingControls({ pos, active }) {
                 isMinimized ? styles.panelMin : styles.panelMax
             }`}
             style={{
+                ...panelStyle,
+                // opacity: currentUser.floatingPanelSettings.isTransparent
+                //     ? 0.2
+                //     : 1,
+                cursor: isDocked ? "grab" : "default",
                 top: position.top,
                 left: position.left,
-                cursor: isDetached ? "grab" : "default",
             }}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
         >
             <div className={styles.header} onMouseDown={handleMouseDown}>
-                <span className={styles.title}>Controls</span>
+                <span className={styles.title} style={{ userSelect: "none" }}>
+                    Controls
+                </span>
                 <div className={styles.controlBtns}>
                     <Tooltip
-                        content={isDetached ? "Attach" : "Detach"}
+                        content={isDocked ? "Undock" : "Dock"}
                         offset={12}
                         delay={100}
                         closeDelay={700}
@@ -98,20 +191,20 @@ export default function FloatingControls({ pos, active }) {
                     >
                         <Button
                             className={styles.detachButton}
-                            onPress={toggleDetach}
+                            onPress={toggleDock}
                             isIconOnly
                             variant="bordered"
                             isDisabled={!active}
                         >
-                            {isDetached ? (
+                            {isDocked ? (
                                 <Icon
-                                    icon="iconoir:open-in-window"
+                                    icon="iconoir:open-new-window"
                                     width="20"
                                     height="20"
                                 />
                             ) : (
                                 <Icon
-                                    icon="iconoir:open-new-window"
+                                    icon="iconoir:open-in-window"
                                     width="20"
                                     height="20"
                                 />
@@ -206,7 +299,7 @@ export default function FloatingControls({ pos, active }) {
                             </div>
                         )} */}
 
-                        <div className="relative flex">
+                        <div className="relative flex gap-1">
                             <ButtonDynamicGroup
                                 pos={{
                                     top: "top-[0px]",
@@ -218,6 +311,30 @@ export default function FloatingControls({ pos, active }) {
                                 disabled={disabled}
                                 mode="bulk"
                             />
+                            {currentUser.floatingPanelSettings?.isLocked && (
+                                <Tooltip
+                                    placement="bottom"
+                                    className="rounded-md"
+                                    content={
+                                        isLocked
+                                            ? "Unlock position"
+                                            : "Lock position"
+                                    }
+                                >
+                                    <Button
+                                        onPress={handleLock}
+                                        className={styles.lockButton}
+                                        variant="bordered"
+                                        isIconOnly
+                                    >
+                                        {isLocked ? (
+                                            <TablerLockOpen />
+                                        ) : (
+                                            <TablerLock />
+                                        )}
+                                    </Button>
+                                </Tooltip>
+                            )}
                             <Tooltip
                                 placement="bottom"
                                 className="rounded-md"
@@ -229,6 +346,14 @@ export default function FloatingControls({ pos, active }) {
                                     isDisabled={!selectionMode}
                                     disableRipple={!selectionMode}
                                     className={styles.clearButton}
+                                    // style={{ left: "173px" }}
+                                    // style={{ left: "128px" }}
+                                    style={{
+                                        left: currentUser.floatingPanelSettings
+                                            .isLocked
+                                            ? "128px"
+                                            : "173px",
+                                    }}
                                     variant="bordered"
                                     isIconOnly
                                 >

@@ -1,6 +1,6 @@
 .panel {
     @apply fixed z-[9999] bg-white border border-gray-300 rounded-xl 
-           backdrop-blur-md bg-opacity-10;
+           backdrop-blur-md;
     @apply hover:bg-opacity-100 hover:rounded-lg transition-background ease-in-out duration-1000;
 }
 
@@ -65,5 +65,9 @@
 }
 
 .clearButton {
-    @apply left-40 top-1 p-1 hover:bg-slate-100;
+    @apply left-32 top-1 p-1 hover:bg-slate-100;
+}
+
+.lockButton {
+    @apply left-32 top-1 p-1 hover:bg-slate-100;
 }

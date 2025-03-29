@@ -20,24 +20,43 @@ import { useUser } from "../hooks/useUser-new";
 import FloatingControls from "./FloatingControls";
 import { useLocation } from "react-router-dom";
 import ManagerGuard from "../guards/ManagerGuard";
-import { useNavigate } from "react-router-dom";
 
 export default function HeaderNav() {
-    const navigate = useNavigate();
     const { navWhite } = useContext(NavContext);
     const { isAuth } = useContext(AuthContext);
     const { currentUser, loading } = useUser();
 
-    const { pathname } = useLocation();
-    const pathSegments = pathname.split("/");
-    const filteredSegments = pathSegments.filter((segment) => segment !== "");
-    const lastSegment = filteredSegments[filteredSegments.length - 1];
+    const location = useLocation();
+    const { pathname } = location;
+    const isEventsPage = pathname === "/events";
+    // const { pathname } = useLocation();
 
-    const panelActive = lastSegment === "events";
+    // const pathSegments = pathname.split("/");
+    // const filteredSegments = pathSegments.filter((segment) => segment !== "");
+    // const lastSegment = filteredSegments[filteredSegments.length - 1];
 
-    const handleLogout = () => {
-        navigate("/logout");
-    };
+    // const panelActive = lastSegment === "events";
+
+    const dockPosition = currentUser?.floatingPanelSettings?.dockPosition;
+
+    const persistPosition = currentUser?.floatingPanelSettings?.persistPosition;
+    const docked =
+        (currentUser?.floatingPanelSettings?.lastPosition?.top === "13px" &&
+            currentUser?.floatingPanelSettings?.lastPosition?.left ===
+                "16px") ||
+        (currentUser?.floatingPanelSettings?.lastPosition?.top === "13px" &&
+            currentUser?.floatingPanelSettings?.lastPosition?.left === "72.8%");
+
+    const pos =
+        isEventsPage && persistPosition
+            ? {
+                  top: `${currentUser?.floatingPanelSettings?.lastPosition?.top || "13px"}`,
+                  left: `${currentUser?.floatingPanelSettings?.lastPosition?.left || "16px"}`,
+              }
+            : {
+                  top: "13px",
+                  left: dockPosition === "top-left" ? "16px" : "72.8%",
+              };
 
     return (
         <Navbar
@@ -49,11 +68,16 @@ export default function HeaderNav() {
                 "--navbar-height": "70px",
                 "--navbar-bg": navWhite ? "white" : "transparent",
             }}
+            maxWidth="full"
         >
             {isAuth && (
                 <FloatingControls
-                    pos={{ top: "13px", left: "16px" }}
-                    active={panelActive}
+                    // pos={{ top: "13px", left: "16px" }}
+                    // pos={{ top: currentUser.floatingPanelSettings."13px",
+                    //     left: "72.8%" }}
+                    pos={pos}
+                    active={isEventsPage}
+                    dock={!(persistPosition && !docked)}
                 />
             )}
 
@@ -61,7 +85,7 @@ export default function HeaderNav() {
                 <Link
                     aria-current="page"
                     href="/events"
-                    className="bg-white px-4 py-2 rounded-lg"
+                    className={`bg-white px-4 py-2 rounded-lg ${dockPosition === "top-left" && "ml-[195px]"}`}
                 >
                     <p className={styles.brand}>STAGE</p>
                 </Link>
@@ -121,69 +145,43 @@ export default function HeaderNav() {
 
             {/* Right Navbar Items */}
             <NavbarContent justify="end">
-                {isAuth ? (
-                    <>
-                        <NavbarItem>
-                            <Button
+                {isAuth && loading ? null : isAuth ? (
+                    <Dropdown
+                        shouldBlockScroll={false}
+                        offset={10}
+                        crossOffset={-65}
+                    >
+                        <DropdownTrigger>
+                            <User
+                                key={currentUser?.image || "fallback"}
+                                as="button"
+                                avatarProps={{
+                                    isBordered: true,
+                                    src: currentUser?.image,
+                                    showFallback: true,
+                                }}
+                                className="transition-transform mr-3 mt-2"
+                            />
+                        </DropdownTrigger>
+                        <DropdownMenu>
+                            <DropdownItem
+                                key="profile"
                                 as={Link}
-                                color="secondary"
+                                href="/profile"
+                            >
+                                Profile
+                            </DropdownItem>
+                            <DropdownItem
+                                key="logout"
+                                as={Link}
                                 href="/logout"
-                                variant="solid"
-                                onPress={handleLogout}
+                                color="danger"
+                                variant="bordered"
                             >
-                                Logout
-                            </Button>
-                        </NavbarItem>
-                        {/* User Avatar & Dropdown */}
-                        <Dropdown shouldBlockScroll={false} placement="top-end">
-                            <DropdownTrigger>
-                                <User
-                                    as="button"
-                                    avatarProps={{
-                                        isBordered: true,
-                                        src: "https://th.bing.com/th?id=OSK.HEROW-wRV8gajI7GQAlcsww50kp26c7GuT_1KPa6bPqp1zA&w=312&h=200&c=7&rs=1&o=6&dpr=1.3&pid=SANGAM",
-                                    }}
-                                    className="transition-transform"
-                                />
-                            </DropdownTrigger>
-                            <DropdownMenu
-                                aria-label="User Actions"
-                                variant="flat"
-                            >
-                                <DropdownItem
-                                    key="profile"
-                                    className="h-14 gap-2"
-                                >
-                                    <p className="font-bold">Signed in as</p>
-                                    <p className="font-bold">
-                                        {loading
-                                            ? "Loading..."
-                                            : currentUser?.name}
-                                    </p>
-                                </DropdownItem>
-                                <DropdownItem
-                                    key="settings"
-                                    as={Link}
-                                    href="/profile"
-                                >
-                                    Profile
-                                </DropdownItem>
-                                <DropdownItem key="analytics">
-                                    Analytics
-                                </DropdownItem>
-                                <DropdownItem key="system">System</DropdownItem>
-                                <DropdownItem key="configurations">
-                                    Configurations
-                                </DropdownItem>
-                                <DropdownItem key="help_and_feedback">
-                                    Help & Feedback
-                                </DropdownItem>
-                                <DropdownItem key="logout" color="danger">
-                                    Log Out
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </>
+                                Log Out
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 ) : (
                     <>
                         <NavbarItem className="hidden lg:flex">
