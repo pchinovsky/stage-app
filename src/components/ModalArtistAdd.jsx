@@ -193,6 +193,7 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
                                     value={artistData.description}
                                     onChange={handleChange}
                                     minRows={2}
+                                    maxRows={5}
                                 />
 
                                 {/* Profile Image upload */}
@@ -213,7 +214,7 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
                                             <Image
                                                 src={profilePreviewUrl}
                                                 alt="Artist profile preview"
-                                                className="max-h-40 object-contain rounded-md"
+                                                className="max-h-20 object-contain rounded-md"
                                             />
                                         </div>
                                     )}
@@ -240,26 +241,29 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
 
                                     {/* Art imgs preview */}
                                     {additionalImages.length > 0 && (
-                                        <div className="mt-2 grid grid-cols-3 gap-2">
+                                        <div className="flex flex-wrap gap-2">
                                             {additionalImages.map(
                                                 (img, index) => (
                                                     <div
                                                         key={index}
-                                                        className="relative"
+                                                        className="relative w-[73px] h-[73px]"
                                                     >
                                                         <Image
                                                             src={img.preview}
                                                             alt={`Additional image ${index + 1}`}
-                                                            className="object-cover rounded-md"
+                                                            width={70}
+                                                            height={70}
+                                                            className="object-cover rounded-md w-full h-full"
                                                             classNames={{
                                                                 wrapper:
-                                                                    "min-w-full h-full",
+                                                                    "w-full h-full",
+                                                                img: "w-full h-full",
                                                             }}
                                                         />
                                                         <Chip
                                                             size="sm"
                                                             variant="solid"
-                                                            className="absolute top-1 right-1 cursor-pointer"
+                                                            className="absolute top-[1px] right-[1px] cursor-pointer"
                                                             onClose={() =>
                                                                 removeAdditionalImage(
                                                                     index
