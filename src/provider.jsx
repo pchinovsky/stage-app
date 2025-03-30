@@ -13,7 +13,6 @@ export function Provider({ children }) {
 
     return (
         <HeroUIProvider navigate={navigate} useHref={useHref}>
-            {/* {children} */}
             <ErrorProvider>
                 <AuthProvider>
                     <UsersProvider>

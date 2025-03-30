@@ -4,14 +4,36 @@ import EventCard from "../components/EventCard";
 import styles from "./EventList.module.css";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { NavContext } from "../contexts/navContext";
+import { getSplitFilters } from "../../utils/getSplitFilters";
 
 const EventsList = ({ filters }) => {
     const { setNavWhite } = useContext(NavContext);
 
     const navigate = useNavigate();
-    const { events, loading, error } = useEvents(filters);
+    // const { events, loading, error } = useEvents(filters);
+
+    // const [safeFilters, postFilters] = getSplitFilters(filters);
+    const [safeFilters, postFilters] = useMemo(() => {
+        return getSplitFilters(filters);
+    }, [filters]);
+
+    const { events, loading, error } = useEvents(safeFilters);
+    // const { events, loading, error } = useEvents({ artists: ["abc123"] });
+
+    const filteredEvents = useMemo(() => {
+        if (loading || !events || !postFilters) return [];
+
+        return events.filter((event) => {
+            if (!postFilters || typeof postFilters !== "object") return true;
+            return Object.entries(postFilters).every(([key, values]) => {
+                if (!Array.isArray(values)) return true;
+
+                return values.every((val) => event[key]?.includes(val));
+            });
+        });
+    }, [events, loading, postFilters]);
 
     const handleEventPress = (eventId) => {
         setNavWhite(false);
@@ -33,7 +55,7 @@ const EventsList = ({ filters }) => {
         return <div className={styles.noResults}>Error loading events.</div>;
     }
 
-    if (events.length === 0) {
+    if (filteredEvents.length === 0) {
         return (
             <div className={styles.noResults}>
                 No events match your filter conditions.
@@ -41,7 +63,7 @@ const EventsList = ({ filters }) => {
         );
     }
 
-    return events.map((event) => (
+    return filteredEvents.map((event) => (
         <EventCard key={event.id} event={event} onPress={handleEventPress} />
     ));
 };

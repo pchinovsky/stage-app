@@ -3,7 +3,7 @@ import { useUsersStore } from "../contexts/usersContext";
 export function useUser() {
     const { currentUser, allUsers, loading, error } = useUsersStore();
 
-    console.log("--- useUser new -", currentUser, loading);
+    // console.log("--- useUser new -", currentUser, loading);
 
 
     const fetchUsersByIds = (userIds) => {

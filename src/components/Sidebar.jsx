@@ -6,7 +6,6 @@ import styles from "./Sidebar.module.css";
 import { db } from "../firebase/firebaseConfig";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useEvents } from "../hooks/useEvents";
-import eventsData2 from "../mockEventData2";
 import { useNavigate } from "react-router-dom";
 import { useEventsRelated } from "../hooks/useEventsRelated";
 import ProfileCard from "./ProfileCard";

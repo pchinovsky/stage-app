@@ -131,7 +131,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 setSuggestions([]);
             }
         }
-        console.log("--- search - ", searchTerm, " - ", selectedSearchType);
+        // console.log("--- search - ", searchTerm, " - ", selectedSearchType);
     }, [searchTerm, selectedSearchType, venues, artists]);
 
     const defaultFilterOptions = {
@@ -514,6 +514,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
             <div className="flex flex-col items-center justify-between gap-1 w-[300px]">
                 {selectedSearchType === "events" ? (
                     <Input
+                        area-label="Search events"
                         placeholder="Search events"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -542,6 +543,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     </div>
                 ) : (
                     <Autocomplete
+                        area-label={`Search ${selectedSearchType}`}
                         placeholder={`Search ${selectedSearchType}`}
                         inputValue={searchTerm}
                         onInputChange={setSearchTerm}
@@ -593,6 +595,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 {/*
                  */}
                 <Select
+                    area-label="Search type"
                     selectedKeys={[selectedSearchType]}
                     onSelectionChange={(keys) => {
                         const newValue = Array.from(keys)[0];
@@ -726,6 +729,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
             {isAuth && (
                 <Dropdown
+                    area-label="Filter options"
                     className={styles.dropdown}
                     shouldBlockScroll={false}
                     closeOnSelect={false}

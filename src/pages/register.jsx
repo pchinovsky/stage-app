@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Input, Checkbox, Link, Image, Form } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import eventsData from "../mockEventData";
 import EventInfo from "../components/EventInfo";
 import DefaultLayout from "../layouts/default";
 import useForm from "../hooks/useForm";

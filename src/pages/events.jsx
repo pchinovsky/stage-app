@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, useMemo } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import DefaultLayout from "@/layouts/default";
 import { Image, Tooltip, Spinner, Skeleton } from "@heroui/react";
@@ -9,7 +9,6 @@ import FilterBar from "../components/FilterBar";
 import styles from "./events.module.css";
 import TabbedCard from "../components/TabCard";
 import { useEvents } from "@/hooks/useEvents";
-import eventsData2 from "../mockEventData2";
 import { useNavigate } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import useRestoreScroll from "../hooks/useRestoreScroll";
@@ -17,6 +16,7 @@ import EventList from "../components/EventList";
 import ErrorModal from "../components/ModalError";
 import { useError } from "../contexts/errorContext";
 import { useLocation } from "react-router-dom";
+import { getSplitFilters } from "../../utils/getSplitFilters";
 
 export default function EventLayout() {
     const { setNavWhite } = useContext(NavContext);
@@ -30,14 +30,32 @@ export default function EventLayout() {
     const [filters, setFilters] = useState({});
 
     const navigate = useNavigate();
-    const { events, loading, error } = useEvents(filters);
-    const [cachedEvents, setCachedEvents] = useState(events);
+    // - - -  temp commented out -
+    // const { events, loading, error } = useEvents(filters);
+    // const [cachedEvents, setCachedEvents] = useState(events);
 
-    useEffect(() => {
-        if (!loading && events) {
-            setCachedEvents(events);
-        }
-    }, [loading, events]);
+    // const { safeFilters, postFilters } = getSplitFilters(filters);
+
+    // const filteredEvents = useMemo(() => {
+    //     if (loading) return [];
+
+    //     return events.filter((event) => {
+    //         if (postFilters?.categories) {
+    //             // Apply AND logic: event.categories must include *all* selected
+    //             return postFilters.categories.every((cat) =>
+    //                 event.categories?.includes(cat)
+    //             );
+    //         }
+    //         return true;
+    //     });
+    // }, [events, loading, postFilters]);
+
+    // - - -  temp commented out -
+    // useEffect(() => {
+    //     if (!loading && events) {
+    //         setCachedEvents(events);
+    //     }
+    // }, [loading, events]);
 
     useEffect(() => {
         if (location.state?.error) {
