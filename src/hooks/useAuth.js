@@ -9,14 +9,14 @@ import { useError } from "../contexts/errorContext";
 
 export function useLogin() {
     const { showError } = useError();
-    const { setUser, setIsAuth, justLogRef } = useContext(AuthContext);
+    const { setUser, setIsAuth } = useContext(AuthContext);
 
     const log = async (data) => {
         try {
             const authData = await authApi.login(data);
             setUser(authData.user);
             setIsAuth(true);
-            justLogRef.current = true;
+            // justLogRef.current = true;
         } catch (err) {
             const errMsg = err.message || "Error detected. Please try again.";
             showError(errMsg);
@@ -28,7 +28,7 @@ export function useLogin() {
 
 export function useRegister() {
     const { showError } = useError();
-    const { setUser, setIsAuth, justRegRef } = useContext(AuthContext);
+    const { setUser, setIsAuth } = useContext(AuthContext);
 
     const reg = async (data) => {
         try {
@@ -38,7 +38,7 @@ export function useRegister() {
 
             console.log("useRegister - about to set justRegRef to true");
 
-            justRegRef.current = true;
+            // justRegRef.current = true;
             setUser(authData.user);
             setIsAuth(true);
 

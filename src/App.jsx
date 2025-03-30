@@ -22,18 +22,36 @@ import LoginWrapper from "./pages/loginWrapper";
 
 function AnimatedRoutes() {
     const location = useLocation();
-    const { accessRegRef, accessLogRef } = useContext(AuthContext);
+    const { pathname } = location;
+    const { isAuth, authLoading, accessRegRef, accessLogRef } =
+        useContext(AuthContext);
+
+    const isGuest = !isAuth && !authLoading;
 
     useEffect(() => {
-        if (location.pathname === "/register") {
-            accessRegRef.current = true;
-            accessLogRef.current = false;
-        } else if (location.pathname === "/login") {
-            accessLogRef.current = true;
-            accessRegRef.current = false;
+        if (pathname === "/register") {
+            if (isGuest) {
+                accessRegRef.current = true;
+                accessLogRef.current = false;
+            }
+            // accessRegRef.current = true;
+            // accessLogRef.current = false;
+        } else if (pathname === "/login") {
+            if (isGuest) {
+                accessLogRef.current = true;
+                accessRegRef.current = false;
+            }
+            // accessLogRef.current = true;
+            // accessRegRef.current = false;
+            console.log("log flag app - ", accessLogRef.current);
         } else {
             accessLogRef.current = false;
             accessRegRef.current = false;
+            console.log(
+                "log flag app reset - ",
+                accessLogRef.current,
+                accessRegRef.current
+            );
         }
     }, [location.pathname]);
 

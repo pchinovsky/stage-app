@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Button,
     Input,
@@ -23,9 +23,11 @@ import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { useError } from "../contexts/errorContext";
 import ErrorModal from "../components/ModalError";
+import { AuthContext } from "../contexts/authContext";
 
 export default function Login() {
     const location = useLocation();
+    const { accessLogRef } = useContext(AuthContext);
     const { error: modalError, showError } = useError();
     const [isVisible, setIsVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
@@ -42,9 +44,15 @@ export default function Login() {
                 showError(location.state.error);
             }
 
-            window.history.replaceState({}, document.title);
+            // window.history.replaceState({}, document.title);
         }
     }, []);
+
+    // useEffect(() => {
+    //     return () => {
+    //         accessLogRef.current = false;
+    //     };
+    // }, []);
 
     const initialValues = { email: "", password: "" };
     const { formValues, handleInputChange, handleSubmit, error } = useForm(

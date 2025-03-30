@@ -3,20 +3,18 @@ import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function NonAuthGuard({ children }) {
-    const { user, authLoading, justLogRef, justRegRef, accessRegRef } =
+    const { isAuth, authLoading, accessLogRef, accessRegRef } =
         useContext(AuthContext);
     const location = useLocation();
     const { pathname } = location;
 
     console.log("Guard:", {
-        user,
+        isAuth,
         authLoading,
         pathname,
-        justLogRef: justLogRef.current,
-        justRegRef: justRegRef.current,
         accessedRegister: accessRegRef.current,
+        accessedLogin: accessLogRef.current,
     });
-
     if (authLoading) return null;
 
     // if (justLogRef?.current) {
@@ -35,15 +33,17 @@ export default function NonAuthGuard({ children }) {
     //     return null;
     // }
 
-    if (justLogRef.current || justRegRef.current) {
-        setTimeout(() => {
-            justLogRef.current = false;
-            justRegRef.current = false;
-        }, 0);
-        return null;
-    }
+    if (isAuth) {
+        if (pathname === "/login" && accessLogRef.current) {
+            accessLogRef.current = false;
+            return null;
+        }
 
-    if (user) {
+        if (pathname === "/register" && accessRegRef.current) {
+            accessRegRef.current = false;
+            return null;
+        }
+
         const errorMessage =
             location.pathname === "/login"
                 ? "You are already logged in. Please log out to access the login page."

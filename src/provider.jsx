@@ -13,8 +13,8 @@ export function Provider({ children }) {
 
     return (
         <HeroUIProvider navigate={navigate} useHref={useHref}>
-            <ErrorProvider>
-                <AuthProvider>
+            <AuthProvider>
+                <ErrorProvider>
                     <UsersProvider>
                         <NavProvider>
                             <FollowingProvider>
@@ -26,8 +26,8 @@ export function Provider({ children }) {
                             </FollowingProvider>
                         </NavProvider>
                     </UsersProvider>
-                </AuthProvider>
-            </ErrorProvider>
+                </ErrorProvider>
+            </AuthProvider>
         </HeroUIProvider>
     );
 }

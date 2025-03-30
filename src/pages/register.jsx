@@ -22,8 +22,6 @@ export default function Register() {
     const { events, loading } = useEventsStore();
 
     // useEffect(() => {
-    //     accessRegRef.current = true;
-
     //     return () => {
     //         accessRegRef.current = false;
     //     };

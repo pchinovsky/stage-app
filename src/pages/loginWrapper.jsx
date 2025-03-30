@@ -5,7 +5,10 @@ import Login from "./login";
 import NonAuthGuard from "../guards/NonAuthGuard";
 
 export default function LoginWrapper() {
-    const { accessLogRef } = useContext(AuthContext);
+    const { accessLogRef, authLoading } = useContext(AuthContext);
+    console.log("login wrapper - ", accessLogRef.current);
+
+    if (authLoading) return null;
 
     return (
         <motion.div

@@ -4,8 +4,7 @@ import { useLogout } from "../hooks/useAuth";
 import { AuthContext } from "../contexts/authContext";
 
 export default function LogoutPage() {
-    const { justLogRef, justRegRef, accessRegRef, accessLogRef } =
-        useContext(AuthContext);
+    const { accessRegRef, accessLogRef } = useContext(AuthContext);
     const logout = useLogout();
     const navigate = useNavigate();
 
@@ -13,8 +12,8 @@ export default function LogoutPage() {
         (async () => {
             await logout();
 
-            justLogRef.current = false;
-            justRegRef.current = false;
+            // justLogRef.current = false;
+            // justRegRef.current = false;
             accessLogRef.current = false;
             accessRegRef.current = false;
 
