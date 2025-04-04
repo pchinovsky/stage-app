@@ -13,6 +13,7 @@ export default function useEventEdit(eventId, initialValues) {
     const { showError } = useError();
     const navigate = useNavigate();
     const [loadingEvent, setLoadingEvent] = useState(true);
+    const [defaultValues, setDefaultValues] = useState(initialValues);
     const isMounted = useRef(true);
 
 
@@ -45,6 +46,7 @@ export default function useEventEdit(eventId, initialValues) {
 
                     if (isMounted.current) {
                         form.setFormValues(eventData);
+                        setDefaultValues(eventData);
                     }
                 } else {
                     showError("Event not found.");
@@ -68,5 +70,9 @@ export default function useEventEdit(eventId, initialValues) {
         };
     }, [eventId, form.setFormValues, navigate, showError]);
 
-    return { ...form, loadingEvent };
+    const resetToDefault = () => {
+        form.setFormValues(defaultValues);
+    };
+
+    return { ...form, loadingEvent, resetForm: resetToDefault };
 }
