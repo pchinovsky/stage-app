@@ -54,8 +54,12 @@ export default function useComments(eventId, authorData) {
                 authorName: authorData.name,
                 event: eventId,
             };
-            await commentsApi.createComment(commentData);
-            await fetchComments();
+
+            const newComment = await commentsApi.createComment(commentData);
+
+            if (isMounted.current) {
+                setComments((prev) => [...prev, newComment]);
+            }
         } catch (err) {
             showError(err.message || "An error occurred while creating comment.");
         }
@@ -64,7 +68,15 @@ export default function useComments(eventId, authorData) {
     const handleUpdateComment = async (commentId, updatedData) => {
         try {
             await commentsApi.updateComment(commentId, updatedData);
-            await fetchComments();
+            if (isMounted.current) {
+                setComments((prev) =>
+                    prev.map((comment) =>
+                        comment.id === commentId
+                            ? { ...comment, ...updatedData }
+                            : comment
+                    )
+                );
+            }
         } catch (err) {
             showError(err.message || "An error occurred while updating comment.");
         }
@@ -73,7 +85,9 @@ export default function useComments(eventId, authorData) {
     const handleRemoveComment = async (commentId) => {
         try {
             await commentsApi.removeComment(commentId);
-            await fetchComments();
+            if (isMounted.current) {
+                setComments((prev) => prev.filter((c) => c.id !== commentId));
+            }
         } catch (err) {
             showError(err.message || "An error occurred while removing comment.");
         }
