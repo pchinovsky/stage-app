@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useContext } from "react";
-import { Button, Input, Checkbox, Link, Image, Form } from "@heroui/react";
+import {
+    Button,
+    Input,
+    Checkbox,
+    Link,
+    Image,
+    Form,
+    Spinner,
+} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import EventInfo from "../components/EventInfo";
 import DefaultLayout from "../layouts/default";
@@ -73,7 +81,14 @@ export default function Register() {
 
                 {/* Event Info */}
                 {loading ? (
-                    <Skeleton className={styles.eventInfo} />
+                    <div className="absolute left-0 top-0 flex justify-center items-center h-full">
+                        <Spinner
+                            classNames={{
+                                wrapper:
+                                    "absolute left-20 top-[250px] w-16 h-16 z-[1000]",
+                            }}
+                        />
+                    </div>
                 ) : (
                     <EventInfo event={featuredEvent} />
                 )}

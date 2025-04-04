@@ -29,34 +29,6 @@ export default function EventLayout() {
 
     const [filters, setFilters] = useState({});
 
-    const navigate = useNavigate();
-    // - - -  temp commented out -
-    // const { events, loading, error } = useEvents(filters);
-    // const [cachedEvents, setCachedEvents] = useState(events);
-
-    // const { safeFilters, postFilters } = getSplitFilters(filters);
-
-    // const filteredEvents = useMemo(() => {
-    //     if (loading) return [];
-
-    //     return events.filter((event) => {
-    //         if (postFilters?.categories) {
-    //             // Apply AND logic: event.categories must include *all* selected
-    //             return postFilters.categories.every((cat) =>
-    //                 event.categories?.includes(cat)
-    //             );
-    //         }
-    //         return true;
-    //     });
-    // }, [events, loading, postFilters]);
-
-    // - - -  temp commented out -
-    // useEffect(() => {
-    //     if (!loading && events) {
-    //         setCachedEvents(events);
-    //     }
-    // }, [loading, events]);
-
     useEffect(() => {
         if (location.state?.error) {
             console.log("error - ", location.state.error);
@@ -90,28 +62,11 @@ export default function EventLayout() {
         };
     }, [searchFixed]);
 
-    // for the scroll reset issue -
-    // useEffect(() => {
-    //     const savedScrollY = localStorage.getItem("scrollPosition");
-    //     if (savedScrollY) {
-    //         setTimeout(() => {
-    //             window.scrollTo(0, parseInt(savedScrollY, 10));
-    //             localStorage.removeItem("scrollPosition");
-    //         }, 50);
-    //     }
-    // }, [filters]);
-
-    // useRestoreScroll([filters, loading]);
-
     return (
         <DefaultLayout>
             <ErrorModal />
             <div className={styles.layout}>
                 <HeroSection />
-                {/* Floating Controls */}
-                {/* <div className={styles.floatingControls}>
-                    <FloatingControls pos={{ top: "220px", left: "40px" }} />
-                </div> */}
 
                 {/* Placeholder for Filter Bar */}
                 <div
@@ -125,7 +80,6 @@ export default function EventLayout() {
                     <FilterBar
                         ref={searchBarRef}
                         searchFixed={searchFixed}
-                        // activeFilters={filters}
                         setFilters={setFilters}
                     />
 

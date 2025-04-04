@@ -3,6 +3,7 @@ import { useVenues } from "../hooks/useVenues";
 import DefaultLayout from "../layouts/default";
 import ModalProfileCustom from "../components/ModalProfileCustom";
 import ProfileCard from "../components/ProfileCard";
+import { Skeleton } from "@heroui/react";
 
 export default function VenuesPage() {
     const { venues, loading } = useVenues();
@@ -19,9 +20,9 @@ export default function VenuesPage() {
         setSelectedVenue(null);
     };
 
-    if (loading) {
-        return <div className="p-4">Loading venues…</div>;
-    }
+    // if (loading) {
+    //     return <div className="p-4">Loading venues…</div>;
+    // }
 
     return (
         <DefaultLayout>
@@ -31,24 +32,38 @@ export default function VenuesPage() {
                     className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto"
                     style={{ maxHeight: "80vh" }}
                 >
-                    {venues.map((venue) => (
-                        <ProfileCard
-                            key={venue.id}
-                            data={venue}
-                            onClick={() => handleCardClick(venue)}
-                            size={{
-                                width: "480px",
-                                height: "288px",
-                            }}
-                            styles={{
-                                text: "text-lg",
-                                desc: 150,
-                                footer: "h-[100px]",
-                                pos: "self-end",
-                            }}
-                            footer={true}
-                        />
-                    ))}
+                    {loading
+                        ? Array(6)
+                              .fill(0)
+                              .map((_, index) => (
+                                  <Skeleton key={index} className="rounded-lg">
+                                      <div
+                                          style={{
+                                              width: "480px",
+                                              height: "288px",
+                                          }}
+                                          className="rounded-lg"
+                                      ></div>
+                                  </Skeleton>
+                              ))
+                        : venues.map((venue) => (
+                              <ProfileCard
+                                  key={venue.id}
+                                  data={venue}
+                                  onClick={() => handleCardClick(venue)}
+                                  size={{
+                                      width: "480px",
+                                      height: "288px",
+                                  }}
+                                  styles={{
+                                      text: "text-lg",
+                                      desc: 150,
+                                      footer: "h-[100px]",
+                                      pos: "self-end",
+                                  }}
+                                  footer={true}
+                              />
+                          ))}
                 </div>
                 <ModalProfileCustom
                     isOpen={isModalOpen}

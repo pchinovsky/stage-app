@@ -178,7 +178,13 @@ export default function Edit() {
                     </div>
                 </div>
                 {loadingEvent ? (
-                    <Spinner size="lg" />
+                    <div className="flex justify-center items-center h-full">
+                        <Spinner
+                            classNames={{
+                                wrapper: "w-16 h-16",
+                            }}
+                        />
+                    </div>
                 ) : (
                     <Form
                         ref={formRef}

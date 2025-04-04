@@ -239,9 +239,9 @@ export default function CreatePage() {
         setArtists((prev) => [...prev, newArtist]);
     };
 
-    if (userLoading) {
-        return <div>Loading user data...</div>;
-    }
+    // if (userLoading) {
+    //     return <div>Loading user data...</div>;
+    // }
 
     return (
         <DefaultLayout>

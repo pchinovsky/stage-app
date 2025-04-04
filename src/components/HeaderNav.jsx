@@ -35,7 +35,13 @@ export default function HeaderNav() {
     const { floatingPanelSettings: settings } = currentUser ?? {};
     const { pos, docked } = getPanelState(settings, isEventsPage);
 
-    const dockPosition = settings?.dockPosition ?? "top-left";
+    // const dockPosition = settings?.dockPosition ?? "top-left";
+    const dockPositionClass = isAuth
+        ? settings?.dockPosition === "top-left"
+            ? "ml-[225px]"
+            : ""
+        : "";
+
     // const persistPosition = settings?.persistPosition;
     // const lastPosition = settings?.lastPosition ?? {
     //     top: "13px",
@@ -86,7 +92,7 @@ export default function HeaderNav() {
                 <Link
                     aria-current="page"
                     href="/events"
-                    className={`bg-transparent px-4 py-2 rounded-lg ${dockPosition === "top-left" && "ml-[225px]"}`}
+                    className={`bg-transparent px-4 py-2 rounded-lg ${dockPositionClass}`}
                 >
                     <p className={styles.brand}>STAGE</p>
                 </Link>

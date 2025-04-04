@@ -9,6 +9,7 @@ import {
     Form,
     Image,
     Skeleton,
+    Spinner,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import EventInfo from "../components/EventInfo";
@@ -43,16 +44,8 @@ export default function Login() {
             if (!modalError) {
                 showError(location.state.error);
             }
-
-            // window.history.replaceState({}, document.title);
         }
     }, []);
-
-    // useEffect(() => {
-    //     return () => {
-    //         accessLogRef.current = false;
-    //     };
-    // }, []);
 
     const initialValues = { email: "", password: "" };
     const { formValues, handleInputChange, handleSubmit, error } = useForm(
@@ -88,7 +81,14 @@ export default function Login() {
                 )}
 
                 {loading ? (
-                    <Skeleton className={styles.eventInfo} />
+                    <div className="absolute left-0 top-0 flex justify-center items-center h-full">
+                        <Spinner
+                            classNames={{
+                                wrapper:
+                                    "absolute left-20 top-[250px] w-16 h-16 z-[1000]",
+                            }}
+                        />
+                    </div>
                 ) : (
                     <EventInfo event={featuredEvent} />
                 )}

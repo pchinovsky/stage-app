@@ -3,9 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
 import { useNavigate } from "react-router-dom";
-import { Button, Tooltip, Modal, Image, Card } from "@heroui/react";
+import { Button, Tooltip, Modal, Image, Card, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import Accordeon from "../components/Accordeon";
 import MultiAccordion from "../components/AccordeonMulti";
 import CalendarDate from "../components/CalendarDate";
 import CalendarModal from "../components/Calendar";
@@ -31,11 +30,14 @@ import ModalInvite from "../components/ModalInvite";
 import { useEvent } from "../hooks/useEvent";
 import OwnerGuard from "../guards/OwnerGuard";
 import { AuthContext } from "../contexts/authContext";
+import { useError } from "../contexts/errorContext";
 
 export default function Event() {
     const { eventId } = useParams();
     const { isAuth } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { showError } = useError();
+
     // const { events, loading, error } = useEvents({ id: eventId });
     // const { events, loading, error } = useEventsRealtime({ id: eventId });
     const { event, loading, error } = useEvent(eventId);
@@ -51,6 +53,14 @@ export default function Event() {
     const [tooltipExitDelay, setTooltipExitDelay] = useState(500);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [trigger, setTrigger] = useState(0);
+
+    useEffect(() => {
+        if (error) {
+            showError(error.message || "An unexpected error occurred.");
+        } else if (!loading && !event) {
+            showError("Event not found.");
+        }
+    }, [error, loading]);
 
     useEffect(() => {
         if (!loading && event) {
@@ -186,11 +196,13 @@ export default function Event() {
                 style={{ position: "relative" }}
             >
                 {loading ? (
-                    <p className={styles.loading}>Loading...</p>
-                ) : error ? (
-                    <p className={styles.error}>Error: {error.message}</p>
-                ) : !event ? (
-                    <p className={styles.notFound}>Event not found.</p>
+                    <div className="flex justify-center items-center h-full">
+                        <Spinner
+                            classNames={{
+                                wrapper: "w-16 h-16",
+                            }}
+                        />
+                    </div>
                 ) : (
                     <>
                         <ModalInvite

@@ -1,4 +1,4 @@
-import { Tooltip } from "@heroui/react";
+import { Tooltip, Spinner } from "@heroui/react";
 import TooltipProfile from "./TooltipProfile";
 
 export default function EventHead({
@@ -60,7 +60,7 @@ export default function EventHead({
                     className="font-bold text-blue-600 text-2xl cursor-pointer"
                     onClick={() => handleOpenModal(venue)}
                 >
-                    {venueLoading ? "Loading venue..." : venue.name}
+                    {venueLoading ? <Spinner variant="wave" /> : venue.name}
                 </button>
             </Tooltip>
         </div>

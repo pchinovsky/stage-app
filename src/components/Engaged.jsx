@@ -29,12 +29,6 @@ export default function Engaged({
     const interestedUsers = interestedIds.map((id) => otherUsers[id]);
 
     return (
-        // <Card
-        //     className={`absolute left-[490px] top-[410px] shadow-md w-[300px] z-[100] overflow-hidden flex justify-center ${
-        //         expanded ? "cardMax" : "cardMin"
-        //     }`}
-        //     style={{ borderRadius: expanded ? "30px" : "40px" }}
-        // >
         <div
             className={`absolute left-[1100px] top-[330px] w-[350px] z-[1000] overflow-hidden flex
     ${expanded ? styles.cardMax : styles.cardMin} 
@@ -141,7 +135,6 @@ export default function Engaged({
                     </>
                 )}
             </div>
-            {/* </Card> */}
         </div>
     );
 }
