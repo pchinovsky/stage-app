@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { Link } from "@heroui/react";
 
-export default function MultiAccordion({ sections, className }) {
+export default function MultiAccordion({ sections }) {
     const [openIndex, setOpenIndex] = useState(null);
 
     const toggleSection = (index) => {
@@ -12,25 +12,19 @@ export default function MultiAccordion({ sections, className }) {
 
     return (
         <div
-            className={`w-[640px] h-[380px] border border-white shadow-md rounded-lg bg-transparent ${className}`}
-            style={
-                {
-                    // backdropFilter: "blur(10px)",
-                    // backgroundColor: "rgba(255, 255, 255, 0.3)",
-                }
-            }
+            className={`w-[955px] h-[335px] border border-white shadow-md rounded-lg bg-white overflow-hidden`}
         >
             {sections.map((section, index) => (
                 <div
                     key={index}
-                    className="border-b last:border-none border-slate-900"
+                    className="border-b last:border-none border-slate-300"
                 >
                     {/* Header */}
                     <button
                         onClick={() => toggleSection(index)}
-                        className="w-full flex justify-between items-center p-3 bg-transparent hover:text-slate-400 transition overflow-hidden rounded-lg"
+                        className="w-full flex justify-between items-center p-3 bg-transparent transition overflow-hidden rounded-lg"
                     >
-                        <span className="text-lg font-medium">
+                        <span className="text-lg font-medium text-gray-500 hover:text-gray-900 ml-2">
                             {section.title}
                         </span>
                         <Icon
@@ -39,7 +33,7 @@ export default function MultiAccordion({ sections, className }) {
                                     ? "mdi:chevron-up"
                                     : "mdi:chevron-down"
                             }
-                            className="text-xl transition-transform"
+                            className="text-xl text-gray-400 transition-transform"
                         />
                     </button>
 
@@ -50,7 +44,7 @@ export default function MultiAccordion({ sections, className }) {
                         className="overflow-hidden px-3"
                     >
                         {section.title === "Related Content" ? (
-                            <div className="py-2 text-blue-400">
+                            <div className="py-2 text-blue-400 flex gap-2">
                                 {section.content.map((link, i) => (
                                     <Link
                                         key={i}
@@ -58,7 +52,7 @@ export default function MultiAccordion({ sections, className }) {
                                         showAnchorIcon
                                         href={link}
                                     >
-                                        <div className="py-2 text-blue-400">
+                                        <div className="py-2 text-blue-400 ml-2">
                                             {link}
                                         </div>
                                     </Link>
@@ -66,7 +60,7 @@ export default function MultiAccordion({ sections, className }) {
                             </div>
                         ) : (
                             // <div className="py-2 text-slate-800">
-                            <div className="py-2 text-white">
+                            <div className="py-2 text-gray-700 mb-5 ml-2">
                                 {section.content}
                             </div>
                         )}

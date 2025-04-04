@@ -22,7 +22,7 @@ export default function CalendarDate({ date, onPress }) {
             placement="top"
             closeDelay={1000}
             color="primary"
-            offset={15}
+            offset={10}
             className="bg-slate-700 text-white rounded-lg"
             isDisabled={!isAuth}
         >
@@ -43,11 +43,11 @@ export default function CalendarDate({ date, onPress }) {
                 <span className="text-4xl font-bold text-blue-600">
                     {formattedDate.getDate()}
                 </span>
-                <span className="text-lg font-semibold">
-                    {formattedDate.toLocaleString("en-US", { month: "short" })}
+                <span className="text-lg font-semibold mb-2">
+                    {formattedDate.toLocaleString("en-US", { month: "long" })}
                 </span>
-                <span className="text-sm opacity-70">
-                    {formattedDate.toLocaleDateString("en-US", options)}
+                <span className="text-tiny opacity-70 text-gray-500">
+                    Opening {formattedDate.toLocaleDateString("en-US", options)}
                 </span>
             </Card>
         </Tooltip>

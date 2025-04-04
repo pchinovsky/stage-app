@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useArtists } from "../hooks/useArtists";
-import ArtistCard from "../components/ProfileCard";
+import ProfileCard from "../components/ProfileCard";
 import DefaultLayout from "../layouts/default";
 import ModalProfileCustom from "../components/ModalProfileCustom";
-import ProfileCard from "../components/ProfileCard";
 import { Skeleton } from "@heroui/react";
 
 export default function ArtistsPage() {
@@ -48,13 +47,19 @@ export default function ArtistsPage() {
                                   </Skeleton>
                               ))
                         : artists.map((artist) => (
-                              <ArtistCard
+                              <ProfileCard
                                   key={artist.id}
                                   data={artist}
                                   onClick={() => handleCardClick(artist)}
                                   size={{
                                       width: "480px",
                                       height: "288px",
+                                  }}
+                                  styles={{
+                                      text: "text-lg",
+                                      desc: 150,
+                                      footer: "h-[100px]",
+                                      pos: "self-end",
                                   }}
                                   footer={true}
                               />

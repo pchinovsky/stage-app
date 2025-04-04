@@ -33,7 +33,8 @@ export default function EventHead({
                 key={isModalOpen ? "closed" : "open"}
                 isOpen={isModalOpen ? false : undefined}
                 placement="bottom"
-                offset={1}
+                offset={10}
+                crossOffset={-10}
                 delay={0}
                 motionProps={{
                     variants: {

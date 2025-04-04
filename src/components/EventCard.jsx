@@ -36,6 +36,16 @@ export default function EventCard({ event, onPress }) {
         }
     };
 
+    const options = {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    };
+    const formattedDate = new Date(event.openingDate);
+
     return (
         <Badge
             content={
@@ -74,6 +84,9 @@ export default function EventCard({ event, onPress }) {
                 className={`${styles.card} ${isSelected ? styles.selected : ""}`}
                 // onPress={() => onPress(event.id)}
                 onPress={handlePress}
+                classNames={{
+                    header: "p-4 py-3 bg-background/60 backdrop-blur-md hover:bg-white transition-all ease-in-out duration-500",
+                }}
             >
                 <CardHeader className={styles.cardHeader}>
                     <h4 className={styles.textLarge}>{event?.title}</h4>
@@ -81,15 +94,29 @@ export default function EventCard({ event, onPress }) {
                         {event?.categories.join(", ")}
                     </small>
                     <Divider className="my-4"></Divider>
-                    <p className={styles.description}>{event?.description}</p>
+                    {/* <div className={styles.description}>
+                        {event?.description?.length > 70
+                            ? `${event.description.substring(0, 70)}...`
+                            : event?.description}
+                    </div> */}
+                    <div className="mt-auto flex gap-2 items-end">
+                        <span className="text-lg font-bold text-blue-600 mb-[-2px]">
+                            {formattedDate.getDate()}
+                        </span>
+                        <span className="text-md font-semibold">
+                            {formattedDate.toLocaleString("en-US", {
+                                month: "short",
+                            })}
+                        </span>
+                    </div>
                 </CardHeader>
                 <CardBody className={styles.cardBody}>
                     <Image
                         alt={event?.title}
                         className={styles.image}
-                        src={event?.image || "https://via.placeholder.com/370"}
+                        src={event?.image}
                         width={470}
-                        height={235}
+                        height={260}
                     />
                 </CardBody>
             </Card>

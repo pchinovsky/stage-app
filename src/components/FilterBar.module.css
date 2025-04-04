@@ -30,7 +30,7 @@
 }
 
 .largerBox {
-    @apply w-[300px];
+    @apply w-[305px];
 }
 
 .filterLabel {
@@ -42,17 +42,17 @@
 }
 
 .chipContainer {
-    @apply grid grid-cols-2 gap-x-3 gap-y-1;
+    /* @apply grid grid-cols-2 gap-x- gap-y-1; */
     @apply flex flex-wrap gap-x-1 gap-y-1;
 }
 
 .chipContainerLarger {
-    @apply flex flex-wrap gap-x-1 gap-y-1;
+    @apply flex flex-wrap gap-x-[2px] gap-y-1;
 }
 
 .chip {
-    @apply w-[100px] min-w-[100px] truncate text-ellipsis overflow-hidden px-1 py-1 rounded-lg text-sm text-center;
-    @apply hover:shadow-md hover:bg-blue-300 hover:cursor-pointer;
+    @apply w-[100px] min-w-[100px] truncate text-ellipsis overflow-hidden px-2 py-2 rounded-lg text-tiny text-center text-gray-200;
+    @apply hover:shadow-md hover:bg-blue-300 hover:border-blue-300 hover:cursor-pointer;
     @apply hover:text-white !important;
 }
 

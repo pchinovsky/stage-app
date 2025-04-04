@@ -34,15 +34,15 @@ export default function NonAuthGuard({ children }) {
     // }
 
     if (isAuth) {
-        if (pathname === "/login" && accessLogRef.current) {
-            accessLogRef.current = false;
-            return null;
-        }
+        // if (pathname === "/login" && accessLogRef.current) {
+        //     accessLogRef.current = false;
+        //     return null;
+        // }
 
-        if (pathname === "/register" && accessRegRef.current) {
-            accessRegRef.current = false;
-            return null;
-        }
+        // if (pathname === "/register" && accessRegRef.current) {
+        //     accessRegRef.current = false;
+        //     return null;
+        // }
 
         const errorMessage =
             location.pathname === "/login"

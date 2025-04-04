@@ -1,5 +1,5 @@
 .card {
-    @apply flex items-start py-2 px-2 w-[459px] z-[60] gap-3 rounded-xl;
+    @apply flex items-start w-[459px] z-[60] gap-3 rounded-xl;
     @apply flex-row !important;
     @apply bg-white !important;
     @apply h-[250px] !important;
@@ -10,24 +10,9 @@
 }
 
 .cardHeader {
-    @apply pb-0 pt-2 px-4 flex flex-col h-full;
-    @apply w-[100px] !important;
-    @apply justify-start !important;
-    @apply items-start !important;
-}
-
-.cardHeader {
-    @apply absolute left-4 bottom-4 z-[1000] pb-0 pt-2 px-4 flex h-[80px] bg-white overflow-hidden rounded-lg;
+    @apply absolute left-2 top-2 flex flex-col h-[93.5%] bg-white overflow-hidden rounded-lg;
     @apply z-[1000] !important;
-    @apply w-[93%] !important;
-    @apply justify-start !important;
-    @apply items-start !important;
-}
-
-.cardHeader {
-    @apply absolute left-4 bottom-4 z-[1000] pb-0 pt-2 px-4 flex h-[87%] bg-white overflow-hidden rounded-lg;
-    @apply z-[1000] !important;
-    @apply w-[100px] !important;
+    @apply w-[110px] !important;
     @apply rounded-t-lg !important;
     @apply justify-start !important;
     @apply items-start !important;
@@ -43,20 +28,19 @@
 }
 
 .textDefault {
-    @apply text-gray-500;
+    @apply text-gray-500 mt-1;
 }
 
 .textLarge {
-    @apply text-medium font-bold text-start;
+    @apply text-small font-bold text-start;
 }
 
 .description {
-    @apply text-sm mt-2;
-    font-size: 0.75rem;
+    @apply text-tiny text-left text-slate-500 overflow-hidden;
 }
 
 .image {
-    @apply object-fill transition-all duration-500 ease-in-out;
+    @apply object-cover transition-all duration-500 ease-in-out;
     @apply rounded-lg !important;
 }
 

@@ -90,7 +90,7 @@ export default function TabbedCard() {
                                 placement="left"
                                 showArrow={true}
                                 size="md"
-                                className="w-[200px] h-[138px] flex justify-start items-start"
+                                className="w-[200px] h-[125px] flex justify-start items-start"
                                 offset={20}
                                 crossOffset={-18}
                             >
@@ -101,6 +101,12 @@ export default function TabbedCard() {
                                             width: "350px",
                                             height: "85px",
                                         }}
+                                        styles={{
+                                            text: "text-sm",
+                                            desc: 20,
+                                            footer: "h-[50px]",
+                                        }}
+                                        footer={false}
                                     />
                                 </div>
                             </Tooltip>
@@ -152,6 +158,12 @@ export default function TabbedCard() {
                                             width: "350px",
                                             height: "85px",
                                         }}
+                                        styles={{
+                                            text: "text-sm",
+                                            desc: 20,
+                                            footer: "h-[50px]",
+                                        }}
+                                        footer={false}
                                     />
                                 </div>
                             </Tooltip>
@@ -203,6 +215,12 @@ export default function TabbedCard() {
                                             width: "350px",
                                             height: "85px",
                                         }}
+                                        styles={{
+                                            text: "text-sm",
+                                            desc: 20,
+                                            footer: "h-[50px]",
+                                        }}
+                                        footer={false}
                                     />
                                 </div>
                             </Tooltip>

@@ -31,10 +31,10 @@ export default function StatsBox({ stats, pos, disableAbsolute = false }) {
                         />
                     </CardHeader>
                     <CardBody className="text-center p-0">
-                        <h2 className="text-4xl font-bold">{stat.value}</h2>
-                        <p className="text-sm text-gray-400">
-                            {stat.description}
-                        </p>
+                        <h2 className="text-4xl font-bold mb-2">
+                            {stat.value}
+                        </h2>
+                        <p className="text-sm text-white">{stat.description}</p>
                     </CardBody>
                 </Card>
             ))}

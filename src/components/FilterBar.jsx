@@ -197,6 +197,11 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }));
 
     useEffect(() => {
+        if (!isAuth) {
+            setActiveFilters(generateDefaultFilters());
+            return;
+        }
+
         if (userLoading) return;
 
         if (currentUser) {
@@ -211,7 +216,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         } else {
             setActiveFilters(generateDefaultFilters());
         }
-    }, [currentUser, userLoading]);
+    }, [isAuth, currentUser, userLoading]);
 
     useEffect(() => {
         if (userId && activeFilters && activeFilters.length > 0) {
@@ -624,6 +629,10 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     width: filterWidth,
                     marginLeft: isAuth ? "0" : "64px",
                 }}
+                // style={{
+                //     backgroundColor: "rgba(255, 0, 0, 0.1)",
+                //     border: "1px solid red",
+                // }}
             >
                 {isAuth && (
                     <button onClick={scrollLeft} className={styles.arrowButton}>
@@ -669,8 +678,30 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                                                 option
                                             )
                                         }
-                                        radius="sm"
+                                        radius="lg"
                                         variant="bordered"
+                                        classNames={{
+                                            base: "p-2",
+                                            // content:
+                                            //     "text-[10px] font-medium text-gray-500 hover:text-white",
+                                            content: `${
+                                                (
+                                                    filter.label === "Time"
+                                                        ? selectedChips.includes(
+                                                              getTimeChipValue(
+                                                                  option
+                                                              )
+                                                          )
+                                                        : selectedChips.includes(
+                                                              getDynamicFilterValue(
+                                                                  option
+                                                              )
+                                                          )
+                                                )
+                                                    ? "text-white"
+                                                    : "text-[10px] font-medium text-gray-500 hover:text-white"
+                                            }`,
+                                        }}
                                         className={`${styles.chip} ${
                                             (
                                                 filter.label === "Time"

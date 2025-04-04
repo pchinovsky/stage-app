@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useContext } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEvents } from "../hooks/useEvents";
 import { useNavigate } from "react-router-dom";
@@ -169,6 +169,14 @@ export default function Event() {
         },
     ];
 
+    // const memoizedAuthorData = useMemo(
+    //     () => ({
+    //         id: event?.createdBy,
+    //         ...otherUsers[event?.createdBy],
+    //     }),
+    //     [event?.createdBy, otherUsers]
+    // );
+
     console.log("calendar open - ", isCalendarOpen);
 
     return (
@@ -273,50 +281,65 @@ export default function Event() {
                             options={["About", "Discussion"]}
                             onChange={(panel) => setSelectedPanel(panel)}
                         />
-                        <motion.div
-                            key={selectedPanel}
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 50 }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute top-[300px] left-[810px] z-[100]"
-                        >
-                            {selectedPanel === "About" ? (
-                                <MultiAccordion
-                                    sections={[
-                                        {
-                                            title: "Description",
-                                            content: event.description,
-                                        },
-                                        {
-                                            title: "Related Content",
-                                            content: event.associatedLinks,
-                                        },
-                                        {
-                                            title: "Venue",
-                                            content:
-                                                "The Grand Arena, New York",
-                                        },
-                                    ]}
-                                />
-                            ) : (
-                                <Discussion
-                                    // comments={comments}
-                                    // onAddComment={addComment}
-                                    eventId={event.id}
-                                    authorData={currentUser}
-                                />
+                        <AnimatePresence mode="wait">
+                            {selectedPanel === "About" && (
+                                <motion.div
+                                    key="about"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 50 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="absolute top-[410px] left-[495px] z-[100]"
+                                >
+                                    <MultiAccordion
+                                        sections={[
+                                            {
+                                                title: "Description",
+                                                content: event?.description,
+                                            },
+                                            {
+                                                title: "Related Content",
+                                                content: event?.associatedLinks,
+                                            },
+                                            {
+                                                title: "Venue",
+                                                content: venue?.description,
+                                            },
+                                        ]}
+                                    />
+                                </motion.div>
                             )}
-                        </motion.div>
+
+                            {selectedPanel === "Discussion" && (
+                                <motion.div
+                                    key="discussion"
+                                    initial={{ opacity: 0, x: -50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 50 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="absolute top-[410px] left-[495px] z-[100]"
+                                >
+                                    <Discussion
+                                        eventId={event.id}
+                                        authorData={currentUser}
+                                    />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                         <OwnerGuard ownerId={event.createdBy} mode="display">
                             <div className={styles.controlsColumn}>
-                                <Button onPress={handleEdit} color="primary">
+                                <Button
+                                    onPress={handleEdit}
+                                    color="primary"
+                                    variant="faded"
+                                >
                                     Edit Event
                                 </Button>
                                 <Button
                                     onPress={handleDelete}
                                     color="danger"
                                     disabled={isDeleting}
+                                    variant="faded"
                                 >
                                     {isDeleting
                                         ? "Deleting Event..."

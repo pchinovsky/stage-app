@@ -21,6 +21,7 @@ import FloatingControls from "./FloatingControls";
 import { useLocation } from "react-router-dom";
 import ManagerGuard from "../guards/ManagerGuard";
 import { getPanelState } from "../../utils/getPanelState";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
@@ -85,7 +86,7 @@ export default function HeaderNav() {
                 <Link
                     aria-current="page"
                     href="/events"
-                    className={`bg-white px-4 py-2 rounded-lg ${dockPosition === "top-left" && "ml-[225px]"}`}
+                    className={`bg-transparent px-4 py-2 rounded-lg ${dockPosition === "top-left" && "ml-[225px]"}`}
                 >
                     <p className={styles.brand}>STAGE</p>
                 </Link>
@@ -96,21 +97,28 @@ export default function HeaderNav() {
                     <NavbarItem>
                         <DropdownTrigger>
                             <Button
-                                disableRipple
-                                className={styles.featureButton}
-                                endContent="▼"
-                                radius="sm"
-                                variant="solid"
+                                size="sm"
+                                endContent={
+                                    <Icon
+                                        icon="material-symbols:keyboard-arrow-down-rounded"
+                                        width="24"
+                                        height="24"
+                                        className="ml-2"
+                                    />
+                                }
+                                radius="lg"
+                                className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
                             >
                                 Profiles
                             </Button>
                         </DropdownTrigger>
                     </NavbarItem>
                     <DropdownMenu
-                        aria-label="ACME features"
+                        radius="lg"
                         className={styles.dropdownMenu}
                         itemClasses={{
-                            base: "gap-4",
+                            base: "gap-6 p-4",
+                            title: "font-bold",
                         }}
                     >
                         <DropdownItem
@@ -118,6 +126,7 @@ export default function HeaderNav() {
                             description="Information on participating artists"
                             as={Link}
                             href="/venues"
+                            className=""
                         >
                             Venues
                         </DropdownItem>
@@ -132,12 +141,31 @@ export default function HeaderNav() {
                     </DropdownMenu>
                 </Dropdown>
 
+                <Button
+                    as={Link}
+                    href="/events"
+                    size="sm"
+                    radius="lg"
+                    className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                >
+                    Events
+                </Button>
+
                 {isAuth && (
                     <ManagerGuard mode="display">
-                        <NavbarItem isActive className={styles.item}>
-                            <Link aria-current="page" href="/create">
+                        <NavbarItem isActive>
+                            <Button
+                                as={Link}
+                                href="/create"
+                                size="sm"
+                                radius="lg"
+                                className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                                // classNames={{
+                                //     base: "data-[hover=true]:bg-pink-100 data-[hover=true]:text-pink-600",
+                                // }}
+                            >
                                 Create Event
-                            </Link>
+                            </Button>
                         </NavbarItem>
                     </ManagerGuard>
                 )}
@@ -149,18 +177,20 @@ export default function HeaderNav() {
                     <Dropdown
                         shouldBlockScroll={false}
                         offset={10}
-                        crossOffset={-65}
+                        crossOffset={-80}
                     >
                         <DropdownTrigger>
                             <User
                                 key={currentUser?.image || "fallback"}
                                 as="button"
+                                isFocusable={true}
                                 avatarProps={{
                                     isBordered: true,
                                     src: currentUser?.image,
                                     showFallback: true,
+                                    color: "primary",
                                 }}
-                                className="transition-transform mr-3 mt-2"
+                                className="transition-transform mr-4 mt-2"
                             />
                         </DropdownTrigger>
                         <DropdownMenu>
@@ -184,26 +214,36 @@ export default function HeaderNav() {
                     </Dropdown>
                 ) : (
                     <>
-                        <NavbarItem className="hidden lg:flex">
-                            <Button
-                                as={Link}
-                                href="/login"
-                                variant="solid"
-                                className="bg-white rounded-3xl p-0"
-                            >
-                                Login
-                            </Button>
-                        </NavbarItem>
-                        <NavbarItem>
-                            <Button
-                                as={Link}
-                                color="primary"
-                                href="/register"
-                                variant="solid"
-                            >
-                                Sign Up
-                            </Button>
-                        </NavbarItem>
+                        <div className="flex gap-2 mr-4">
+                            <NavbarItem className="hidden lg:flex">
+                                <Button
+                                    as={Link}
+                                    href="/login"
+                                    size="sm"
+                                    radius="lg"
+                                    className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                                    // classNames={{
+                                    //     base: "data-[hover=true]:bg-pink-100 data-[hover=true]:text-pink-600",
+                                    // }}
+                                >
+                                    Login
+                                </Button>
+                            </NavbarItem>
+                            <NavbarItem>
+                                <Button
+                                    as={Link}
+                                    href="/register"
+                                    size="sm"
+                                    radius="lg"
+                                    className="px-4 py-[17.5px] text-white font-bold bg-blue-600 text-[12px] hover:text-blue-300"
+                                    // classNames={{
+                                    //     base: "data-[hover=true]:bg-pink-100 data-[hover=true]:text-pink-600",
+                                    // }}
+                                >
+                                    Sign Up
+                                </Button>
+                            </NavbarItem>
+                        </div>
                     </>
                 )}
             </NavbarContent>

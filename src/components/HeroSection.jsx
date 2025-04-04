@@ -1,24 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Image, Tooltip, Spinner, Skeleton } from "@heroui/react";
+import { Icon } from "@iconify/react";
 import TabbedCard from "./TabCard";
 import styles from "../pages/events.module.css";
-import { useEvents } from "../hooks/useEvents";
+// import styles from "./HeroSection.module.css";
 import StatsBox from "./Stats";
 import { useEventsStore } from "../contexts/eventsContext";
 import { calcTrending } from "../../utils/calcTrending";
+import { useVenue } from "../hooks/useVenue";
+import { set } from "date-fns";
 
 const HeroSection = React.memo(() => {
     const [isFixed, setIsFixed] = useState(false);
 
     const { events, loading, error } = useEventsStore();
+
     const [randomEvent, setRandomEvent] = useState(null);
+    const [venueId, setVenueId] = useState(null);
+    const { venue, loading: venueLoading } = useVenue(venueId);
     const [involved, setInvolved] = useState(0);
+    const [formattedDate, setFormattedDate] = useState(new Date());
 
     useEffect(() => {
         if (!randomEvent && !loading && events && events.length > 0) {
             const randomIndex = Math.floor(Math.random() * events.length);
             setRandomEvent(events[randomIndex]);
+            setVenueId(events[randomIndex].venue);
+            setFormattedDate(new Date(events[randomIndex].openingDate));
         }
     }, [loading, events, randomEvent]);
 
@@ -45,7 +54,7 @@ const HeroSection = React.memo(() => {
 
     const statsData = [
         {
-            label: "Visitors involved",
+            label: "Visitors",
             value: involved,
             description: "Total visitors involved",
             icon: "tabler:user-check",
@@ -53,7 +62,7 @@ const HeroSection = React.memo(() => {
         {
             label: "Events",
             value: events.length,
-            description: "Total number of events staged",
+            description: "Total events staged",
             icon: "ci:calendar-check",
         },
     ];
@@ -101,36 +110,111 @@ const HeroSection = React.memo(() => {
                     )}
                 </div>
             </motion.div>
-            {circlePos.map((pos, index) => (
-                <Tooltip
-                    key={index}
-                    content={
-                        index === 0 ? (
-                            `${randomEvent?.title || "Loading"}: ${randomEvent?.description || ""}`
-                        ) : index === 1 ? (
-                            `Location: ${randomEvent?.venue || "Unknown"}`
-                        ) : (
-                            <a
-                                href={`/events/${randomEvent?.id}`}
-                                className="text-blue-500 underline"
-                            >
-                                Explore Event
-                            </a>
-                        )
-                    }
-                    placement="bottom"
-                >
-                    <div
-                        className={styles.tooltipCircle}
-                        style={{
-                            position: "absolute",
-                            top: pos.top,
-                            left: pos.left,
-                            opacity: loading ? 0.7 : 1,
-                        }}
+
+            <div
+                className={styles.tooltipCircle}
+                style={{
+                    position: "absolute",
+                    top: "60%",
+                    left: "50%",
+                }}
+                onClick={() =>
+                    (window.location.href = `/events/${randomEvent?.id}`)
+                }
+            >
+                <div className={styles.circleContent}>
+                    <Icon
+                        icon="material-symbols:location-on-outline-rounded"
+                        width="20"
+                        height="20"
+                        className={`${styles.locationIcon}`}
                     />
-                </Tooltip>
-            ))}
+
+                    <p className={`${styles.venueName}`}>
+                        {venueLoading ? "Loading..." : venue.name}
+                    </p>
+
+                    <Icon
+                        icon="ic:round-arrow-outward"
+                        width="24"
+                        height="24"
+                        className={`${styles.arrowIcon}`}
+                    />
+                </div>
+            </div>
+
+            <div
+                className={`${styles.tooltipCircle} hover:w-[320px]`}
+                style={{
+                    position: "absolute",
+                    top: "35%",
+                    left: "20%",
+                }}
+                onClick={() =>
+                    (window.location.href = `/events/${randomEvent?.id}`)
+                }
+            >
+                <div className={styles.circleContent}>
+                    <Icon
+                        icon="tabler:timeline-event"
+                        width="20"
+                        height="20"
+                        className={`${styles.locationIcon}`}
+                    />
+
+                    <p className={`${styles.venueName}`}>
+                        {randomEvent?.title?.length > 30
+                            ? `${randomEvent.title.substring(0, 30)}...`
+                            : randomEvent?.title}
+                    </p>
+
+                    <Icon
+                        icon="ic:round-arrow-outward"
+                        width="24"
+                        height="24"
+                        className={`${styles.arrowIcon}`}
+                    />
+                </div>
+            </div>
+
+            <div
+                className={`${styles.tooltipCircle} hover:w-[150px]`}
+                style={{
+                    position: "absolute",
+                    top: "105%",
+                    left: "30%",
+                }}
+                onClick={() =>
+                    (window.location.href = `/events/${randomEvent?.id}`)
+                }
+            >
+                <div className={styles.circleContent}>
+                    <Icon
+                        icon="majesticons:calendar-line"
+                        width="20"
+                        height="20"
+                        className={`${styles.locationIcon}`}
+                    />
+
+                    <p className={`${styles.venueName}`}>
+                        <span className="text-md font-bold text-blue-600">
+                            {formattedDate.getDate()}
+                        </span>
+                        <span className="text-sm font-semibold">
+                            {formattedDate.toLocaleString("en-US", {
+                                month: "short",
+                            })}
+                        </span>
+                    </p>
+
+                    <Icon
+                        icon="ic:round-arrow-outward"
+                        width="24"
+                        height="24"
+                        className={`${styles.arrowIcon}`}
+                    />
+                </div>
+            </div>
         </motion.div>
     );
 });

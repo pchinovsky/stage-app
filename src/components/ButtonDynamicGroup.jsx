@@ -11,6 +11,7 @@ import { useFloatingContext } from "../contexts/floatingContext";
 import { calcTrending } from "../../utils/calcTrending";
 import authApi from "../api/auth-api";
 import { useError } from "../contexts/errorContext";
+import { useToast } from "../contexts/toastContext";
 
 export default function ButtonDynamicGroup({
     pos,
@@ -20,8 +21,9 @@ export default function ButtonDynamicGroup({
     disabled,
     mode = "single",
 }) {
+    const { showToast } = useToast();
     const { showError } = useError();
-    const [toastMessage, setToastMessage] = useState("");
+    // const [toastMessage, setToastMessage] = useState("");
     const [isInterested, setIsInterested] = useState(false);
     const [isAttending, setIsAttending] = useState(false);
 
@@ -70,7 +72,7 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(event.id),
             });
             setIsAttending(!isAttending);
-            setToastMessage(
+            showToast(
                 isAttending
                     ? "You are no longer attending this event."
                     : "You are now attending this event."
@@ -113,7 +115,7 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(event.id),
             });
             setIsInterested(!isInterested);
-            setToastMessage(
+            showToast(
                 isInterested
                     ? "You are no longer interested in this event."
                     : "You are now interested in this event."
@@ -127,9 +129,9 @@ export default function ButtonDynamicGroup({
         }
     };
 
-    const handleCloseToast = () => {
-        setToastMessage("");
-    };
+    // const handleCloseToast = () => {
+    //     setToastMessage("");
+    // };
 
     return (
         <div
@@ -169,9 +171,9 @@ export default function ButtonDynamicGroup({
                 selectionMode={selectionMode}
                 selection={disabled?.selection}
             />
-            {toastMessage && (
+            {/* {toastMessage && (
                 <Toast message={toastMessage} onClose={handleCloseToast} />
-            )}
+            )} */}
         </div>
     );
 }

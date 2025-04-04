@@ -1,0 +1,41 @@
+.heroSection {
+    @apply sticky top-0 h-[34.5vh] w-full bg-white text-white flex items-center justify-center text-3xl z-10;
+}
+
+.infoBoxes {
+    @apply absolute top-[80px] right-[-17px] flex flex-col gap-3 z-[1000] mr-6;
+}
+
+.heroImage {
+    @apply object-cover rounded-xl transition-all duration-700 ease-in-out z-50;
+    @apply absolute top-0 left-0;
+    @apply transition-opacity duration-700;
+    object-position: center;
+    /* position: fixed !important; */
+}
+
+.tooltipCircle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.tooltipCircle:hover {
+    width: 80px;
+    border-radius: 20px;
+}
+
+.tooltipCircle:hover::after {
+    content: "";
+    background-image: url("path-to-arrow-icon");
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}

@@ -79,9 +79,10 @@ export default function CalendarModal({ isOpen, onClose }) {
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            className="absolute left-[500px] top-10 p-6 rounded-lg max-w-2xl bg-white z-[1000]"
+            backdrop="opaque"
+            className="absolute left-[505px] top-10 p-6 rounded-lg max-w-2xl bg-white z-[1000] shadow-md"
         >
-            <div className="absolute right-11 top-3 bottom-3 z-[1000] bg-white p-5 rounded-lg">
+            <div className="absolute right-11 top-3 bottom-3 z-[1000] bg-white p-5 rounded-lg shadow-md">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold">
                         {viewMode === "mine"
@@ -125,11 +126,11 @@ export default function CalendarModal({ isOpen, onClose }) {
                     }}
                     className={`font-sans ${styles.calendarCustom}`}
                 />
-                <div className="flex mt-4 w-full">
+                <div className="flex mt-[120px] w-full">
                     <Button
                         onPress={onClose}
                         className="ml-auto"
-                        variant="bordered"
+                        variant="ghost"
                         color="danger"
                     >
                         Close

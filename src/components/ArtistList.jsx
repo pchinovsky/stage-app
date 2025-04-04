@@ -1,5 +1,7 @@
 import { Tooltip, Avatar } from "@heroui/react";
 import TooltipProfile from "./TooltipProfile";
+// import "./ArtistList.module.css";
+import styles from "./ArtistList.module.css";
 
 export default function ArtistList({
     artists,
@@ -8,19 +10,32 @@ export default function ArtistList({
     isModalOpen,
 }) {
     const one = artists.length === 1;
-    const h = one ? 120 : 160;
+    const h = one ? 120 : 192;
 
     console.log("isModalOpen", isModalOpen);
 
     return (
         <div
-            className="absolute left-[1000px] top-[120px] w-[450px] max-w-lg overflow-y-auto bg-transparent px-4 py-3 rounded-lg border-2 border-gray-500 z-[100]"
-            style={{ height: `${h}px` }}
+            className="absolute left-[1100px] top-[120px] w-[350px] max-w-lg overflow-hidden bg-white px-4 py-3 rounded-lg z-[100]"
+            style={{
+                height: `${h}px`,
+                backdropFilter: "blur(10px)",
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+                // overflowY: "auto",
+                // overflow: "hidden",
+            }}
         >
             <h2 className="text-black text-lg font-bold mb-2">
                 {one ? "Artist" : "Artists"}
             </h2>
-            <div className="space-y-3">
+            <div
+                // className="space-y-3 overflow-y-auto"
+                className="artist-scroll space-y-2 overflow-y-auto"
+                // className={`${styles.spaceY3} overflow-y-auto`}
+                style={{
+                    height: "100%",
+                }}
+            >
                 {artists.map((artist) => (
                     <Tooltip
                         // key={artist.id}
@@ -64,7 +79,7 @@ export default function ArtistList({
                         }}
                     >
                         <button
-                            className="flex items-center gap-3 p-2 bg-gray-900 w-full rounded-lg cursor-pointer"
+                            className="flex items-center gap-3 p-2 bg-white w-full rounded-lg cursor-pointer"
                             onClick={() => onClick(artist)}
                         >
                             <Avatar src={artist.profileImage} size="sm" />

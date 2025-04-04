@@ -1,7 +1,13 @@
 import React from "react";
 import { Card, CardFooter, Image } from "@heroui/react";
 
-export default function ProfileCard({ data, onClick, size, footer }) {
+export default function ProfileCard({
+    data,
+    onClick,
+    size,
+    styles,
+    footer = true,
+}) {
     return (
         <Card
             isPressable
@@ -27,18 +33,31 @@ export default function ProfileCard({ data, onClick, size, footer }) {
                     height: "100%",
                 }}
             />
-            <div className="absolute bottom-0 left-0 right-0 h-[100px] flex justify-center px-2 pb-2 z-10">
+            <div
+                // className="absolute bottom-0 left-0 right-0 h-[100px] flex justify-center px-2 pb-2 z-10"
+                className={`absolute bottom-0 left-0 right-0 flex justify-center px-2 pb-2 z-10 ${
+                    styles.footer ? styles.footer : "h-[100px]"
+                }`}
+            >
                 {footer && (
                     <CardFooter className="bg-white bg-opacity-90 rounded-lg shadow-sm px-3 py-2 w-full">
-                        <div>
-                            <h3 className="text-lg font-bold m-0 text-left">
+                        <div
+                            // className="flex flex-col justify-end self-end"
+                            className={`flex flex-col justify-end ${styles.pos}`}
+                        >
+                            <h3
+                                // className="text-lg font-bold m-0 text-left flex items-end"
+                                className={`m-0 text-left flex items-end font-bold ${styles.text || "text-lg"}`}
+                            >
                                 {data.name}
                             </h3>
-                            <p className="text-sm text-gray-600 m-0">
+                            <p className="text-tiny text-gray-600 m-0 text-left">
                                 {data.description
-                                    ? data.description.length > 60
-                                        ? data.description.substring(0, 60) +
-                                          "..."
+                                    ? data.description.length > styles.desc
+                                        ? data.description.substring(
+                                              0,
+                                              styles.desc
+                                          ) + "..."
                                         : data.description
                                     : "No description"}
                             </p>

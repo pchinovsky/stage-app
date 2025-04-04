@@ -54,45 +54,6 @@ export default function Profile() {
 
     const logout = useLogout();
 
-    // useEffect(() => {
-    //     if (!loading && user) {
-    //         setFloatingPanelSettings(
-    //             user.floatingPanelSettings || floatingPanelSettings
-    //         );
-    //     }
-    // }, [user, loading]);
-
-    // const updateFloatingPanelSettings = async (newSettings) => {
-    //     setFloatingPanelSettings((prev) => ({ ...prev, ...newSettings }));
-
-    //     try {
-    //         setSwitchLoading(true);
-    //         await authApi.updateUser(user.id, {
-    //             floatingPanelSettings: {
-    //                 ...floatingPanelSettings,
-    //                 ...newSettings,
-    //             },
-    //         });
-    //     } catch (error) {
-    //         console.error("Error updating floating panel settings:", error);
-    //         showError("Failed to update settings. Please try again.");
-    //     } finally {
-    //         setSwitchLoading(false);
-    //     }
-    // };
-
-    // const handleSwitchToggle = async (newSettings) => {
-    //     setFloatingPanelSettings((prev) => ({ ...prev, ...newSettings }));
-    //     setSwitchLoading(true);
-    //     try {
-    //         await updateFloatingPanelSettings(newSettings);
-    //     } catch (err) {
-    //         showError("Failed to update setting");
-    //     } finally {
-    //         setSwitchLoading(false);
-    //     }
-    // };
-
     const handleToggleSetting = async (key, value) => {
         if (!user?.id) return;
 
@@ -201,7 +162,8 @@ export default function Profile() {
             "Following Users": user.followingUsers?.length || 0,
             "Following Artists": user.followingArtists?.length,
             "Following Venues": user.followingVenues?.length,
-            "Followed By": user.followedBy?.length || 0,
+            "Followed By Users": user.followedBy?.length || 0,
+            "": "",
         };
     }
 
@@ -219,8 +181,8 @@ export default function Profile() {
 
     return (
         <DefaultLayout>
-            <div className="container mx-auto mt-[200px] p-4 min-h-screen">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="container block mt-[550px] p-4 h-auto w-screen bg-gray-300 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full">
                     {/* User info */}
                     <div className="md:col-span-1 flex flex-col justify-between items-start bg-white p-6 rounded-lg shadow-md">
                         <User
@@ -231,6 +193,13 @@ export default function Profile() {
                                 size: "lg",
                                 radius: "md",
                                 showFallback: true,
+                                classNames: {
+                                    base: "w-24 h-24",
+                                },
+                            }}
+                            classNames={{
+                                base: "flex-col items-start",
+                                name: "font-bold mt-4 text-left text-lg",
                             }}
                         />
 
@@ -238,7 +207,7 @@ export default function Profile() {
                             isOpen={isCalendarOpen}
                             onClose={() => setIsCalendarOpen(false)}
                         />
-                        <div className="mt-6 flex justify-between w-full items-end">
+                        <div className="mt-6 flex justify-end gap-2 w-full items-end">
                             {/* <Button
                                 color="danger"
                                 variant="bordered"
@@ -251,6 +220,7 @@ export default function Profile() {
                                 variant="bordered"
                                 as={Link}
                                 href="/logout"
+                                className="w-[95px] h-[95px] border-2 border-red-400"
                             >
                                 Log Out
                             </Button>
@@ -258,12 +228,12 @@ export default function Profile() {
                                 isIconOnly
                                 variant="bordered"
                                 onPress={setIsCalendarOpen}
-                                className="w-[55px] h-[55px] hover:text-blue-500"
+                                className="w-[95px] h-[95px] hover:text-blue-500"
                             >
                                 <Icon
                                     icon="ci:calendar-days"
-                                    width="24"
-                                    height="24"
+                                    width="44"
+                                    height="44"
                                 />
                             </Button>
                         </div>
@@ -271,15 +241,25 @@ export default function Profile() {
 
                     {/* Stats */}
                     <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md">
-                        <h2 className="text-xl font-bold mb-4">Your Stats</h2>
-                        <div className="flex flex-wrap gap-4 w-full">
+                        <h2 className="text-xl font-bold mb-20">
+                            Your Statistics
+                        </h2>
+                        <div className="flex flex-wrap content-end gap-3 w-full">
                             {Object.entries(stats).map(([label, value]) => (
-                                <Card key={label} className="w-[150px]">
-                                    <CardBody>
-                                        <h3 className="text-lg font-bold">
+                                <Card
+                                    key={label}
+                                    radius="md"
+                                    className="w-[180px] h-[80px]"
+                                    shadow="sm"
+                                    isHoverable
+                                >
+                                    <CardBody className="flex flex-col justify-between">
+                                        <h3 className="text-medium hover:text-blue-500 ">
                                             {label}
                                         </h3>
-                                        <p className="text-2xl">{value}</p>
+                                        <p className="text-medium font-bold text-blue-500">
+                                            {value}
+                                        </p>
                                     </CardBody>
                                 </Card>
                             ))}
@@ -296,7 +276,7 @@ export default function Profile() {
                                 <h2 className="text-xl font-bold mb-4">
                                     Update Profile
                                 </h2>
-                                <div className="space-y-10 w-[350px]">
+                                <div className="space-y-9 w-[350px]">
                                     <Input
                                         id="name"
                                         name="name"
@@ -317,7 +297,10 @@ export default function Profile() {
                                         onChange={handleInputChange}
                                     />
 
-                                    <div className="flex w-full items-end gap-5">
+                                    <div
+                                        className="flex w-full items-end gap-5"
+                                        style={{ marginTop: "20px" }}
+                                    >
                                         <Input
                                             id="image"
                                             name="image"
@@ -347,7 +330,7 @@ export default function Profile() {
                                 </div>
                             </Form>
                             {/* Floating controls */}
-                            <div className="my-0 ml-auto">
+                            <div className="my-0 ml-auto mr-5">
                                 <h2 className="text-xl font-bold mb-8">
                                     Floating Controls Preferences
                                 </h2>
@@ -401,77 +384,7 @@ export default function Profile() {
                                     >
                                         Persist Position
                                     </Switch>
-                                    {/* <Switch
-                                        id="transparency"
-                                        isSelected={
-                                            floatingPanelSettings.isTransparent
-                                        }
-                                        onChange={(e) =>
-                                            handleSwitchToggle({
-                                                isTransparent: e.target.checked,
-                                            })
-                                        }
-                                        isDisabled={switchLoading}
-                                    >
-                                        Transparent Mode
-                                    </Switch>
-                                    <Switch
-                                        id="locked"
-                                        isSelected={
-                                            floatingPanelSettings.isLocked
-                                        }
-                                        onChange={(e) =>
-                                            handleSwitchToggle({
-                                                isLocked: e.target.checked,
-                                            })
-                                        }
-                                        isDisabled={switchLoading}
-                                    >
-                                        Locked Mode
-                                    </Switch>
 
-                                    <Switch
-                                        id="transparency"
-                                        isSelected={
-                                            floatingPanelSettings.persistPosition
-                                        }
-                                        onChange={(e) =>
-                                            handleSwitchToggle({
-                                                persistPosition:
-                                                    e.target.checked,
-                                            })
-                                        }
-                                        isDisabled={switchLoading}
-                                    >
-                                        Persist Position
-                                    </Switch> */}
-                                    {/* <Select
-                                        label="Dock Position"
-                                        selectedKeys={[
-                                            floatingPanelSettings.dockPosition,
-                                        ]}
-                                        onSelectionChange={(keys) => {
-                                            const selectedKey =
-                                                Array.from(keys)[0];
-                                            console.log(
-                                                "selectedKey",
-                                                selectedKey
-                                            );
-
-                                            updateFloatingPanelSettings({
-                                                dockPosition: selectedKey,
-                                            });
-                                        }}
-                                        isDisabled={switchLoading}
-                                        // className="border rounded-md p-2"
-                                    >
-                                        <SelectItem key="top-left">
-                                            Top Left
-                                        </SelectItem>
-                                        <SelectItem key="top-right">
-                                            Top Right
-                                        </SelectItem>
-                                    </Select> */}
                                     <Select
                                         label="Dock Position"
                                         selectedKeys={[
@@ -498,46 +411,51 @@ export default function Profile() {
                                 </div>
                             </div>
                         </div>
-
-                        <div className="flex justify-between md:col-span-3 bg-white p-6 rounded-lg shadow-md w-full">
+                        <div className="flex justify-between md:col-span-3 bg-white p-0 rounded-lg shadow-md w-full mb-5">
                             {/* Managed venue */}
-                            {user.managedVenue && (
-                                <div className="md:col-span-3 bg-white p-6 rounded-lg flex justify-between w-full">
-                                    {user.managedVenue && (
-                                        <div className="my-6 flex justify-between items-start w-full gap-10">
-                                            <h2 className="text-xl font-bold mb-4 w-[100px]">
-                                                Your Managed Venue
-                                            </h2>
-                                            {venueLoading ? (
-                                                <div>Loading venue...</div>
-                                            ) : venueError || !venue ? (
-                                                <div>Error loading venue.</div>
-                                            ) : (
-                                                <ProfileCard
-                                                    key={venue.id}
-                                                    data={venue}
-                                                    onClick={handleCardClick}
-                                                    className="self-end"
-                                                    size={{
-                                                        width: "480px",
-                                                        height: "288px",
-                                                    }}
-                                                    footer={true}
-                                                />
-                                            )}
-                                        </div>
+                            <div className="md:col-span-3 bg-white p-6 rounded-lg flex justify-between w-full">
+                                <div className="my-6 mt-0 flex justify-between items-start w-full gap-10">
+                                    <h2 className="text-xl font-bold mb-4 w-[100px]">
+                                        Your Managed Venue
+                                    </h2>
+                                    {venueLoading ? (
+                                        <div>Loading venue...</div>
+                                    ) : venueError || !venue ? (
+                                        <div>Error loading venue.</div>
+                                    ) : user.managedVenue ? (
+                                        <ProfileCard
+                                            key={venue.id}
+                                            data={venue}
+                                            onClick={handleCardClick}
+                                            className="self-end"
+                                            size={{
+                                                width: "480px",
+                                                height: "288px",
+                                            }}
+                                            styles={{
+                                                text: "text-lg",
+                                                desc: 150,
+                                                footer: "h-[100px]",
+                                                pos: "self-end",
+                                            }}
+                                            footer={true}
+                                        />
+                                    ) : (
+                                        <p className="border border-gray-400 rounded-lg px-4 py-3 text-gray-400">
+                                            No managed venue.
+                                        </p>
                                     )}
-                                    <ModalProfileCustom
-                                        isOpen={isModalOpen}
-                                        onClose={closeModal}
-                                        data={venue}
-                                    />
                                 </div>
-                            )}
-                        </div>
+                                <ModalProfileCustom
+                                    isOpen={isModalOpen}
+                                    onClose={closeModal}
+                                    data={venue}
+                                />
+                            </div>
+                        </div>{" "}
                     </div>
 
-                    <div className="h-full w-auto md:col-span-1">
+                    <div className="w-auto md:col-span-1 mb-5">
                         {/* Invitations */}
                         <div className="md:col-span-3 bg-white p-6 rounded-lg h-full w-auto shadow-md">
                             <div className="my-0">
@@ -553,7 +471,9 @@ export default function Profile() {
                                             />
                                         ))
                                     ) : (
-                                        <p>No invitations at the moment.</p>
+                                        <p className="border border-gray-400 rounded-lg px-4 py-3 text-gray-400">
+                                            No invitations at the moment.
+                                        </p>
                                     )}
                                 </div>
                             </div>

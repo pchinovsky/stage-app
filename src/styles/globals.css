@@ -24,3 +24,27 @@
 .z-50 {
     z-index: 9999 !important;
 }
+
+.artist-scroll::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.artist-scroll::-webkit-scrollbar-thumb {
+    /* background: rgba(0, 0, 0, 0.5); */
+    background: rgba(219, 6, 6, 1);
+
+    border-radius: 2px;
+}
+
+.artist-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.artist-scroll::-webkit-scrollbar-button {
+    display: none;
+}
+
+.artist-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+}

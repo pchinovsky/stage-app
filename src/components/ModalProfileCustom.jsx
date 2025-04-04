@@ -24,6 +24,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
     const { showError } = useError();
     const { isAuth, userId } = useContext(AuthContext);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     useEffect(() => {
         (async () => {
@@ -121,26 +122,37 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                 }}
             >
                 <motion.div
-                    className="w-[90%] max-w-2xl"
+                    className="w-[90%] max-w-3xl"
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -50, opacity: 0 }}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <Card className="border border-gray-200 shadow-xl p-4">
-                        <CardHeader className="text-center font-bold text-xl">
-                            {data.name}
+                        <CardHeader className="flex justify-between items-start text-center font-bold text-xl">
+                            <p>{data.name}</p>
+                            {!data.address && (
+                                <Image
+                                    alt={data.name}
+                                    className="object-cover shadow-none rounded-md"
+                                    height={70}
+                                    width={70}
+                                    src={data.profileImage}
+                                />
+                            )}
                         </CardHeader>
 
-                        <Image
-                            alt={data.name}
-                            className="object-cover shadow-none rounded-md"
-                            height={250}
-                            src={data.profileImage}
-                            width="100%"
-                        />
+                        {data.address && (
+                            <Image
+                                alt={data.name}
+                                className="object-cover shadow-none rounded-md"
+                                height={350}
+                                src={data.profileImage}
+                                width="100%"
+                            />
+                        )}
 
-                        <CardBody className="text-gray-700 text-sm mt-2">
+                        <CardBody className="text-gray-700 text-sm mt-1">
                             <p>
                                 {data.description ||
                                     "No description available."}
@@ -175,30 +187,74 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                                         <h4 className="font-semibold mb-2">
                                             Gallery
                                         </h4>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {data.additionalImages.map(
-                                                (imgUrl, index) => (
-                                                    <Image
-                                                        key={index}
-                                                        alt={`Additional image ${index + 1}`}
-                                                        className="object-cover rounded-md w-full h-24"
-                                                        src={imgUrl}
-                                                    />
-                                                )
-                                            )}
+                                        <div className="relative flex justify-between">
+                                            <Image
+                                                alt={`Image ${currentImageIndex + 1}`}
+                                                className="object-cover rounded-md w-[655px] h-[300px]"
+                                                src={
+                                                    data.additionalImages[
+                                                        currentImageIndex
+                                                    ]
+                                                }
+                                            />
+                                            {/* <div className="absolute inset-0 flex justify-between items-center">
+                                                <Button
+                                                    isIconOnly
+                                                    onClick={prevImage}
+                                                    className="bg-black/30 text-white"
+                                                >
+                                                    &lt;
+                                                </Button>
+                                                <Button
+                                                    isIconOnly
+                                                    onClick={nextImage}
+                                                    className="bg-black/30 text-white"
+                                                >
+                                                    &gt;
+                                                </Button>
+                                            </div> */}
+                                            <div className="flex flex-col justify-start gap-1">
+                                                {data.additionalImages.map(
+                                                    (_, index) => (
+                                                        <Button
+                                                            key={index}
+                                                            size="sm"
+                                                            isIconOnly
+                                                            className={`rounded-full h-5
+                                                                ${
+                                                                    currentImageIndex ===
+                                                                    index
+                                                                        ? "bg-primary"
+                                                                        : "bg-default"
+                                                                }`}
+                                                            onPress={() =>
+                                                                setCurrentImageIndex(
+                                                                    index
+                                                                )
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
                         </CardBody>
 
-                        <CardFooter className="flex justify-end">
-                            <Button onPress={onClose} color="primary">
+                        <CardFooter className="flex justify-end gap-2">
+                            <Button
+                                onPress={onClose}
+                                color="primary"
+                                variant="bordered"
+                            >
                                 Close
                             </Button>
                             {isAuth && (
                                 <Button
                                     onPress={handleFollow}
-                                    color={isFollowing ? "danger" : "success"}
+                                    color={isFollowing ? "danger" : "primary"}
+                                    variant="ghost"
+                                    classNames={{ base: "p-0" }}
                                 >
                                     {isFollowing ? "Unfollow" : "Follow"}
                                 </Button>

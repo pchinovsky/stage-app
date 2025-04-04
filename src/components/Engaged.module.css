@@ -1,0 +1,15 @@
+.cardMin {
+    @apply max-h-[60px] p-2 overflow-hidden;
+    transition:
+        max-height 0.7s ease-in-out,
+        padding 0.3s ease-in-out,
+        border-radius 0.3s ease-in-out;
+}
+
+.cardMax {
+    @apply max-h-[1000px] p-4 overflow-hidden;
+    transition:
+        max-height 0.7s ease-in-out,
+        padding 0.3s ease-in-out,
+        border-radius 0.3s ease-in-out;
+}

@@ -16,7 +16,7 @@ import {
 } from "@heroui/react";
 import { Time } from "@internationalized/date";
 import { parseDate } from "@internationalized/date";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import { getLocalTimeZone } from "@internationalized/date";
 import { useDateFormatter } from "@react-aria/i18n";
@@ -50,6 +50,8 @@ export default function CreatePage() {
     const createEvent = useEventCreate();
     const [previewImage, setPreviewImage] = useState("");
 
+    const formRef = useRef(null);
+
     const initialValues = {
         title: "",
         subtitle: "",
@@ -76,25 +78,6 @@ export default function CreatePage() {
     };
 
     const route = "/events";
-
-    // async function createEventWithUser(values, currentUserId) {
-    //     try {
-    //         const eventId = await eventsApi.createEvent(values);
-    //         await setDoc(
-    //             doc(db, "users", currentUserId),
-    //             { created: arrayUnion(eventId) },
-    //             { merge: true }
-    //         );
-    //         return eventId;
-    //     } catch (err) {
-    //         const errMsg = err.message || "Failed to create event.";
-    //         showError(errMsg);
-    //         throw err;
-    //     }
-    // }
-
-    // const createEventWithUserWrapper = (values) =>
-    //     createEventWithUser(values, currentUser.id);
 
     const {
         formValues,
@@ -274,13 +257,43 @@ export default function CreatePage() {
             >
                 <div className="container mx-auto py-8 px-4">
                     <div
-                        className={`w-[1200px] h-[700px] max-w-5xl mx-auto rounded-xl p-6 ${previewImage ? "bg-gray-50/20 backdrop-blur-md" : "bg-white border border-slate-300"}`}
+                        className={`w-[850px] h-[700px] mx-auto rounded-xl p-6 ${previewImage ? "bg-gray-50/20 backdrop-blur-md" : "bg-white border border-slate-300"}`}
                     >
-                        <h1
-                            className={`text-3xl font-bold mb-6 ${previewImage ? "text-white" : "text-gray-800"}`}
-                        >
-                            Create Event
-                        </h1>
+                        <div className="flex justify-between items-start mb-5">
+                            <h1
+                                className={`text-3xl font-bold mb-6 ${previewImage ? "text-white" : "text-gray-800"}`}
+                            >
+                                Create Event
+                            </h1>
+                            <div className="flex justify-end gap-2 mt-4 h-[100%]">
+                                <Button
+                                    type="submit"
+                                    color="primary"
+                                    isDisabled={isSubmitting}
+                                    startContent={
+                                        isSubmitting ? (
+                                            <Spinner size="sm" />
+                                        ) : null
+                                    }
+                                    onPress={() =>
+                                        formRef.current?.requestSubmit()
+                                    }
+                                >
+                                    {isSubmitting
+                                        ? "Staging in progress"
+                                        : "Stage Event"}
+                                </Button>
+                                <Button
+                                    variant="flat"
+                                    color={
+                                        formValues.image ? "default" : "danger"
+                                    }
+                                    onPress={resetForm}
+                                >
+                                    Reset
+                                </Button>
+                            </div>
+                        </div>
 
                         <div>
                             <ModalArtistAdd
@@ -292,6 +305,7 @@ export default function CreatePage() {
                         </div>
 
                         <Form
+                            ref={formRef}
                             className="flex flex-row gap-10"
                             onSubmit={handleSubmit}
                             validationBehavior="aria"
@@ -644,32 +658,6 @@ export default function CreatePage() {
                                         </Tooltip>
                                     ))}
                                 </div>
-                            </div>
-
-                            <div className="flex flex-col justify-end gap-2 mt-4 h-[100%]">
-                                <Button
-                                    type="submit"
-                                    color="primary"
-                                    isDisabled={isSubmitting}
-                                    startContent={
-                                        isSubmitting ? (
-                                            <Spinner size="sm" />
-                                        ) : null
-                                    }
-                                >
-                                    {isSubmitting
-                                        ? "Staging in progress"
-                                        : "Stage Event"}
-                                </Button>
-                                <Button
-                                    variant="flat"
-                                    color={
-                                        formValues.image ? "default" : "danger"
-                                    }
-                                    onPress={resetForm}
-                                >
-                                    Reset
-                                </Button>
                             </div>
                         </Form>
                     </div>

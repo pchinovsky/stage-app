@@ -10,7 +10,11 @@
 }
 
 .brand {
-    @apply font-bold text-lg text-gray-800;
+    @apply font-bold text-lg text-white;
+}
+
+.brand:hover {
+    @apply text-blue-600 transition-all ease-in-out duration-500;
 }
 
 .navContent {
@@ -22,7 +26,7 @@
 }
 
 .dropdownMenu {
-    @apply bg-white shadow-lg border border-gray-200 rounded-md w-full;
+    @apply bg-white shadow-lg border border-gray-200 rounded-xl w-full;
 }
 
 .dropdownMenu .dropdown-item {
@@ -30,5 +34,5 @@
 }
 
 .item {
-    @apply border-1 border-gray-600 rounded-2xl p-2 px-3 text-gray-800 hover:bg-gray-100 transition-all;
+    @apply border-1 border-gray-600 rounded-2xl p-1 px-3 text-gray-800 hover:bg-gray-100 transition-all;
 }

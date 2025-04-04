@@ -44,7 +44,7 @@
 
 .header {
     @apply bg-gray-100 px-2 py-2 flex justify-between items-center rounded-t-lg 
-           cursor-move backdrop-blur-md bg-opacity-10;
+            backdrop-blur-md bg-opacity-10;
     @apply rounded-lg;
 }
 

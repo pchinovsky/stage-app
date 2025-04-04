@@ -102,7 +102,7 @@ export default function User({ user, currentUserId }) {
                     fallback={<AvatarIcon />}
                     showFallback={!user?.image}
                     alt={user?.name || "User"}
-                    size="sm"
+                    size="md"
                     isBordered
                     color="primary"
                 />

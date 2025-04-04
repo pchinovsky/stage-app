@@ -97,6 +97,12 @@ export default function SlidingSidebar({ event, venue }) {
                                 }}
                                 size={{ width: "260px", height: "200px" }}
                                 onClick={() => handleEventPress(event.id)}
+                                styles={{
+                                    text: "text-sm",
+                                    desc: 70,
+                                    footer: "h-[80px]",
+                                    pos: "self-start",
+                                }}
                                 footer={true}
                                 className={styles.eventCard}
                             />

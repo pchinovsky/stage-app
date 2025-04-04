@@ -72,3 +72,80 @@
 .eventsListContainer {
     @apply w-full flex flex-wrap gap-2 min-h-screen content-start;
 }
+
+/*  */
+
+.tooltipCircle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background-color: rgba(240, 234, 234, 0.4);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    padding-inline: 9.5px;
+    z-index: 500;
+}
+
+.locationIcon {
+    opacity: 1;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.venueName {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: black;
+    margin-right: 10px;
+    margin-left: 10px;
+    white-space: nowrap;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.arrowIcon {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: blue;
+    flex-shrink: 0;
+    margin-right: 3px;
+}
+
+.arrowIcon:hover {
+    color: rgb(67, 150, 239);
+}
+
+.tooltipCircle:hover {
+    width: 220px;
+    /* max-width: 300px; */
+    height: 40px;
+    border-radius: 30px;
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.tooltipCircle:hover .venueName,
+.tooltipCircle:hover .arrowIcon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.circleContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    /* gap: 8px; */
+}

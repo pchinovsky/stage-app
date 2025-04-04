@@ -40,6 +40,12 @@ export default function VenuesPage() {
                                 width: "480px",
                                 height: "288px",
                             }}
+                            styles={{
+                                text: "text-lg",
+                                desc: 150,
+                                footer: "h-[100px]",
+                                pos: "self-end",
+                            }}
                             footer={true}
                         />
                     ))}
