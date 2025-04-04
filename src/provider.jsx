@@ -7,6 +7,7 @@ import { FloatingProvider } from "./contexts/floatingContext.jsx";
 import { EventsProvider } from "./contexts/eventsContext.jsx";
 import { UsersProvider } from "./contexts/usersContext.jsx";
 import { ErrorProvider } from "./contexts/errorContext.jsx";
+import { ToastProvider } from "./contexts/toastContext.jsx";
 
 export function Provider({ children }) {
     const navigate = useNavigate();
@@ -15,17 +16,19 @@ export function Provider({ children }) {
         <HeroUIProvider navigate={navigate} useHref={useHref}>
             <AuthProvider>
                 <ErrorProvider>
-                    <UsersProvider>
-                        <NavProvider>
-                            <FollowingProvider>
-                                <EventsProvider>
-                                    <FloatingProvider>
-                                        {children}
-                                    </FloatingProvider>
-                                </EventsProvider>
-                            </FollowingProvider>
-                        </NavProvider>
-                    </UsersProvider>
+                    <ToastProvider>
+                        <UsersProvider>
+                            <NavProvider>
+                                <FollowingProvider>
+                                    <EventsProvider>
+                                        <FloatingProvider>
+                                            {children}
+                                        </FloatingProvider>
+                                    </EventsProvider>
+                                </FollowingProvider>
+                            </NavProvider>
+                        </UsersProvider>
+                    </ToastProvider>
                 </ErrorProvider>
             </AuthProvider>
         </HeroUIProvider>
