@@ -1,4 +1,4 @@
-import {heroui} from "@heroui/theme"
+import { heroui } from "@heroui/theme"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,7 +10,15 @@ module.exports = {
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        primary: ['Oxygen', 'sans-serif'],
+        secondary: ['Fjalla One', 'sans-serif'],
+      },
+      colors: {
+        primary: '#4E04EC',
+      },
+    },
   },
   darkMode: "class",
   plugins: [heroui()],
