@@ -162,7 +162,7 @@ The filtering interface supports a toggle system, allowing users to determine wh
 
 ## 🌐 Deployment & Access
 The application is deployed via Firebase Hosting:
-> **[STAGE Deployed Application](https://link/)** 
+> **[STAGE Deployed Application](https://stage-f9621.web.app)** 
 
 ---
 
