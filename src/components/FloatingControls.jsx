@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Button, Switch, Tooltip } from "@heroui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useUser } from "../hooks/useUser-new";
 import { useFloatingContext } from "../contexts/floatingContext";
@@ -53,19 +54,23 @@ export function TablerLockOpen(props) {
     );
 }
 
-export default function FloatingControls({ pos, active, dock }) {
+export default function FloatingControls({ pos, active, dock, defaultDock }) {
     const { currentUser } = useUser();
-
-    const panelRef = useRef(null);
-    const offset = useRef({ x: 0, y: 0 });
-    const initialPosition = useRef(pos);
-    const dockedPosition = useRef({ top: "13px", left: "16px" });
-
     const [isDocked, setIsDocked] = useState(dock);
     const [isLocked, setIsLocked] = useState(false);
-    const [position, setPosition] = useState(initialPosition.current);
-    const [isDragging, setIsDragging] = useState(false);
     const [isMinimized, setIsMinimized] = useState(true);
+
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    useEffect(() => {
+        if (pos) {
+            x.set(pos.x);
+            y.set(pos.y);
+        }
+
+        setIsDocked(dock);
+    }, [pos, dock]);
 
     const {
         selectedEvents,
@@ -84,75 +89,57 @@ export default function FloatingControls({ pos, active, dock }) {
     };
 
     const toggleDock = () => {
-        if (!isDocked) {
-            setPosition(dockedPosition.current);
+        const { x: dockedX, y: dockedY } = defaultDock;
+
+        if (isDocked) {
+            setIsDocked(false);
+        } else {
+            x.set(dockedX);
+            y.set(dockedY);
+            setIsDocked(true);
+
+            updateFloatingPanelSettings({
+                lastPosition: { x: dockedX, y: dockedY },
+            });
         }
-        setIsDocked(!isDocked);
-    };
-
-    const handleMouseDown = (e) => {
-        if (isDocked || isLocked) return;
-        setIsDragging(true);
-        offset.current = {
-            x: e.clientX - panelRef.current.offsetLeft,
-            y: e.clientY - panelRef.current.offsetTop,
-        };
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isDragging) return;
-        setPosition({
-            top: `${e.clientY - offset.current.y}px`,
-            left: `${e.clientX - offset.current.x}px`,
-        });
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
     };
 
     const handleLock = () => {
         setIsLocked((prev) => !prev);
     };
 
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            if (currentUser?.floatingPanelSettings?.persistPosition) {
-                updateFloatingPanelSettings({ lastPosition: position });
-            }
-        };
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-
-            if (currentUser?.floatingPanelSettings?.persistPosition) {
-                updateFloatingPanelSettings({ lastPosition: position });
-            }
-        };
-    }, [position, currentUser]);
-
-    const panelStyle = {
-        "--panel-bg-color": currentUser?.floatingPanelSettings?.isTransparent
-            ? "rgba(255, 255, 255, 0.1)"
-            : "rgba(255, 255, 255, 1)",
-        "--panel-top": position.top,
-        "--panel-left": position.left,
-        "--panel-border-radius": "9px",
+    const persistPositionIfNeeded = () => {
+        if (currentUser?.floatingPanelSettings?.persistPosition) {
+            updateFloatingPanelSettings({
+                lastPosition: { x: x.get(), y: y.get() },
+            });
+        }
     };
 
+    useEffect(() => {
+        window.addEventListener("beforeunload", persistPositionIfNeeded);
+        return () =>
+            window.removeEventListener("beforeunload", persistPositionIfNeeded);
+    }, [x, y, currentUser]);
+
     return (
-        <div
-            ref={panelRef}
-            className={`${styles.panel} ${
-                isMinimized ? styles.panelMin : styles.panelMax
-            }`}
-            style={panelStyle}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
+        <motion.div
+            drag={!isDocked && !isLocked}
+            dragMomentum={false}
+            dragElastic={0.08}
+            onDragEnd={persistPositionIfNeeded}
+            style={{
+                x,
+                y,
+                "--panel-bg-color": currentUser?.floatingPanelSettings
+                    ?.isTransparent
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(255, 255, 255, 1)",
+                "--panel-border-radius": "9px",
+            }}
+            className={`${styles.panel} ${isMinimized ? styles.panelMin : styles.panelMax}`}
         >
-            <div className={styles.header} onMouseDown={handleMouseDown}>
+            <div className={styles.header}>
                 <span className={styles.title} style={{ userSelect: "none" }}>
                     Controls
                 </span>
@@ -316,6 +303,6 @@ export default function FloatingControls({ pos, active, dock }) {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </motion.div>
     );
 }

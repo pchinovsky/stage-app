@@ -1,25 +1,20 @@
 export function getPanelState(settings, isEventsPage) {
     const dockPosition = settings?.dockPosition ?? "top-left";
-    const persistPosition = settings?.persistPosition;
-    const lastPosition = settings?.lastPosition ?? {
-        top: "13px",
-        left: "16px",
+    const persist = settings?.persistPosition;
+    const last = settings?.lastPosition;
+
+    const dockStates = {
+        "top-left": { x: 0, y: 0 },
+        "top-right": { x: 1078, y: 0 },
     };
 
-    const docked =
-        !persistPosition ||
-        (lastPosition?.top === "13px" &&
-            (lastPosition?.left === "16px" || lastPosition?.left === "72.8%"));
+    const defaultDock = dockStates[dockPosition];
 
-    const pos = isEventsPage && persistPosition
-        ? {
-            top: lastPosition?.top || "13px",
-            left: lastPosition?.left || "16px",
-        }
-        : {
-            top: "13px",
-            left: dockPosition === "top-left" ? "16px" : "72.8%",
-        };
+    const isDocked = last?.x === defaultDock.x && last?.y === defaultDock.y;
+    const shouldUsePersisted = persist && last && isEventsPage && !isDocked;
 
-    return { pos, docked };
+    const pos = shouldUsePersisted ? last : defaultDock;
+    const docked = shouldUsePersisted ? false : true;
+
+    return { pos, docked, defaultDock };
 }

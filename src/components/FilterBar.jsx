@@ -227,7 +227,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
     const getTimeChipValue = (option) => option.toLowerCase();
 
-    // --- last -
     const handleChipClick = (category, option) => {
         if (category === "Time") {
             const chipId = getTimeChipValue(option);

@@ -33,7 +33,7 @@ export default function HeaderNav() {
     const isEventsPage = pathname === "/events";
 
     const { floatingPanelSettings: settings } = currentUser ?? {};
-    const { pos, docked } = getPanelState(settings, isEventsPage);
+    const { pos, docked, defaultDock } = getPanelState(settings, isEventsPage);
 
     const dockPositionClass = isAuth
         ? settings?.dockPosition === "top-left"
@@ -81,6 +81,7 @@ export default function HeaderNav() {
                     pos={pos}
                     active={isEventsPage}
                     dock={docked}
+                    defaultDock={defaultDock}
                 />
             )}
 
@@ -90,7 +91,6 @@ export default function HeaderNav() {
                     href="/events"
                     className={`bg-transparent px-4 py-2 rounded-lg ${dockPositionClass}`}
                 >
-                    {/* <p className={styles.brand}>STAGE</p> */}
                     <motion.p
                         className={styles.brand + " flex gap-1"}
                         variants={container}
