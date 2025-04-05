@@ -1,9 +1,7 @@
-// Import Firebase modules
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAJFVk-kdCGCvIEevWvws-BZ1u6YWL8BHM",
     authDomain: "stage-f9621.firebaseapp.com",
@@ -14,7 +12,6 @@ const firebaseConfig = {
     measurementId: "G-H87MW35ELC"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);

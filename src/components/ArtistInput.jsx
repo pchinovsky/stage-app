@@ -1,4 +1,3 @@
-import React from "react";
 import { Select, SelectItem } from "@heroui/react";
 
 export function ArtistInput({ artistList, selectedArtists, onChange, error }) {

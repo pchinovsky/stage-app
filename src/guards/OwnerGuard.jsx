@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Navigate, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+    useParams,
+    Navigate,
+    useNavigate,
+    useLocation,
+} from "react-router-dom";
 import { useUser } from "../hooks/useUser-new";
 import { useEvent } from "../hooks/useEvent";
-import { useLocation } from "react-router-dom";
 
 const OwnerGuard = ({ ownerId, children, mode = "route" }) => {
     const { currentUser, loading: userLoading } = useUser();
     const { eventId } = useParams();
     const { event, loading: eventLoading } = useEvent(eventId);
-    const navigate = useNavigate();
     const location = useLocation();
 
     const [checked, setChecked] = useState(false);

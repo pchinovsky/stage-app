@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Icon } from "@iconify/react";
 import { Link } from "@heroui/react";
+import { Icon } from "@iconify/react";
 
 export default function MultiAccordion({ sections }) {
     const [openIndex, setOpenIndex] = useState(null);
@@ -12,7 +12,7 @@ export default function MultiAccordion({ sections }) {
 
     return (
         <div
-            className={`w-[955px] h-[335px] border border-white shadow-md rounded-lg bg-white overflow-hidden`}
+            className={`w-[955px] h-[335px] font-primary border border-white shadow-md rounded-lg bg-transparent hover:bg-white transition-all ease-in-out duration-1000 overflow-hidden`}
         >
             {sections.map((section, index) => (
                 <div
@@ -24,7 +24,7 @@ export default function MultiAccordion({ sections }) {
                         onClick={() => toggleSection(index)}
                         className="w-full flex justify-between items-center p-3 bg-transparent transition overflow-hidden rounded-lg"
                     >
-                        <span className="text-lg font-medium text-gray-500 hover:text-gray-900 ml-2">
+                        <span className="text-lg font-bold text-gray-500 hover:text-gray-900 ml-2">
                             {section.title}
                         </span>
                         <Icon
@@ -59,7 +59,6 @@ export default function MultiAccordion({ sections }) {
                                 ))}
                             </div>
                         ) : (
-                            // <div className="py-2 text-slate-800">
                             <div className="py-2 text-gray-700 mb-5 ml-2">
                                 {section.content}
                             </div>

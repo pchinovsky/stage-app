@@ -1,6 +1,5 @@
-import React from "react";
-import { Card, Tooltip } from "@heroui/react";
 import { useContext } from "react";
+import { Card, Tooltip } from "@heroui/react";
 import { AuthContext } from "../contexts/authContext";
 
 export default function CalendarDate({ date, onPress }) {

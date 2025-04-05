@@ -1,8 +1,6 @@
-import { getDoc, updateDoc, doc } from "firebase/firestore";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
-import { POPULAR_THRESHOLD } from "../src/constants/generalConstants";
-import { db } from "../src/firebase/firebaseConfig";
 import eventsApi from "../src/api/events-api";
+import { POPULAR_THRESHOLD } from "../src/constants/generalConstants";
 
 /**
  * Calculate and return event counter total.

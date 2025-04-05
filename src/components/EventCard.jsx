@@ -1,24 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     Card,
     CardHeader,
     CardBody,
     Image,
-    Button,
     Divider,
-    Skeleton,
     Badge,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import styles from "./EventCard.module.css";
-import { useFloatingContext } from "../contexts/floatingContext";
 import { AuthContext } from "../contexts/authContext";
+import { useFloatingContext } from "../contexts/floatingContext";
+import styles from "./EventCard.module.css";
 
 export default function EventCard({ event, onPress }) {
-    const { userId } = useContext(AuthContext);
     const [interested, setInterested] = useState(false);
     const [attending, setAttending] = useState(false);
 
+    const { userId } = useContext(AuthContext);
     const { selectionMode, selectedEvents, toggleEventSelection, applied } =
         useFloatingContext();
     const isSelected = selectedEvents.includes(event.id);
@@ -36,14 +34,6 @@ export default function EventCard({ event, onPress }) {
         }
     };
 
-    const options = {
-        weekday: "short",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-    };
     const formattedDate = new Date(event.openingDate);
 
     return (
@@ -80,9 +70,7 @@ export default function EventCard({ event, onPress }) {
         >
             <Card
                 isPressable={true}
-                // className={styles.card}
                 className={`${styles.card} ${isSelected ? styles.selected : ""}`}
-                // onPress={() => onPress(event.id)}
                 onPress={handlePress}
                 classNames={{
                     header: "p-4 py-3 bg-background/60 backdrop-blur-md hover:bg-white transition-all ease-in-out duration-500",
@@ -94,11 +82,6 @@ export default function EventCard({ event, onPress }) {
                         {event?.categories.join(", ")}
                     </small>
                     <Divider className="my-4"></Divider>
-                    {/* <div className={styles.description}>
-                        {event?.description?.length > 70
-                            ? `${event.description.substring(0, 70)}...`
-                            : event?.description}
-                    </div> */}
                     <div className="mt-auto flex gap-2 items-end">
                         <span className="text-lg font-bold text-blue-600 mb-[-2px]">
                             {formattedDate.getDate()}

@@ -1,4 +1,3 @@
-import React from "react";
 import {
     Modal,
     Button,
@@ -16,7 +15,6 @@ const ErrorModal = () => {
 
     const handleClose = () => {
         clearError();
-
         navigate(location.pathname, { replace: true });
     };
 

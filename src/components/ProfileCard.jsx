@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardFooter, Image } from "@heroui/react";
 
 export default function ProfileCard({
@@ -34,7 +33,6 @@ export default function ProfileCard({
                 }}
             />
             <div
-                // className="absolute bottom-0 left-0 right-0 h-[100px] flex justify-center px-2 pb-2 z-10"
                 className={`absolute bottom-0 left-0 right-0 flex justify-center px-2 pb-2 z-10 ${
                     styles.footer ? styles.footer : "h-[100px]"
                 }`}
@@ -42,11 +40,9 @@ export default function ProfileCard({
                 {footer && (
                     <CardFooter className="bg-white bg-opacity-90 rounded-lg shadow-sm px-3 py-2 w-full">
                         <div
-                            // className="flex flex-col justify-end self-end"
                             className={`flex flex-col justify-end ${styles.pos}`}
                         >
                             <h3
-                                // className="text-lg font-bold m-0 text-left flex items-end"
                                 className={`m-0 text-left flex items-end font-bold ${styles.text || "text-lg"}`}
                             >
                                 {data.name}

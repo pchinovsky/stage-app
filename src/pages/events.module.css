@@ -43,7 +43,6 @@
     @apply absolute top-0 left-0;
     @apply transition-opacity duration-700;
     object-position: center;
-    /* position: fixed !important; */
 }
 
 .floatingControls {
@@ -129,7 +128,6 @@
 
 .tooltipCircle:hover {
     width: 220px;
-    /* max-width: 300px; */
     height: 40px;
     border-radius: 30px;
     justify-content: flex-start;
@@ -147,5 +145,4 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    /* gap: 8px; */
 }

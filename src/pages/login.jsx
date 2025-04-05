@@ -1,46 +1,31 @@
-"use client";
-
-import React, { useState, useEffect, useContext } from "react";
-import {
-    Button,
-    Input,
-    Checkbox,
-    Link,
-    Form,
-    Image,
-    Skeleton,
-    Spinner,
-} from "@heroui/react";
-import { Icon } from "@iconify/react";
-import EventInfo from "../components/EventInfo";
-import DefaultLayout from "../layouts/default";
-import useForm from "../hooks/useForm";
-import { useLogin } from "../hooks/useAuth";
-import { loginSchema } from "../api/validationSchemas";
-import styles from "./login.module.css";
-import ButtonDynamic from "../components/ButtonDynamic";
-import { useEventsStore } from "../contexts/eventsContext";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { Button, Input, Link, Form, Image, Spinner } from "@heroui/react";
 import { useLocation } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import { motion } from "framer-motion";
+import useForm from "../hooks/useForm";
 import { useError } from "../contexts/errorContext";
+import { useLogin } from "../hooks/useAuth";
+import { useEventsStore } from "../contexts/eventsContext";
+import { loginSchema } from "../api/validationSchemas";
+import DefaultLayout from "../layouts/default";
+import EventInfo from "../components/EventInfo";
 import ErrorModal from "../components/ModalError";
-import { AuthContext } from "../contexts/authContext";
+import styles from "./login.module.css";
 
 export default function Login() {
     const location = useLocation();
-    const { accessLogRef } = useContext(AuthContext);
     const { error: modalError, showError } = useError();
+    const { events, loading } = useEventsStore();
+
     const [isVisible, setIsVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
-    const { events, loading } = useEventsStore();
 
     const log = useLogin();
     const route = "/events";
 
     useEffect(() => {
         if (location.state?.error) {
-            console.log("error - ", location.state.error);
-
             if (!modalError) {
                 showError(location.state.error);
             }

@@ -11,17 +11,16 @@ import {
     DropdownMenu,
     User,
 } from "@heroui/react";
-import styles from "./HeaderNav.module.css";
-import { useContext, useState } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useContext } from "react";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
-import { useLogout } from "../hooks/useAuth";
 import { useUser } from "../hooks/useUser-new";
-import FloatingControls from "./FloatingControls";
 import { useLocation } from "react-router-dom";
 import ManagerGuard from "../guards/ManagerGuard";
+import FloatingControls from "./FloatingControls";
 import { getPanelState } from "../../utils/getPanelState";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import styles from "./HeaderNav.module.css";
 
 export default function HeaderNav() {
     const { navWhite } = useContext(NavContext);
@@ -35,34 +34,11 @@ export default function HeaderNav() {
     const { floatingPanelSettings: settings } = currentUser ?? {};
     const { pos, docked } = getPanelState(settings, isEventsPage);
 
-    // const dockPosition = settings?.dockPosition ?? "top-left";
     const dockPositionClass = isAuth
         ? settings?.dockPosition === "top-left"
             ? "ml-[225px]"
             : ""
         : "";
-
-    // const persistPosition = settings?.persistPosition;
-    // const lastPosition = settings?.lastPosition ?? {
-    //     top: "13px",
-    //     left: "16px",
-    // };
-
-    // const docked =
-    //     !persistPosition ||
-    //     (lastPosition?.top === "13px" &&
-    //         (lastPosition?.left === "16px" || lastPosition?.left === "72.8%"));
-
-    // const pos =
-    //     isEventsPage && persistPosition
-    //         ? {
-    //               top: lastPosition?.top || "13px",
-    //               left: lastPosition?.left || "16px",
-    //           }
-    //         : {
-    //               top: "13px",
-    //               left: dockPosition === "top-left" ? "16px" : "72.8%",
-    //           };
 
     return (
         <Navbar
@@ -78,12 +54,8 @@ export default function HeaderNav() {
         >
             {isAuth && (
                 <FloatingControls
-                    // pos={{ top: "13px", left: "16px" }}
-                    // pos={{ top: currentUser.floatingPanelSettings."13px",
-                    //     left: "72.8%" }}
                     pos={pos}
                     active={isEventsPage}
-                    // dock={!(persistPosition && !docked)}
                     dock={docked}
                 />
             )}
@@ -97,7 +69,8 @@ export default function HeaderNav() {
                     <p className={styles.brand}>STAGE</p>
                 </Link>
             </NavbarBrand>
-            {/* Center Navbar Items */}
+
+            {/* Center */}
             <NavbarContent className={styles.navContent} justify="center">
                 <Dropdown shouldBlockScroll={false} className="lg:flex p-0">
                     <NavbarItem>
@@ -166,9 +139,6 @@ export default function HeaderNav() {
                                 size="sm"
                                 radius="lg"
                                 className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
-                                // classNames={{
-                                //     base: "data-[hover=true]:bg-pink-100 data-[hover=true]:text-pink-600",
-                                // }}
                             >
                                 Create Event
                             </Button>
@@ -177,7 +147,7 @@ export default function HeaderNav() {
                 )}
             </NavbarContent>
 
-            {/* Right Navbar Items */}
+            {/* Right */}
             <NavbarContent justify="end">
                 {isAuth && loading ? null : isAuth ? (
                     <Dropdown
@@ -228,9 +198,6 @@ export default function HeaderNav() {
                                     size="sm"
                                     radius="lg"
                                     className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
-                                    // classNames={{
-                                    //     base: "data-[hover=true]:bg-pink-100 data-[hover=true]:text-pink-600",
-                                    // }}
                                 >
                                     Login
                                 </Button>
@@ -242,9 +209,6 @@ export default function HeaderNav() {
                                     size="sm"
                                     radius="lg"
                                     className="px-4 py-[17.5px] text-white font-bold bg-blue-600 text-[12px] hover:text-blue-300"
-                                    // classNames={{
-                                    //     base: "data-[hover=true]:bg-pink-100 data-[hover=true]:text-pink-600",
-                                    // }}
                                 >
                                     Sign Up
                                 </Button>

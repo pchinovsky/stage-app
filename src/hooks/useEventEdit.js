@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useState, useRef } from "react";
 import { db } from "../firebase/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 import useForm from "./useForm";
 import eventsApi from "../api/events-api";
-import { eventSchema } from "../api/validationSchemas";
-import { parseTime } from "@internationalized/date";
 import { useError } from "../contexts/errorContext";
-import { useRef } from "react";
+import { parseTime } from "@internationalized/date";
+import { eventSchema } from "../api/validationSchemas";
 
 export default function useEventEdit(eventId, initialValues) {
-    const { showError } = useError();
     const navigate = useNavigate();
+    const isMounted = useRef(true);
+    const { showError } = useError();
+
     const [loadingEvent, setLoadingEvent] = useState(true);
     const [defaultValues, setDefaultValues] = useState(initialValues);
-    const isMounted = useRef(true);
-
 
     const route = `/events/${eventId}`;
 

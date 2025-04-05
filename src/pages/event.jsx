@@ -1,58 +1,53 @@
-import { useState, useEffect, useMemo, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import { useEvents } from "../hooks/useEvents";
 import { useNavigate } from "react-router-dom";
-import { Button, Tooltip, Modal, Image, Card, Spinner } from "@heroui/react";
-import { Icon } from "@iconify/react";
+import { Button, Image, Spinner, Skeleton } from "@heroui/react";
 import MultiAccordion from "../components/AccordeonMulti";
 import CalendarDate from "../components/CalendarDate";
 import CalendarModal from "../components/Calendar";
 
-import styles from "./event.module.css";
-import DefaultLayout from "../layouts/default";
-import { FloatingCard } from "../components/FloatingCard";
-import TooltipProfile from "../components/TooltipProfile";
-import ModalProfileCustom from "../components/ModalProfileCustom";
-import Engaged from "../components/Engaged";
-import Toggle from "../components/Toggle";
-import Discussion from "../components/Discussion";
+import OwnerGuard from "../guards/OwnerGuard";
 import { useArtists } from "../hooks/useArtists";
 import { useVenue } from "../hooks/useVenue";
-import ArtistList from "../components/ArtistList";
-import SlidingSidebar from "../components/Sidebar";
-import StatsBox from "../components/Stats";
-import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
-import EventHead from "../components/EventHead";
 import { useUser } from "../hooks/useUser";
-import useEventDelete from "../hooks/useEventDelete";
-import ModalInvite from "../components/ModalInvite";
 import { useEvent } from "../hooks/useEvent";
-import OwnerGuard from "../guards/OwnerGuard";
-import { AuthContext } from "../contexts/authContext";
 import { useError } from "../contexts/errorContext";
+import { AuthContext } from "../contexts/authContext";
+import useEventDelete from "../hooks/useEventDelete";
+import styles from "./event.module.css";
+
+import DefaultLayout from "../layouts/default";
+import Toggle from "../components/Toggle";
+import Engaged from "../components/Engaged";
+import StatsBox from "../components/Stats";
+import EventHead from "../components/EventHead";
+import ArtistList from "../components/ArtistList";
+import Discussion from "../components/Discussion";
+import ModalInvite from "../components/ModalInvite";
+import SlidingSidebar from "../components/Sidebar";
+import ButtonDynamicGroup from "../components/ButtonDynamicGroup";
+import ModalProfileCustom from "../components/ModalProfileCustom";
 
 export default function Event() {
     const { eventId } = useParams();
-    const { isAuth } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    const { isAuth } = useContext(AuthContext);
     const { showError } = useError();
 
-    // const { events, loading, error } = useEvents({ id: eventId });
-    // const { events, loading, error } = useEventsRealtime({ id: eventId });
     const { event, loading, error } = useEvent(eventId);
-
-    // const event = events[0];
 
     const { deleteEvent, isDeleting } = useEventDelete();
 
     const [artistIds, setArtistIds] = useState(null);
     const [venueId, setVenueId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState(null);
-    const [sidebarData, setSidebarData] = useState(null);
-    const [tooltipExitDelay, setTooltipExitDelay] = useState(500);
+    const [isModalInviteOpen, setIsModalInviteOpen] = useState(false);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    const [trigger, setTrigger] = useState(0);
+    const [selectedPanel, setSelectedPanel] = useState("About");
+    const [tooltipExitDelay, setTooltipExitDelay] = useState(500);
 
     useEffect(() => {
         if (error) {
@@ -64,41 +59,10 @@ export default function Event() {
 
     useEffect(() => {
         if (!loading && event) {
-            // const event = events[0];
-            setArtistIds(event.artists || []);
             setVenueId(event.venue || null);
+            setArtistIds(event.artists || []);
         }
     }, [loading, event]);
-
-    const { artists, loading: artistsLoading } = useArtists(artistIds);
-    const { venue, loading: venueLoading } = useVenue(venueId);
-
-    useEffect(() => {
-        if (!event || artistsLoading || venueLoading) return;
-
-        setSidebarData({
-            artists: artists || [],
-            categories: event.categories || [],
-            createdBy: event.createdBy || "",
-            venue: venue || "",
-        });
-    }, [event, artists, venue, artistsLoading, venueLoading]);
-
-    console.log("artists", artists);
-    console.log("venue", venue);
-
-    // const sidebarData = {
-    //     artists: artists || [],
-    //     categories: event.categories || [],
-    //     createdBy: event.createdBy || "",
-    //     venue: venue || "",
-    // };
-
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedPanel, setSelectedPanel] = useState("About");
-    const [showModal, setShowModal] = useState(false);
-    const [isModalInviteOpen, setIsModalInviteOpen] = useState(false);
 
     const {
         currentUser,
@@ -108,22 +72,16 @@ export default function Event() {
         allUsers,
     } = useUser();
 
+    const { venue, loading: venueLoading } = useVenue(venueId);
+    const { artists, loading: artistsLoading } = useArtists(artistIds);
+
     useEffect(() => {
         if (event?.createdBy) {
-            console.log(
-                "Fetching user data for event creator:",
-                event.createdBy
-            );
-
             fetchUsersByIds([event.createdBy]);
         }
     }, [event?.createdBy]);
 
-    // const author = otherUsers[event?.createdBy] || {};
     const author = { id: event?.createdBy, ...otherUsers[event?.createdBy] };
-
-    console.log("author", otherUsers);
-    console.log("author itself", author);
 
     const handleOpenModal = (content) => {
         setTooltipExitDelay(0);
@@ -179,16 +137,6 @@ export default function Event() {
         },
     ];
 
-    // const memoizedAuthorData = useMemo(
-    //     () => ({
-    //         id: event?.createdBy,
-    //         ...otherUsers[event?.createdBy],
-    //     }),
-    //     [event?.createdBy, otherUsers]
-    // );
-
-    console.log("calendar open - ", isCalendarOpen);
-
     return (
         <DefaultLayout>
             <div
@@ -231,9 +179,6 @@ export default function Event() {
                                 onModalOpen={handleOpenModalInvite}
                             />
                         )}
-                        {/* <ButtonDynamicClick></ButtonDynamicClick>
-                        <ButtonDynamicClick></ButtonDynamicClick>
-                        <ButtonDynamicClick></ButtonDynamicClick> */}
                         <EventHead
                             event={event}
                             venue={venue}
@@ -243,7 +188,9 @@ export default function Event() {
                         />
                         {/* Artists Section */}
                         {artistsLoading ? (
-                            <p>Loading artists...</p>
+                            <div className="absolute right-[230px] top-[150px] z-[100]">
+                                <Spinner size="lg" />
+                            </div>
                         ) : (
                             <ArtistList
                                 artists={artists}
@@ -262,13 +209,38 @@ export default function Event() {
                             }}
                             attendingIds={event.attending || []}
                             interestedIds={event.interested || []}
-                            trigger={trigger}
                         />
-                        <Image
-                            src={event.image}
-                            alt={event.title}
+
+                        <motion.div
+                            initial={{ x: "-100%" }}
+                            animate={{ x: 0 }}
+                            transition={{ duration: 1 }}
                             className={styles.image}
-                        />
+                        >
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100vw",
+                                    height: "100vh",
+                                    zIndex: 0,
+                                }}
+                            >
+                                {loading ? (
+                                    <Skeleton
+                                        className={`${styles.image} h-[1080px] w-[1920px]`}
+                                    />
+                                ) : (
+                                    <Image
+                                        src={event.image}
+                                        alt={event.title}
+                                        className={styles.image}
+                                    />
+                                )}
+                            </div>
+                        </motion.div>
+
                         <StatsBox
                             stats={statsData}
                             pos={{
@@ -285,10 +257,6 @@ export default function Event() {
                             className="z-[1000]"
                             data={modalContent}
                         ></ModalProfileCustom>
-                        {/* <Discussion
-                            comments={comments}
-                            onAddComment={addComment}
-                        /> */}
                         <Toggle
                             options={["About", "Discussion"]}
                             onChange={(panel) => setSelectedPanel(panel)}
@@ -331,10 +299,16 @@ export default function Event() {
                                     transition={{ duration: 0.3 }}
                                     className="absolute top-[410px] left-[495px] z-[100]"
                                 >
-                                    <Discussion
-                                        eventId={event.id}
-                                        authorData={currentUser}
-                                    />
+                                    {userLoading ? (
+                                        <div className="flex justify-center items-center h-[250px]">
+                                            <Spinner size="lg" />
+                                        </div>
+                                    ) : (
+                                        <Discussion
+                                            eventId={event.id}
+                                            authorData={currentUser}
+                                        />
+                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>

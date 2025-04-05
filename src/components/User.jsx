@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { Avatar, AvatarIcon, Tooltip, Button, Image } from "@heroui/react";
+import { Avatar, AvatarIcon, Tooltip, Button } from "@heroui/react";
 import {
     doc,
     getDoc,
@@ -8,24 +8,19 @@ import {
     arrayRemove,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { AuthContext } from "../contexts/authContext";
 import { useError } from "../contexts/errorContext";
+import { AuthContext } from "../contexts/authContext";
 
 export default function User({ user, currentUserId }) {
     const { showError } = useError();
     const { isAuth } = useContext(AuthContext);
+
     const [isFollowing, setIsFollowing] = useState(false);
     const [imageSrc, setImageSrc] = useState(user?.image);
 
     useEffect(() => {
-        console.log("User data:", user);
         if (user) setImageSrc(user.image);
     }, [user]);
-
-    console.log("img src", imageSrc);
-    console.log("user id === current user id", user.id, currentUserId);
-
-    // console.log("user comp - user", user);
 
     // check follow status
     useEffect(() => {

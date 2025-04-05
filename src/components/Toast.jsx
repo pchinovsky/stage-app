@@ -1,13 +1,7 @@
-import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./Toast.module.css";
 
 const Toast = ({ message }) => {
-    // useEffect(() => {
-    //     const timer = setTimeout(onClose, 3000);
-    //     return () => clearTimeout(timer);
-    // }, [onClose]);
-
     return (
         <AnimatePresence>
             {message && (

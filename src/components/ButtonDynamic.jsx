@@ -57,7 +57,6 @@ export default function ButtonDynamic({
                     isIconOnly={false}
                     isDisabled={disabled}
                     className="w-full h-full flex items-center justify-center px-2 py-2 rounded-full bg-white"
-                    // className={`flex items-center bg-white text-black px-2 py-2 rounded-full overflow-hidden shadow-lg z-[1000] ${disabled ? "backdrop-blur-md bg-opacity-[5%] shadow-none text-gray-500" : ""}`}
                 >
                     <Icon
                         icon={icon}

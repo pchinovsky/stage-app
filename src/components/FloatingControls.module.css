@@ -22,9 +22,6 @@
 
 .panelMin {
     @apply w-48 h-[57px];
-    /* @apply transition-width ease-in-out duration-1000;
-    @apply transition-height ease-in-out duration-1000; */
-    /* @apply transition-all ease-in-out duration-1000; */
     transition:
         width 0.7s ease-in-out,
         height 0.7s ease-in-out,
@@ -33,9 +30,6 @@
 
 .panelMax {
     @apply w-56 h-[180px];
-    /* @apply transition-width ease-in-out duration-1000;
-    @apply transition-height ease-in-out duration-1000; */
-    /* @apply transition-all ease-in-out duration-1000; */
     transition:
         width 0.3s ease-in-out,
         height 0.3s ease-in-out,

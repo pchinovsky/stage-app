@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs, documentId } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { collection, query, where, getDocs, documentId } from "firebase/firestore";
 import { useError } from "../contexts/errorContext";
 
 export function useArtists(artistIds) {

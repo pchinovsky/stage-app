@@ -1,10 +1,9 @@
 import { useState } from "react";
-import Calendar from "react-calendar";
-import { Modal, Button } from "@heroui/react";
 import { Link } from "react-router-dom";
+import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styles from "./Calendar.module.css";
-import { useEvents } from "../hooks/useEvents";
+import { Modal, Button } from "@heroui/react";
 import { useUser } from "../hooks/useUser";
 import { useEventsStore } from "../contexts/eventsContext";
 
@@ -12,11 +11,6 @@ export default function CalendarModal({ isOpen, onClose }) {
     const [viewMode, setViewMode] = useState("mine");
     const { currentUser, loading: userLoading, error: userError } = useUser();
 
-    // const {
-    //     events,
-    //     loading: eventsLoading,
-    //     error: eventsError,
-    // } = useEvents({});
     const {
         events,
         loading: eventsLoading,
@@ -67,13 +61,6 @@ export default function CalendarModal({ isOpen, onClose }) {
     const handleDateClick = (date) => {
         console.log("Date clicked:", date.tileContent);
     };
-
-    console.log("---- CalendarModal ----");
-
-    console.log("currentUser", currentUser);
-    console.log("events", events);
-    console.log("displayedEvents", displayedEvents);
-    console.log("eventMap", eventMap);
 
     return (
         <Modal

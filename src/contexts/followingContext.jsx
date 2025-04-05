@@ -1,14 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { db } from "../firebase/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-import { AuthContext } from "./authContext";
 import { useUser } from "../hooks/useUser-new";
 
 const FollowingContext = createContext();
 
 export const FollowingProvider = ({ children }) => {
-    // const { userId } = useContext(AuthContext);
-
     const { currentUser, loading: userLoading } = useUser();
     const userId = currentUser ? currentUser.id : null;
 
@@ -40,5 +35,4 @@ export const FollowingProvider = ({ children }) => {
     );
 };
 
-// directly exporting executed context -
 export const useFollowing = () => useContext(FollowingContext);

@@ -1,12 +1,15 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser-new";
-import { Card, Spacer, Button, Link } from "@heroui/react";
+import { Card, Spacer, Button, Link, Spinner } from "@heroui/react";
 
 const ManagerGuard = ({ mode = "route", children, fallback }) => {
     const { currentUser, loading } = useUser();
 
-    if (loading) return <div>Loading...</div>;
+    if (loading)
+        return (
+            <div className="flex justify-center items-center h-full">
+                <Spinner size="sm" />
+            </div>
+        );
 
     const isManager =
         currentUser &&

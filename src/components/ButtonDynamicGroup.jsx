@@ -1,17 +1,16 @@
-import ButtonDynamic from "./ButtonDynamic";
 import { useState, useEffect, useContext } from "react";
-import styles from "./ButtonDynamicGroup.module.css";
-import eventsApi from "../api/events-api";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
-import { doc, updateDoc, increment } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig";
-import Toast from "./Toast";
+import { increment } from "firebase/firestore";
+
+import styles from "./ButtonDynamicGroup.module.css";
+import authApi from "../api/auth-api";
+import eventsApi from "../api/events-api";
+import ButtonDynamic from "./ButtonDynamic";
 import { AuthContext } from "../contexts/authContext";
 import { useFloatingContext } from "../contexts/floatingContext";
-import { calcTrending } from "../../utils/calcTrending";
-import authApi from "../api/auth-api";
 import { useError } from "../contexts/errorContext";
 import { useToast } from "../contexts/toastContext";
+import { calcTrending } from "../../utils/calcTrending";
 
 export default function ButtonDynamicGroup({
     pos,
@@ -23,20 +22,11 @@ export default function ButtonDynamicGroup({
 }) {
     const { showToast } = useToast();
     const { showError } = useError();
-    // const [toastMessage, setToastMessage] = useState("");
     const [isInterested, setIsInterested] = useState(false);
     const [isAttending, setIsAttending] = useState(false);
 
     const { userId } = useContext(AuthContext);
-    const {
-        selectedEvents,
-        selectionMode,
-        toggleSelectionMode,
-        bulkUpdate,
-        uniformAttending,
-        uniformInterested,
-        setApplied,
-    } = useFloatingContext();
+    const { selectionMode, bulkUpdate, setApplied } = useFloatingContext();
 
     useEffect(() => {
         if (event) {
@@ -77,8 +67,6 @@ export default function ButtonDynamicGroup({
                     ? "You are no longer attending this event."
                     : "You are now attending this event."
             );
-            // setTrigger((prev) => prev + 1);
-            console.log("User toggled attending status");
         } catch (error) {
             console.error("Error updating attending list:", error);
             showError(
@@ -120,7 +108,6 @@ export default function ButtonDynamicGroup({
                     ? "You are no longer interested in this event."
                     : "You are now interested in this event."
             );
-            console.log("User toggled interested status");
         } catch (error) {
             console.error("Error updating interested list:", error);
             showError(
@@ -128,10 +115,6 @@ export default function ButtonDynamicGroup({
             );
         }
     };
-
-    // const handleCloseToast = () => {
-    //     setToastMessage("");
-    // };
 
     return (
         <div
@@ -171,9 +154,6 @@ export default function ButtonDynamicGroup({
                 selectionMode={selectionMode}
                 selection={disabled?.selection}
             />
-            {/* {toastMessage && (
-                <Toast message={toastMessage} onClose={handleCloseToast} />
-            )} */}
         </div>
     );
 }

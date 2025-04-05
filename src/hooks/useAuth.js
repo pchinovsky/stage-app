@@ -1,11 +1,9 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import authApi from "../api/auth-api";
-import { AuthContext } from "../contexts/authContext";
-import { setDoc, doc } from "firebase/firestore";
+import { useContext } from "react";
 import { db } from "../firebase/firebaseConfig";
+import { setDoc, doc } from "firebase/firestore";
+import authApi from "../api/auth-api";
 import { useError } from "../contexts/errorContext";
-
+import { AuthContext } from "../contexts/authContext";
 
 export function useLogin() {
     const { showError } = useError();
@@ -16,7 +14,6 @@ export function useLogin() {
             const authData = await authApi.login(data);
             setUser(authData.user);
             setIsAuth(true);
-            // justLogRef.current = true;
         } catch (err) {
             const errMsg = err.message || "Error detected. Please try again.";
             showError(errMsg);
@@ -36,9 +33,6 @@ export function useRegister() {
 
             await new Promise((res) => setTimeout(res, 100));
 
-            console.log("useRegister - about to set justRegRef to true");
-
-            // justRegRef.current = true;
             setUser(authData.user);
             setIsAuth(true);
 

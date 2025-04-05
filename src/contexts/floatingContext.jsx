@@ -1,20 +1,19 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import eventsApi from "../api/events-api";
+import { createContext, useContext, useState, useEffect } from "react";
 import { db } from "../firebase/firebaseConfig";
 import {
     doc,
     arrayUnion,
     arrayRemove,
     getDoc,
-    updateDoc,
     increment,
 } from "firebase/firestore";
-import { AuthContext } from "./authContext";
-import { calcTrending } from "../../utils/calcTrending";
-import { useEventsStore } from "./eventsContext";
 import authApi from "../api/auth-api";
+import eventsApi from "../api/events-api";
 import { useError } from "./errorContext";
+import { AuthContext } from "./authContext";
+import { useEventsStore } from "./eventsContext";
 import { useUser } from "../hooks/useUser-new";
+import { calcTrending } from "../../utils/calcTrending";
 
 const FloatingContext = createContext();
 
@@ -22,6 +21,7 @@ export const useFloatingContext = () => useContext(FloatingContext);
 
 export const FloatingProvider = ({ children }) => {
     const { showError } = useError();
+
     const [selectedEvents, setSelectedEvents] = useState([]);
     const [selectionMode, setSelectionMode] = useState(false);
     const [uniformInterested, setUniformInterested] = useState(null);
@@ -167,61 +167,6 @@ export const FloatingProvider = ({ children }) => {
         }
     };
 
-    // - 1
-    // const updateFloatingPanelSettings = async (newSettings) => {
-    //     if (!userId) return;
-
-    //     try {
-    //         await authApi.updateUser(userId, {
-    //             floatingPanelSettings: newSettings,
-    //         });
-    //     } catch (error) {
-    //         console.error("Error updating floating panel settings:", error);
-    //         throw error;
-    //     }
-    // };
-
-    // - 2
-    // const updateFloatingPanelSettings = async (newSettings) => {
-    //     if (!userId || !currentUser?.floatingPanelSettings) return;
-
-    //     const updatedSettings = {
-    //         ...currentUser.floatingPanelSettings,
-    //         ...newSettings,
-    //     };
-
-    //     try {
-    //         await authApi.updateUser(userId, {
-    //             floatingPanelSettings: updatedSettings,
-    //         });
-    //     } catch (error) {
-    //         console.error("Error updating floating panel settings:", error);
-    //         throw error;
-    //     }
-    // };
-
-    // - 3
-    // const updateFloatingPanelSettings = async (newSettings) => {
-    //     if (!userId || !currentUser?.floatingPanelSettings) return;
-
-    //     const updatedSettings = {
-    //         ...currentUser.floatingPanelSettings,
-    //         ...newSettings, // Overwrite with new settings
-    //     };
-
-    //     try {
-    //         setFloatingPanelSettings(updatedSettings);
-
-    //         await authApi.updateUser(userId, {
-    //             floatingPanelSettings: updatedSettings,
-    //         });
-    //     } catch (error) {
-    //         console.error("Error updating floating panel settings:", error);
-    //         throw error;
-    //     }
-    // };
-
-    // - 4
     const isEqual = (obj1, obj2) =>
         JSON.stringify(obj1) === JSON.stringify(obj2);
 

@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { Skeleton } from "@heroui/react";
 import { useArtists } from "../hooks/useArtists";
 import ProfileCard from "../components/ProfileCard";
 import DefaultLayout from "../layouts/default";
 import ModalProfileCustom from "../components/ModalProfileCustom";
-import { Skeleton } from "@heroui/react";
 
 export default function ArtistsPage() {
     const { artists, loading } = useArtists();
+
     const [selectedArtist, setSelectedArtist] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -19,10 +20,6 @@ export default function ArtistsPage() {
         setModalOpen(false);
         setSelectedArtist(null);
     };
-
-    // if (loading) {
-    //     return <div className="p-4">Loading artists…</div>;
-    // }
 
     return (
         <DefaultLayout>
@@ -64,18 +61,6 @@ export default function ArtistsPage() {
                                   footer={true}
                               />
                           ))}
-                    {/* {artists.map((artist) => (
-                        <ProfileCard
-                            key={artist.id}
-                            data={artist}
-                            onClick={() => handleCardClick(artist)}
-                            size={{
-                                width: "480px",
-                                height: "288px",
-                            }}
-                            footer={true}
-                        />
-                    ))} */}
                 </div>
                 <ModalProfileCustom
                     isOpen={isModalOpen}

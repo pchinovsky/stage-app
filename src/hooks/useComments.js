@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import useForm from "./useForm";
 import commentsApi from "../api/comments-api";
+import useForm from "./useForm";
 import { useError } from "../contexts/errorContext";
 
 const initialValues = {
@@ -12,10 +12,11 @@ const initialValues = {
 };
 
 export default function useComments(eventId, authorData) {
+    const isMounted = useRef(true);
     const { showError } = useError();
+
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const isMounted = useRef(true);
 
     useEffect(() => {
         return () => {

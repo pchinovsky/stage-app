@@ -11,7 +11,6 @@ export function ImageUploadInput({
     setPreviewImage,
     error,
 }) {
-    // const [previewUrl, setPreviewUrl] = useState("");
     const [uploading, setUploading] = useState(false);
 
     const handleFileChange = async (e) => {

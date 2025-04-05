@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { getFiltersKey } from "../../utils/getFiltersKey";
 import { useError } from "../contexts/errorContext";
 
@@ -8,7 +8,6 @@ export function useEventsRelated(event) {
     const { showError } = useError();
     const [relatedEvents, setRelatedEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(null);
     const isMounted = useRef(true);
 
     const filters = useMemo(() => {
@@ -30,7 +29,6 @@ export function useEventsRelated(event) {
         const fetchRelatedEvents = async () => {
             try {
                 setLoading(true);
-                // setError(null);
                 const eventsRef = collection(db, "events");
 
                 let eventResults = new Set();

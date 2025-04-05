@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect, useRef } from "react";
 import {
     Form,
     Input,
@@ -6,7 +6,6 @@ import {
     Button,
     Select,
     SelectItem,
-    Switch,
     DatePicker,
     TimeInput,
     Spinner,
@@ -16,35 +15,20 @@ import {
 } from "@heroui/react";
 import { Time } from "@internationalized/date";
 import { parseDate } from "@internationalized/date";
-import { useState, useEffect, useRef } from "react";
-import { Icon } from "@iconify/react";
-import { getLocalTimeZone } from "@internationalized/date";
-import { useDateFormatter } from "@react-aria/i18n";
-import { ArtistInput } from "../components/ArtistInput";
-import DefaultLayout from "../layouts/default";
-import { FormLinks } from "../components/FormLinks";
-import { ImageUrlInput } from "../components/Image";
-import { useArtists } from "../hooks/useArtists";
-import TooltipProfile from "../components/TooltipProfile";
+import { serverTimestamp } from "firebase/firestore";
+import useForm from "../hooks/useForm";
 import { useUser } from "../hooks/useUser";
 import { useVenue } from "../hooks/useVenue";
-import useForm from "../hooks/useForm";
+import { useArtists } from "../hooks/useArtists";
+import { useEventCreate } from "../hooks/useEventCreate";
 import { eventSchema } from "../api/validationSchemas";
-import eventsApi from "../api/events-api";
-import DurationInput from "../components/DurationInput";
+import { FormLinks } from "../components/FormLinks";
+import { ArtistInput } from "../components/ArtistInput";
+import { ImageUploadInput } from "../components/ImageUploadInput";
+import DefaultLayout from "../layouts/default";
+import TooltipProfile from "../components/TooltipProfile";
 import ModalArtistAdd from "../components/ModalArtistAdd";
 import { categories } from "../constants/generalConstants";
-import {
-    doc,
-    updateDoc,
-    setDoc,
-    arrayUnion,
-    serverTimestamp,
-} from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig";
-import { useError } from "../contexts/errorContext";
-import { useEventCreate } from "../hooks/useEventCreate";
-import { ImageUploadInput } from "../components/Image2";
 
 export default function CreatePage() {
     const createEvent = useEventCreate();
@@ -108,11 +92,8 @@ export default function CreatePage() {
 
     const { venue, loading: venueLoading } = useVenue(venueId);
 
-    console.log("current user", currentUser);
-
     useEffect(() => {
         if (venue) {
-            console.log("Updating formValues with venue:", venue.id);
             setFormValues((prevValues) => ({
                 ...prevValues,
                 venue: venue.id,
@@ -122,7 +103,6 @@ export default function CreatePage() {
 
     useEffect(() => {
         if (currentUser) {
-            console.log("Updating formValues with user:", currentUser.id);
             setFormValues((prevValues) => ({
                 ...prevValues,
                 createdBy: currentUser.id,
@@ -130,15 +110,6 @@ export default function CreatePage() {
             }));
         }
     }, [currentUser]);
-
-    // const backgroundStyle = formValues.image
-    //     ? {
-    //           backgroundImage: `url(${formValues.image})`,
-    //           backgroundSize: "cover",
-    //           backgroundPosition: "center",
-    //           color: "white",
-    //       }
-    //     : {};
 
     const backgroundStyle =
         previewImage || formValues.image
@@ -185,8 +156,6 @@ export default function CreatePage() {
     };
 
     const handleTimeChange = (value) => {
-        console.log("Time change received:", value);
-
         if (
             value &&
             typeof value === "object" &&
@@ -197,8 +166,6 @@ export default function CreatePage() {
             const minutes = value.minute.toString().padStart(2, "0");
 
             const timeString = `${hours}:${minutes}`;
-
-            console.log("Formatted time string:", timeString);
 
             handleInputChangeExpanded(null, "startTime", timeString);
         } else {
@@ -207,8 +174,6 @@ export default function CreatePage() {
     };
 
     const handleEndTimeChange = (value) => {
-        console.log("End Time change received:", value);
-
         if (
             value &&
             typeof value === "object" &&
@@ -219,8 +184,6 @@ export default function CreatePage() {
             const minutes = value.minute.toString().padStart(2, "0");
 
             const timeString = `${hours}:${minutes}`;
-
-            console.log("Formatted end time string:", timeString);
 
             handleInputChangeExpanded(null, "endTime", timeString);
         } else {
@@ -239,20 +202,10 @@ export default function CreatePage() {
         setArtists((prev) => [...prev, newArtist]);
     };
 
-    // if (userLoading) {
-    //     return <div>Loading user data...</div>;
-    // }
-
     return (
         <DefaultLayout>
             <div
                 className="min-h-screen w-full transition-all duration-700 ease-in-out pt-10"
-                // style={{
-                //     backgroundImage: `url(${formValues?.image})`,
-                //     backgroundSize: "cover",
-                //     backgroundPosition: "center",
-                //     color: "white",
-                // }}
                 style={backgroundStyle}
             >
                 <div className="container mx-auto py-8 px-4">
@@ -362,12 +315,6 @@ export default function CreatePage() {
                                     label="Category"
                                     placeholder="Select event categories"
                                     selectedKeys={formValues.categories || []}
-                                    // onSelectionChange={(keys) =>
-                                    //     setFormValues((prev) => ({
-                                    //         ...prev,
-                                    //         categories: Array.from(keys),
-                                    //     }))
-                                    // }
                                     onSelectionChange={(keys) =>
                                         handleInputChangeExpanded(
                                             null,
@@ -427,7 +374,6 @@ export default function CreatePage() {
                                         <Chip
                                             key={link}
                                             onClose={() => removeLink(link)}
-                                            // className="max-w-xs overflow-hidden text-ellipsis whitespace-nowrap bg-white"
                                             className={
                                                 formValues.image
                                                     ? "bg-white py-4 px-2"

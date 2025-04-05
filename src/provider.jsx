@@ -1,13 +1,13 @@
-import { HeroUIProvider } from "@heroui/system";
 import { useHref, useNavigate } from "react-router-dom";
 import { NavProvider } from "./contexts/navContext.jsx";
 import { AuthProvider } from "./contexts/authContext.jsx";
-import { FollowingProvider } from "./contexts/followingContext.jsx";
-import { FloatingProvider } from "./contexts/floatingContext.jsx";
-import { EventsProvider } from "./contexts/eventsContext.jsx";
 import { UsersProvider } from "./contexts/usersContext.jsx";
 import { ErrorProvider } from "./contexts/errorContext.jsx";
 import { ToastProvider } from "./contexts/toastContext.jsx";
+import { HeroUIProvider } from "@heroui/system";
+import { EventsProvider } from "./contexts/eventsContext.jsx";
+import { FloatingProvider } from "./contexts/floatingContext.jsx";
+import { FollowingProvider } from "./contexts/followingContext.jsx";
 
 export function Provider({ children }) {
     const navigate = useNavigate();

@@ -5,14 +5,12 @@ import { AuthContext } from "../contexts/authContext";
 
 export function useUser() {
     const { userId, user } = useContext(AuthContext);
+
     const [currentUserData, setCurrentUserData] = useState(null);
     const [otherUsersData, setOtherUsersData] = useState({});
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // console.log('useUser', userId, currentUserData);
-
 
     useEffect(() => {
         if (!user) return;
@@ -51,28 +49,6 @@ export function useUser() {
         })();
     }, []);
 
-    // const fetchUsersByIds = async (userIds) => {
-    //     if (!userIds || userIds.length === 0) return;
-    //     // console.log('--- fetchUsersByIds userIds', userIds);
-
-
-    //     try {
-    //         const usersCollection = collection(db, "users");
-    //         const userDocs = await getDocs(usersCollection);
-
-    //         const users = {};
-    //         userDocs.forEach((doc) => {
-    //             if (userIds.includes(doc.id)) {
-    //                 users[doc.id] = doc.data();
-    //             }
-    //         });
-
-    //         setOtherUsersData((prev) => ({ ...prev, ...users }));
-    //     } catch (err) {
-    //         console.error("Error fetching users -", err);
-    //     }
-    // };
-
     const fetchUsersByIds = (userIds) => {
         if (!userIds || userIds.length === 0) return;
         const uniqueUserIds = [...new Set(userIds)];
@@ -94,7 +70,6 @@ export function useUser() {
         );
         return unsubscribe;
     };
-
 
     return {
         currentUser: currentUserData,

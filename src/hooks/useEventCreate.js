@@ -1,4 +1,3 @@
-// hooks/useCreateEvent.js
 import { useUser } from "./useUser-new";
 import { setDoc, doc, arrayUnion } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";

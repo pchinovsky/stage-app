@@ -1,11 +1,8 @@
-import { useContext, useState, useMemo } from "react";
 import React from "react";
-import { Button, Tooltip, Avatar, Form, Input } from "@heroui/react";
-import { Icon } from "@iconify/react";
-import useComments from "../hooks/useComments";
-import { AuthContext } from "../contexts/authContext";
-import OwnerGuard from "../guards/OwnerGuard";
+import { Button, Tooltip, Avatar } from "@heroui/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Icon } from "@iconify/react";
+import OwnerGuard from "../guards/OwnerGuard";
 
 const CommentList = React.memo(({ comments, handleRemoveComment }) => {
     return (

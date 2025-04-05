@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button, Switch, Tooltip } from "@heroui/react";
-import styles from "./FloatingControls.module.css";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence, motion } from "framer-motion";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useUser } from "../hooks/useUser-new";
 import { useFloatingContext } from "../contexts/floatingContext";
 import ButtonDynamicGroup from "./ButtonDynamicGroup";
-import { useUser } from "../hooks/useUser-new";
+import styles from "./FloatingControls.module.css";
 
 export function TablerLock(props) {
     return (
@@ -54,12 +54,15 @@ export function TablerLockOpen(props) {
 }
 
 export default function FloatingControls({ pos, active, dock }) {
-    const { currentUser, loading } = useUser();
-    const [isDocked, setIsDocked] = useState(dock);
-    const [isLocked, setIsLocked] = useState(false);
+    const { currentUser } = useUser();
+
     const panelRef = useRef(null);
+    const offset = useRef({ x: 0, y: 0 });
     const initialPosition = useRef(pos);
     const dockedPosition = useRef({ top: "13px", left: "16px" });
+
+    const [isDocked, setIsDocked] = useState(dock);
+    const [isLocked, setIsLocked] = useState(false);
     const [position, setPosition] = useState(initialPosition.current);
     const [isDragging, setIsDragging] = useState(false);
     const [isMinimized, setIsMinimized] = useState(true);
@@ -73,21 +76,6 @@ export default function FloatingControls({ pos, active, dock }) {
         clearSelection,
         updateFloatingPanelSettings,
     } = useFloatingContext();
-
-    // useEffect(() => {
-    //     console.log("--- mode - ", selectionMode);
-    // }, [selectionMode]);
-
-    // useEffect(() => {
-    //     console.log("- - panel - ", selectedEvents);
-    // }, [selectedEvents]);
-
-    // useEffect(() => {
-    //     console.log("- - unif A - ", uniformAttending);
-    //     console.log("- - unif I - ", uniformInterested);
-    // }, [uniformAttending, uniformInterested]);
-
-    const offset = useRef({ x: 0, y: 0 });
 
     const disabled = {
         interested: !selectionMode || !uniformInterested,
@@ -145,20 +133,6 @@ export default function FloatingControls({ pos, active, dock }) {
         };
     }, [position, currentUser]);
 
-    // const getPanelStyle = (settings) => ({
-    //     backgroundColor: settings.isTransparent
-    //         ? "rgba(255, 255, 255, 0.1)"
-    //         : "rgba(255, 255, 255, 1)",
-    //     backdropFilter: settings.isTransparent ? "blur(10px)" : "none",
-    //     borderRadius: "9px",
-    //     border: "2px solid rgba(209 213 219, 1)",
-    // });
-
-    // const panelStyle = useMemo(() => {
-    //     if (!currentUser?.floatingPanelSettings) return {};
-    //     return getPanelStyle(currentUser.floatingPanelSettings);
-    // }, [currentUser?.floatingPanelSettings]);
-
     const panelStyle = {
         "--panel-bg-color": currentUser?.floatingPanelSettings?.isTransparent
             ? "rgba(255, 255, 255, 0.1)"
@@ -174,15 +148,6 @@ export default function FloatingControls({ pos, active, dock }) {
             className={`${styles.panel} ${
                 isMinimized ? styles.panelMin : styles.panelMax
             }`}
-            // style={{
-            //     ...panelStyle,
-            //     // opacity: currentUser.floatingPanelSettings.isTransparent
-            //     //     ? 0.2
-            //     //     : 1,
-            //     cursor: isDocked ? "grab" : "default",
-            //     top: position.top,
-            //     left: position.left,
-            // }}
             style={panelStyle}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
@@ -283,32 +248,6 @@ export default function FloatingControls({ pos, active, dock }) {
                             />
                         </div>
 
-                        {/* {selectionMode && (
-                            <div className={styles.actions}>
-                                <div className={styles.selectedCount}>
-                                    {selectedEvents.length} event(s) selected
-                                </div>
-
-                                <Button
-                                    onPress={() =>
-                                        bulkUpdate("interested")
-                                    }
-                                    disabled={!selectedEvents.length}
-                                >
-                                    Interested
-                                </Button>
-                                <Button
-                                    onPress={() => bulkUpdate("attending")}
-                                    disabled={!selectedEvents.length}
-                                >
-                                    Attend
-                                </Button>
-                                <Button onPress={clearSelection}>
-                                    Clear Selection
-                                </Button>
-                            </div>
-                        )} */}
-
                         <div className="relative flex gap-1">
                             <ButtonDynamicGroup
                                 pos={{
@@ -356,8 +295,6 @@ export default function FloatingControls({ pos, active, dock }) {
                                     isDisabled={!selectionMode}
                                     disableRipple={!selectionMode}
                                     className={styles.clearButton}
-                                    // style={{ left: "173px" }}
-                                    // style={{ left: "128px" }}
                                     style={{
                                         left: currentUser.floatingPanelSettings
                                             .isLocked

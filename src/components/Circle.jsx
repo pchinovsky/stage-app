@@ -1,13 +1,13 @@
-import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import styles from "../pages/events.module.css";
 
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const TooltipCircle = ({ title = "Event Title" }) => {
+    const contentRef = useRef(null);
+
     const [width, setWidth] = useState(40);
     const [expandedWidth, setExpandedWidth] = useState(0);
-    const contentRef = useRef(null);
 
     useEffect(() => {
         if (contentRef.current) {

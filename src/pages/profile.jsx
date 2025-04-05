@@ -1,59 +1,43 @@
-import { title } from "@/components/primitives";
-import DefaultLayout from "@/layouts/default";
-import TabbedCard from "../components/TabCard";
-import styles from "./profile.module.css";
+import { useState, useEffect } from "react";
 import {
     Button,
     User,
     Card,
     CardBody,
-    CardHeader,
     Form,
     Input,
     Avatar,
-    Calendar,
     Switch,
-    Tooltip,
     Select,
     SelectItem,
     Spinner,
     Link,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import CalendarModal from "../components/Calendar";
-import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../contexts/authContext";
-import { useVenue } from "../hooks/useVenue";
-import { useEvents } from "../hooks/useEvents";
-import { useUser } from "../hooks/useUser";
-import ProfileCard from "../components/ProfileCard";
-import ModalProfileCustom from "../components/ModalProfileCustom";
-import InvitationCard from "../components/InvitationCard";
-import { useLogout } from "../hooks/useAuth";
-import { useFollowing } from "../contexts/followingContext";
 import useForm from "../hooks/useForm";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig";
-import { userSchema } from "../api/validationSchemas";
 import authApi from "../api/auth-api";
+
+import { useUser } from "../hooks/useUser";
 import { useError } from "../contexts/errorContext";
+import { useVenue } from "../hooks/useVenue";
+import { useLogout } from "../hooks/useAuth";
+import { userSchema } from "../api/validationSchemas";
 import { useFloatingContext } from "../contexts/floatingContext";
+
+import DefaultLayout from "@/layouts/default";
+import ProfileCard from "../components/ProfileCard";
+import CalendarModal from "../components/Calendar";
+import InvitationCard from "../components/InvitationCard";
+import ModalProfileCustom from "../components/ModalProfileCustom";
 
 export default function Profile() {
     const { showError } = useError();
-    const {
-        updateFloatingPanelSettings,
-        floatingPanelSettings,
-        setFloatingPanelSettings,
-    } = useFloatingContext();
 
     const { currentUser: user, setCurrentUser, loading } = useUser();
 
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
     const [switchLoading, setSwitchLoading] = useState(false);
-
-    const logout = useLogout();
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     const handleToggleSetting = async (key, value) => {
         if (!user?.id) return;
@@ -82,11 +66,7 @@ export default function Profile() {
         }
     };
 
-    const {
-        venue,
-        loading: venueLoading,
-        error: venueError,
-    } = useVenue(user?.managedVenue);
+    const { venue, loading: venueLoading } = useVenue(user?.managedVenue);
 
     const initialValues = {
         name: user?.name || "",
@@ -96,19 +76,11 @@ export default function Profile() {
 
     const updateUser = async (values) => {
         try {
-            // const userRef = doc(db, "users", user.id);
-            // await updateDoc(userRef, {
-            //     name: values.name,
-            //     email: values.email,
-            //     image: values.image,
-            // });
             await authApi.updateUser(user.id, {
                 name: values.name,
                 email: values.email,
                 image: values.image,
             });
-
-            console.log("User updated:", values);
             setCurrentUser({
                 ...user,
                 name: values.name,
@@ -133,7 +105,6 @@ export default function Profile() {
         handleSubmit,
         isSubmitting,
         resetForm,
-        error,
     } = useForm(initialValues, updateUser, null, userSchema);
 
     useEffect(() => {
@@ -151,8 +122,6 @@ export default function Profile() {
             }
         }
     }, [user]);
-
-    if (!loading) console.log("--- profile user - ", formValues.name);
 
     let stats;
     if (!loading && user) {
@@ -175,10 +144,6 @@ export default function Profile() {
     const closeModal = () => {
         setModalOpen(false);
     };
-
-    // if (loading || !user) {
-    //     return <div>Loading user data...</div>;
-    // }
 
     return (
         <DefaultLayout>
@@ -219,13 +184,6 @@ export default function Profile() {
                                 onClose={() => setIsCalendarOpen(false)}
                             />
                             <div className="mt-6 flex justify-end gap-2 w-full items-end">
-                                {/* <Button
-                                color="danger"
-                                variant="bordered"
-                                onPress={logout}
-                            >
-                                Log Out
-                            </Button> */}
                                 <Button
                                     color="danger"
                                     variant="bordered"
@@ -292,7 +250,6 @@ export default function Profile() {
                                             id="name"
                                             name="name"
                                             label="Username"
-                                            // key={formValues?.name}
                                             labelPlacement="outside"
                                             value={formValues?.name}
                                             onChange={handleInputChange}

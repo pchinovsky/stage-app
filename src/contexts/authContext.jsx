@@ -11,8 +11,6 @@ export function AuthProvider({ children }) {
     const [isAuth, setIsAuth] = useState(false);
     const [authLoading, setAuthLoading] = useState(true);
 
-    // const justLogRef = useRef(false);
-    // const justRegRef = useRef(false);
     const accessRegRef = useRef(false);
     const accessLogRef = useRef(false);
 
@@ -45,8 +43,6 @@ export function AuthProvider({ children }) {
         setIsAuth,
         getToken,
         authLoading,
-        // justLogRef,
-        // justRegRef,
         accessRegRef,
         accessLogRef,
     };

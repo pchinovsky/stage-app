@@ -4,10 +4,11 @@ import eventsApi from "../api/events-api";
 import { useError } from "../contexts/errorContext";
 
 const useEventDelete = () => {
-    const { showError } = useError();
-    const [isDeleting, setIsDeleting] = useState(false);
     const navigate = useNavigate();
     const isMounted = useRef(true);
+    const { showError } = useError();
+
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         return () => {

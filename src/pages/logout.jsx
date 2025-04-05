@@ -12,8 +12,6 @@ export default function LogoutPage() {
         (async () => {
             await logout();
 
-            // justLogRef.current = false;
-            // justRegRef.current = false;
             accessLogRef.current = false;
             accessRegRef.current = false;
 

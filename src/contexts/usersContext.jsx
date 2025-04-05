@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { AuthContext } from "./authContext";
 import { useError } from "./errorContext";
+import { AuthContext } from "./authContext";
 
 const UsersContext = createContext();
 
@@ -15,13 +15,9 @@ export const UsersProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        console.log("--- user 1st - userId", userId);
-
         if (authLoading) return;
 
-        // if (!userId) return;
         if (!userId) {
-            console.log("--- user 2nd - userId", userId);
             setCurrentUserData(null);
             setLoading(false);
             return;
@@ -61,7 +57,7 @@ export const UsersProvider = ({ children }) => {
             },
             (err) => {
                 console.error("Error fetching all users:", err);
-                showError(`Failed to load users list: ${err.message}`); // ✅
+                showError(`Failed to load users list: ${err.message}`);
 
                 setError(err);
             }

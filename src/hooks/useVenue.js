@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 import { useError } from "../contexts/errorContext";
 
 export function useVenue(venueId) {

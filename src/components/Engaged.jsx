@@ -1,17 +1,15 @@
 import { useContext, useState, useEffect } from "react";
-import { Card, Avatar, AvatarGroup, Button, Spinner } from "@heroui/react";
+import { Avatar, AvatarGroup, Button, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import User from "./User";
 import { AuthContext } from "../contexts/authContext";
 import { useUser } from "../hooks/useUser";
-// import "./Engaged.module.css";
+import User from "./User";
 import styles from "./Engaged.module.css";
 
 export default function Engaged({
     author,
     attendingIds = [],
     interestedIds = [],
-    trigger,
 }) {
     const [expanded, setExpanded] = useState(false);
     const { userId } = useContext(AuthContext);
@@ -23,7 +21,7 @@ export default function Engaged({
             const unsubscribe = fetchUsersByIds(userIds);
             return () => unsubscribe && unsubscribe();
         }
-    }, [attendingIds, interestedIds, trigger]);
+    }, [attendingIds, interestedIds]);
 
     const attendingUsers = attendingIds.map((id) => otherUsers[id]);
     const interestedUsers = interestedIds.map((id) => otherUsers[id]);
@@ -31,8 +29,8 @@ export default function Engaged({
     return (
         <div
             className={`absolute left-[1100px] top-[330px] w-[350px] z-[1000] overflow-hidden flex
-    ${expanded ? styles.cardMax : styles.cardMin} 
-    bg-white text-black shadow-md rounded-lg border border-gray-200`}
+                ${expanded ? styles.cardMax : styles.cardMin} 
+             bg-white text-black shadow-md rounded-lg border border-gray-200`}
             style={{ borderRadius: expanded ? "30px" : "40px" }}
         >
             <div

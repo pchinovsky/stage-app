@@ -1,38 +1,29 @@
-import { useState, useEffect, useRef, useContext, useMemo } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
-import DefaultLayout from "@/layouts/default";
-import { Image, Tooltip, Spinner, Skeleton } from "@heroui/react";
-import FloatingControls from "../components/FloatingControls";
-import EventCard from "../components/EventCard";
+import { useState, useEffect, useRef, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import { NavContext } from "../contexts/navContext";
+import { useError } from "../contexts/errorContext";
+import DefaultLayout from "@/layouts/default";
 import FilterBar from "../components/FilterBar";
-import styles from "./events.module.css";
-import TabbedCard from "../components/TabCard";
-import { useEvents } from "@/hooks/useEvents";
-import { useNavigate } from "react-router-dom";
-import HeroSection from "../components/HeroSection";
-import useRestoreScroll from "../hooks/useRestoreScroll";
 import EventList from "../components/EventList";
 import ErrorModal from "../components/ModalError";
-import { useError } from "../contexts/errorContext";
-import { useLocation } from "react-router-dom";
-import { getSplitFilters } from "../../utils/getSplitFilters";
+import HeroSection from "../components/HeroSection";
+import styles from "./events.module.css";
 
 export default function EventLayout() {
-    const { setNavWhite } = useContext(NavContext);
-    const { error: modalError, showError } = useError();
     const location = useLocation();
 
-    const [searchFixed, setSearchFixed] = useState(false);
     const searchBarRef = useRef(null);
     const placeholderRef = useRef(null);
+
+    const { setNavWhite } = useContext(NavContext);
+    const { error: modalError, showError } = useError();
+
+    const [searchFixed, setSearchFixed] = useState(false);
 
     const [filters, setFilters] = useState({});
 
     useEffect(() => {
         if (location.state?.error) {
-            console.log("error - ", location.state.error);
-
             if (!modalError) {
                 showError(location.state.error);
             }

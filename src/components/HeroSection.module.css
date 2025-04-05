@@ -11,7 +11,6 @@
     @apply absolute top-0 left-0;
     @apply transition-opacity duration-700;
     object-position: center;
-    /* position: fixed !important; */
 }
 
 .tooltipCircle {

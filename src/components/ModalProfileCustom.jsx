@@ -1,14 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Card,
-    Button,
-    Image,
-    CardBody,
-    CardHeader,
-    CardFooter,
-} from "@heroui/react";
-import {
     doc,
     getDoc,
     updateDoc,
@@ -16,13 +8,22 @@ import {
     arrayRemove,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { AuthContext } from "../contexts/authContext";
-import { Link } from "@heroui/react";
+import {
+    Card,
+    Button,
+    Image,
+    Link,
+    CardBody,
+    CardHeader,
+    CardFooter,
+} from "@heroui/react";
 import { useError } from "../contexts/errorContext";
+import { AuthContext } from "../contexts/authContext";
 
 export default function ModalProfileCustom({ isOpen, onClose, data }) {
     const { showError } = useError();
     const { isAuth, userId } = useContext(AuthContext);
+
     const [isFollowing, setIsFollowing] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -197,22 +198,6 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                                                     ]
                                                 }
                                             />
-                                            {/* <div className="absolute inset-0 flex justify-between items-center">
-                                                <Button
-                                                    isIconOnly
-                                                    onClick={prevImage}
-                                                    className="bg-black/30 text-white"
-                                                >
-                                                    &lt;
-                                                </Button>
-                                                <Button
-                                                    isIconOnly
-                                                    onClick={nextImage}
-                                                    className="bg-black/30 text-white"
-                                                >
-                                                    &gt;
-                                                </Button>
-                                            </div> */}
                                             <div className="flex flex-col justify-start gap-1">
                                                 {data.additionalImages.map(
                                                     (_, index) => (

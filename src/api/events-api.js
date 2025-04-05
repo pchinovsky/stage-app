@@ -2,8 +2,6 @@ import { db } from "../firebase/firebaseConfig";
 import { collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 
 const createEvent = async (eventData) => {
-    console.log("--- createEvent - eventData", eventData);
-
     try {
         const eventsCollection = collection(db, "events");
         const docRef = await addDoc(eventsCollection, eventData);
@@ -15,8 +13,6 @@ const createEvent = async (eventData) => {
 };
 
 const createArtist = async (artistData) => {
-    console.log("--- createArtist - artistData", artistData);
-
     try {
         const artistsCollection = collection(db, "artists");
         const docRef = await addDoc(artistsCollection, artistData);
@@ -53,16 +49,6 @@ const getEventById = async (eventId) => {
 
 const updateEvent = async (eventId, updatedEvent) => {
     const formattedEvent = { ...updatedEvent };
-
-    // const formattedEvent = {
-    //     ...updatedEvent,
-    //     startTime: updatedEvent.startTime && typeof updatedEvent.startTime === 'object'
-    //         ? updatedEvent.startTime.toString()
-    //         : updatedEvent.startTime,
-    //     endTime: updatedEvent.endTime && typeof updatedEvent.endTime === 'object'
-    //         ? updatedEvent.endTime.toString()
-    //         : updatedEvent.endTime,
-    // };
 
     if ('startTime' in updatedEvent) {
         formattedEvent.startTime = updatedEvent.startTime && typeof updatedEvent.startTime === 'object'

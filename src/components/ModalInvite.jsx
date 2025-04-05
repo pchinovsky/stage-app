@@ -1,3 +1,4 @@
+import { useState, useMemo, useEffect } from "react";
 import "./ModalInvite.module.css";
 import {
     Modal,
@@ -12,7 +13,6 @@ import {
     Input,
     Avatar,
 } from "@heroui/react";
-import { useState, useMemo, useEffect } from "react";
 import {
     arrayUnion,
     writeBatch,
@@ -21,8 +21,8 @@ import {
     increment,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { calcTrending } from "../../utils/calcTrending";
 import { useError } from "../contexts/errorContext";
+import { calcTrending } from "../../utils/calcTrending";
 
 export default function ModalInvite({
     isOpen,
@@ -32,9 +32,9 @@ export default function ModalInvite({
     event,
 }) {
     const { showError } = useError();
-    const [selectedUsers, setSelectedUsers] = useState(new Set([]));
-    const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedUsers, setSelectedUsers] = useState(new Set([]));
     const [alreadyInvited, setAlreadyInvited] = useState([]);
 
     // fetch already invited -

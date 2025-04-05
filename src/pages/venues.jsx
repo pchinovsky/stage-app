@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Skeleton } from "@heroui/react";
 import { useVenues } from "../hooks/useVenues";
 import DefaultLayout from "../layouts/default";
 import ModalProfileCustom from "../components/ModalProfileCustom";
 import ProfileCard from "../components/ProfileCard";
-import { Skeleton } from "@heroui/react";
 
 export default function VenuesPage() {
     const { venues, loading } = useVenues();
+
     const [selectedVenue, setSelectedVenue] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
 
@@ -19,10 +20,6 @@ export default function VenuesPage() {
         setModalOpen(false);
         setSelectedVenue(null);
     };
-
-    // if (loading) {
-    //     return <div className="p-4">Loading venues…</div>;
-    // }
 
     return (
         <DefaultLayout>

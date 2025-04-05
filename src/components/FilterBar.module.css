@@ -4,7 +4,6 @@
 
 .input {
     @apply w-full outline-none focus:outline-none !important;
-    /* @apply bg-none border-2 border-slate-200 rounded-lg !important; */
 }
 
 .select {
@@ -16,7 +15,6 @@
 }
 
 .arrowButton {
-    /* @apply bg-white text-black px-2 py-1 rounded-lg hover:bg-slate-100; */
     @apply bg-white text-slate-400 px-2 py-1 rounded-lg hover:shadow-md h-full hover:text-black;
 }
 
@@ -42,7 +40,6 @@
 }
 
 .chipContainer {
-    /* @apply grid grid-cols-2 gap-x- gap-y-1; */
     @apply flex flex-wrap gap-x-1 gap-y-1;
 }
 

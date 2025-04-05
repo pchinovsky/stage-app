@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useRef,
-    forwardRef,
-    useEffect,
-    useContext,
-} from "react";
+import { useState, useRef, forwardRef, useEffect, useContext } from "react";
 import {
     Input,
     Select,
@@ -18,19 +12,17 @@ import {
     Button,
     Autocomplete,
     AutocompleteItem,
-    Skeleton,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import { formatISO } from "date-fns";
-import { useFollowing } from "../contexts/followingContext";
-import styles from "./FilterBar.module.css";
-import { useArtists } from "../hooks/useArtists";
-import { useVenues } from "../hooks/useVenues";
-import { doc, collection, query, getDocs, where } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig";
-import { AuthContext } from "../contexts/authContext";
 import authApi from "../api/auth-api";
 import { useUser } from "../hooks/useUser-new";
+import { useArtists } from "../hooks/useArtists";
+import { useVenues } from "../hooks/useVenues";
+import { AuthContext } from "../contexts/authContext";
+import { useFollowing } from "../contexts/followingContext";
+import { getNormalizedFilterValue } from "../../utils/getNormalizedFilterValue";
+import { getDynamicFilterValue } from "../../utils/getDynamicFilterValue";
+import styles from "./FilterBar.module.css";
 
 const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     const { userId, isAuth } = useContext(AuthContext);
@@ -46,7 +38,37 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
     const [selectedChips, setSelectedChips] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const [filterWidth, setFilterWidth] = useState("1150px");
+    const [activeFilters, setActiveFilters] = useState([]);
 
+    const filtersRef = useRef(null);
+
+    const defaultFilterOptions = {
+        Categories: [
+            "Artist Talk",
+            "Workshop",
+            "Conference",
+            "Sound",
+            "Presentation",
+            "Exhibition",
+            "Other",
+        ],
+        Time: ["Today", "Tomorrow", "Upcoming", "Past"],
+        Popular: ["Interested", "Attended", "Invitations", "Trending"],
+        Involved: [
+            "Following Artists",
+            "Following Users",
+            "Following Venues",
+            "Invited",
+            "Inviting",
+        ],
+    };
+
+    const [availableFilters] = useState([
+        "Categories",
+        "Time",
+        "Popular",
+        "Involved",
+    ]);
     useEffect(() => {
         const width = isAuth ? "950px" : "1150px";
         setFilterWidth(width);
@@ -131,40 +153,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                 setSuggestions([]);
             }
         }
-        // console.log("--- search - ", searchTerm, " - ", selectedSearchType);
     }, [searchTerm, selectedSearchType, venues, artists]);
-
-    const defaultFilterOptions = {
-        Categories: [
-            "Artist Talk",
-            "Workshop",
-            "Conference",
-            "Sound",
-            "Presentation",
-            "Exhibition",
-            "Other",
-        ],
-        Time: ["Today", "Tomorrow", "Upcoming", "Past"],
-        Popular: ["Interested", "Attended", "Invitations", "Trending"],
-        Involved: [
-            "Following Artists",
-            "Following Users",
-            "Following Venues",
-            "Invited",
-            "Inviting",
-        ],
-    };
-
-    const [activeFilters, setActiveFilters] = useState([]);
-
-    const [availableFilters] = useState([
-        "Categories",
-        "Time",
-        "Popular",
-        "Involved",
-    ]);
-
-    const filtersRef = useRef(null);
 
     const removeFilter = (id) => {
         setActiveFilters((prevFilters) =>
@@ -365,7 +354,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }
 
         const filterKey = category.toLowerCase();
-
         const dynamicValue = getNormalizedFilterValue(filterKey, option);
 
         sessionStorage.setItem("scrollPosition", window.scrollY);
@@ -473,40 +461,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         }
     };
 
-    const getDynamicFilterValue = (option, category = "") => {
-        const today = new Date();
-
-        switch (option) {
-            case "Today":
-                return formatISO(today, { representation: "date" });
-            case "Tomorrow":
-                return formatISO(new Date(today.setDate(today.getDate() + 1)), {
-                    representation: "date",
-                });
-            case "Upcoming":
-                return {
-                    greaterThan: formatISO(today, { representation: "date" }),
-                };
-            case "Past":
-                return {
-                    lessThan: formatISO(today, { representation: "date" }),
-                };
-            default:
-                return getNormalizedFilterValue(category, option);
-        }
-    };
-
-    const getNormalizedFilterValue = (key, option) => {
-        if (key === "categories") {
-            return option
-                .toLowerCase()
-                .replace(/\s(.)/g, (match) => match.toUpperCase().trim())
-                .replace(/\s/g, "");
-        }
-
-        return option.toLowerCase();
-    };
-
     const isLoading =
         (selectedSearchType === "artist" && artistsLoading) ||
         (selectedSearchType === "venue" && venuesLoading);
@@ -523,7 +477,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                         placeholder="Search events"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        // className={styles.input}
                         className={`${styles.input} no-focus-outline`}
                         classNames={{
                             inputWrapper: [
@@ -597,8 +550,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     </Autocomplete>
                 )}
 
-                {/*
-                 */}
                 <Select
                     area-label="Search type"
                     selectedKeys={[selectedSearchType]}
@@ -629,10 +580,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     width: filterWidth,
                     marginLeft: isAuth ? "0" : "64px",
                 }}
-                // style={{
-                //     backgroundColor: "rgba(255, 0, 0, 0.1)",
-                //     border: "1px solid red",
-                // }}
             >
                 {isAuth && (
                     <button onClick={scrollLeft} className={styles.arrowButton}>
@@ -682,8 +629,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                                         variant="bordered"
                                         classNames={{
                                             base: "p-2",
-                                            // content:
-                                            //     "text-[10px] font-medium text-gray-500 hover:text-white",
                                             content: `${
                                                 (
                                                     filter.label === "Time"
@@ -768,7 +713,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                     crossOffset={-25}
                 >
                     <DropdownTrigger>
-                        {/* <div> */}
                         <Button
                             variant="bordered"
                             shouldBlockScroll={false}
@@ -776,7 +720,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                         >
                             Filters
                         </Button>
-                        {/* </div> */}
                     </DropdownTrigger>
 
                     <DropdownMenu>

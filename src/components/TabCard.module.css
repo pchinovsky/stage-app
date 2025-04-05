@@ -1,6 +1,5 @@
 .card {
     @apply w-[370px] h-[140px] shadow-lg p-1.5 bg-slate-100 bg-opacity-30 backdrop:blur-md rounded-b-3xl !important;
-    /* @apply top-48 left-8 !important; */
 }
 
 .tabs {

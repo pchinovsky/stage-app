@@ -1,41 +1,24 @@
-"use client";
-
-import React, { useState, useEffect, useContext } from "react";
-import {
-    Button,
-    Input,
-    Checkbox,
-    Link,
-    Image,
-    Form,
-    Spinner,
-} from "@heroui/react";
+import { useState, useEffect } from "react";
+import { Button, Input, Link, Image, Form, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import EventInfo from "../components/EventInfo";
-import DefaultLayout from "../layouts/default";
+import { motion } from "framer-motion";
 import useForm from "../hooks/useForm";
 import { useRegister } from "../hooks/useAuth";
-import { registerSchema } from "../api/validationSchemas";
-import styles from "./register.module.css";
 import { useEventsStore } from "../contexts/eventsContext";
-import { motion } from "framer-motion";
-import { Skeleton } from "@heroui/react";
-import { AuthContext } from "../contexts/authContext";
+import { registerSchema } from "../api/validationSchemas";
+import EventInfo from "../components/EventInfo";
+import DefaultLayout from "../layouts/default";
+import styles from "./register.module.css";
 
 export default function Register() {
-    const { accessRegRef } = useContext(AuthContext);
-    const [isVisible, setIsVisible] = useState(false);
-    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-    const [featuredEvent, setFeaturedEvent] = useState(null);
     const { events, loading } = useEventsStore();
 
-    // useEffect(() => {
-    //     return () => {
-    //         accessRegRef.current = false;
-    //     };
-    // }, []);
+    const [isVisible, setIsVisible] = useState(false);
+    const [featuredEvent, setFeaturedEvent] = useState(null);
+    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
     const register = useRegister();
+
     const initialValues = {
         username: "",
         email: "",
@@ -69,7 +52,6 @@ export default function Register() {
                         initial={{ x: "-100%" }}
                         animate={{ x: 0 }}
                         transition={{ duration: 0.5 }}
-                        // style={{ width: "100%", height: "100%" }}
                     >
                         <Image
                             src={featuredEvent.image}

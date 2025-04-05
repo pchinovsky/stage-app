@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
     Form,
@@ -13,24 +13,18 @@ import {
     Tooltip,
     Chip,
 } from "@heroui/react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebaseConfig";
-import DefaultLayout from "../layouts/default";
-import { useArtists } from "../hooks/useArtists";
-import { useVenue } from "../hooks/useVenue";
-import { eventSchema } from "../api/validationSchemas";
-import useForm from "../hooks/useForm";
+import { parseDate } from "@internationalized/date";
 import useEventEdit from "../hooks/useEventEdit";
-import eventsApi from "../api/events-api";
-import { parseDate, parseTime } from "@internationalized/date";
-import { ArtistInput } from "../components/ArtistInput";
+import DefaultLayout from "../layouts/default";
 import TooltipProfile from "../components/TooltipProfile";
+import { useArtists } from "../hooks/useArtists";
+import { ArtistInput } from "../components/ArtistInput";
+import { ImageUploadInput } from "../components/ImageUploadInput";
 import { categories } from "../constants/generalConstants";
-import { ImageUploadInput } from "../components/Image2";
 
 export default function Edit() {
     const { eventId } = useParams();
-    const navigate = useNavigate();
+
     const [previewImage, setPreviewImage] = useState("");
 
     const formRef = useRef(null);
@@ -66,28 +60,14 @@ export default function Edit() {
         loadingEvent,
     } = useEventEdit(eventId, initialValues);
 
-    // useEffect(() => {
-    //     if (formValues.image) {
-    //         setPreviewImage(formValues.image);
-    //     }
-    // }, [formValues.image]);
-
     useEffect(() => {
         if (!loadingEvent && formValues.image) {
             setPreviewImage(formValues.image);
         }
     }, [loadingEvent, formValues.image]);
 
-    useEffect(() => {
-        console.log("Background image updated to:", formValues.image);
-    }, [formValues.image]);
-
     const { artists: allArtists, loading: loadingArtists } = useArtists();
     const { artists: selectedArtists } = useArtists(formValues.artists);
-
-    useEffect(() => {
-        console.log("Updated form values:", formValues);
-    }, [formValues]);
 
     const handleSubmitWithConversion = async (e) => {
         e.preventDefault();
@@ -105,24 +85,9 @@ export default function Edit() {
         };
 
         try {
-            console.log("Submitting with formatted values:", formattedValues);
             await handleSubmit(e);
-            console.log("Successfully updated");
         } catch (error) {
             console.error("Error updating event:", error);
-        }
-    };
-
-    const handleSubmitWithDebug = async (e) => {
-        e.preventDefault();
-
-        console.log("Submitting form with values:", formValues);
-
-        try {
-            await eventsApi.updateEvent(eventId, formValues);
-            navigate(`/events/${eventId}`);
-        } catch (err) {
-            console.error("Error updating event:", err);
         }
     };
 
@@ -143,7 +108,6 @@ export default function Edit() {
     const backgroundStyle =
         previewImage || formValues.image
             ? {
-                  //   backgroundImage: `url(${previewImage || formValues.image})`,
                   backgroundImage: `url("${previewImage || formValues.image}")`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
@@ -189,7 +153,6 @@ export default function Edit() {
                     <Form
                         ref={formRef}
                         onSubmit={handleSubmitWithConversion}
-                        // onSubmit={handleSubmitWithDebug}
                         className="flex gap-5"
                         style={{ flexDirection: "row" }}
                     >
@@ -302,7 +265,6 @@ export default function Edit() {
                                     label="Start Time"
                                     name="startTime"
                                     value={formValues.startTime}
-                                    // onChange={handleInputChangeExpanded}
                                     onChange={(value) =>
                                         setFormValues((prev) => ({
                                             ...prev,
@@ -318,7 +280,6 @@ export default function Edit() {
                                     label="End Time"
                                     name="endTime"
                                     value={formValues.endTime}
-                                    // onChange={handleInputChangeExpanded}
                                     onChange={(value) =>
                                         setFormValues((prev) => ({
                                             ...prev,
@@ -341,13 +302,19 @@ export default function Edit() {
                                 />
                             </div>
                             <div>
-                                <ArtistInput
-                                    artistList={allArtists}
-                                    selectedArtists={selectedArtists}
-                                    onChange={handleArtistChange}
-                                    isInvalid={!!error?.artists}
-                                    errorMessage={error?.artists?.[0]}
-                                />
+                                {loadingArtists ? (
+                                    <div className="flex justify-center items-center h-[56px]">
+                                        <Spinner size="lg" />
+                                    </div>
+                                ) : (
+                                    <ArtistInput
+                                        artistList={allArtists}
+                                        selectedArtists={selectedArtists}
+                                        onChange={handleArtistChange}
+                                        isInvalid={!!error?.artists}
+                                        errorMessage={error?.artists?.[0]}
+                                    />
+                                )}
 
                                 <div className="mt-5 flex flex-wrap gap-2">
                                     {selectedArtists.map((artist) => (
@@ -372,31 +339,6 @@ export default function Edit() {
                                     ))}
                                 </div>
                             </div>
-
-                            {/* <Input
-                                label="Venue Id"
-                                value={formValues.venue}
-                                isReadOnly
-                            /> */}
-
-                            {/* <div className="flex gap-2 self-end">
-                                <Button
-                                    type="submit"
-                                    color="primary"
-                                    isDisabled={isSubmitting}
-                                >
-                                    {isSubmitting
-                                        ? "Saving..."
-                                        : "Save Changes"}
-                                </Button>
-                                <Button
-                                    variant="flat"
-                                    color="danger"
-                                    onPress={resetForm}
-                                >
-                                    Reset
-                                </Button>
-                            </div> */}
                         </div>
                     </Form>
                 )}

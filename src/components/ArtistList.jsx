@@ -1,7 +1,5 @@
 import { Tooltip, Avatar } from "@heroui/react";
 import TooltipProfile from "./TooltipProfile";
-// import "./ArtistList.module.css";
-import styles from "./ArtistList.module.css";
 
 export default function ArtistList({
     artists,
@@ -21,26 +19,20 @@ export default function ArtistList({
                 height: `${h}px`,
                 backdropFilter: "blur(10px)",
                 backgroundColor: "rgba(255, 255, 255, 0.3)",
-                // overflowY: "auto",
-                // overflow: "hidden",
             }}
         >
             <h2 className="text-black text-lg font-bold mb-2">
                 {one ? "Artist" : "Artists"}
             </h2>
             <div
-                // className="space-y-3 overflow-y-auto"
                 className="artist-scroll space-y-2 overflow-y-auto"
-                // className={`${styles.spaceY3} overflow-y-auto`}
                 style={{
                     height: "100%",
                 }}
             >
                 {artists.map((artist) => (
                     <Tooltip
-                        // key={artist.id}
                         // forcing tooltip re-render to prevent linger post modal closure -
-                        // key={isModalOpen ? "closed" : "open"}
                         key={isModalOpen ? `${artist.id}-closed` : artist.id}
                         isOpen={isModalOpen ? false : undefined}
                         content={

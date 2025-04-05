@@ -15,8 +15,5 @@ export function getSplitFilters(filters = {}) {
         }
     }
 
-    console.log("--- FN - Safe filters:", safeFilters);
-    console.log("--- FN - Post filters:", postFilters);
-
     return [safeFilters, postFilters];
 }

@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Tabs, Tab, Card, Tooltip, Button, Skeleton } from "@heroui/react";
-import styles from "./TabCard.module.css";
-import ProfileCard from "./ProfileCard";
+import { Tabs, Tab, Card, Tooltip, Skeleton } from "@heroui/react";
 import { useArtists } from "../hooks/useArtists";
 import { useVenues } from "../hooks/useVenues";
 import { useEventsStore } from "../contexts/eventsContext";
+import ProfileCard from "./ProfileCard";
+import styles from "./TabCard.module.css";
 
 export default function TabbedCard() {
     const [selectedTab, setSelectedTab] = useState(0);
+
     const { events, loading: eventsLoading } = useEventsStore();
     const { artists, loading: artistsLoading } = useArtists();
     const { venues, loading: venuesLoading } = useVenues();

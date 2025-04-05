@@ -3,8 +3,6 @@ import {
     collection,
     query,
     where,
-    getDoc,
-    doc,
     onSnapshot,
     orderBy,
     limit,
@@ -14,15 +12,12 @@ import { getFiltersKey } from "../../utils/getFiltersKey";
 import { useError } from "../contexts/errorContext";
 
 export function useEvents(filters = {}) {
-    // export function useEvents(filters) {
 
-
+    const isMounted = useRef(true);
     const { showError } = useError();
+
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    // console.log("use events filters", filters);
-    const isMounted = useRef(true);
 
     const filtersKey = useMemo(() => getFiltersKey(filters), [filters]);
 
@@ -35,8 +30,6 @@ export function useEvents(filters = {}) {
 
         let eventsRef = collection(db, "events");
         let conditions = [];
-
-        // console.log("Full filters object:", filters);
 
         Object.entries(filters).forEach(([key, value]) => {
             if (value === undefined || value === null) return;
@@ -100,9 +93,6 @@ export function useEvents(filters = {}) {
                 conditions.push(where(key, "==", value));
             }
         });
-
-        console.log("Final conditions:", conditions);
-        console.log("Applying query with conditions:", conditions);
 
         let eventsQuery = conditions.length > 0 ? query(eventsRef, ...conditions) : eventsRef;
 

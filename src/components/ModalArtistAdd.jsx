@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { db } from "../firebase/firebaseConfig";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import {
     Modal,
     Input,
@@ -11,11 +14,6 @@ import {
     Image,
     Chip,
 } from "@heroui/react";
-import eventsApi from "../api/events-api";
-
-import { db } from "../firebase/firebaseConfig";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, uploadBytes, ref } from "firebase/storage";
 import { useError } from "../contexts/errorContext";
 import { MAX_ADDITIONAL_IMAGES } from "../constants/generalConstants";
 

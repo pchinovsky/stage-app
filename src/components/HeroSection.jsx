@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Image, Tooltip, Spinner, Skeleton } from "@heroui/react";
+import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
-import TabbedCard from "./TabCard";
-import styles from "../pages/events.module.css";
-// import styles from "./HeroSection.module.css";
-import StatsBox from "./Stats";
+import { motion } from "framer-motion";
+import { Image, Skeleton } from "@heroui/react";
+import { useVenue } from "../hooks/useVenue";
 import { useEventsStore } from "../contexts/eventsContext";
 import { calcTrending } from "../../utils/calcTrending";
-import { useVenue } from "../hooks/useVenue";
-import { set } from "date-fns";
+import StatsBox from "./Stats";
+import TabbedCard from "./TabCard";
+import styles from "../pages/events.module.css";
 
 const HeroSection = React.memo(() => {
+    const navigate = useNavigate();
+
+    const { events, loading } = useEventsStore();
+
     const [isFixed, setIsFixed] = useState(false);
-
-    const { events, loading, error } = useEventsStore();
-
     const [randomEvent, setRandomEvent] = useState(null);
     const [venueId, setVenueId] = useState(null);
     const { venue, loading: venueLoading } = useVenue(venueId);
@@ -45,12 +45,6 @@ const HeroSection = React.memo(() => {
             })();
         }
     }, [loading, events]);
-
-    const circlePos = [
-        { top: "30%", left: "30%" },
-        { top: "60%", left: "60%" },
-        { top: "100%", left: "40%" },
-    ];
 
     const statsData = [
         {
@@ -118,9 +112,7 @@ const HeroSection = React.memo(() => {
                     top: "60%",
                     left: "50%",
                 }}
-                onClick={() =>
-                    (window.location.href = `/events/${randomEvent?.id}`)
-                }
+                onClick={() => navigate("/venues")}
             >
                 <div className={styles.circleContent}>
                     <Icon
@@ -150,9 +142,7 @@ const HeroSection = React.memo(() => {
                     top: "35%",
                     left: "20%",
                 }}
-                onClick={() =>
-                    (window.location.href = `/events/${randomEvent?.id}`)
-                }
+                onClick={() => navigate(`/events/${randomEvent?.id}`)}
             >
                 <div className={styles.circleContent}>
                     <Icon
@@ -184,9 +174,7 @@ const HeroSection = React.memo(() => {
                     top: "105%",
                     left: "30%",
                 }}
-                onClick={() =>
-                    (window.location.href = `/events/${randomEvent?.id}`)
-                }
+                onClick={() => navigate(`/events/${randomEvent?.id}`)}
             >
                 <div className={styles.circleContent}>
                     <Icon

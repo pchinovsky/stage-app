@@ -5,9 +5,10 @@ export default function Toggle({
     options = ["Option 1", "Option 2"],
     onChange,
 }) {
+    const selectedRef = useRef(null);
+
     const [selected, setSelected] = useState(0);
     const [sliderWidth, setSliderWidth] = useState(0);
-    const selectedRef = useRef(null);
 
     useEffect(() => {
         if (selectedRef.current) {

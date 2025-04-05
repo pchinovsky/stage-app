@@ -1,49 +1,14 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, Image } from "@heroui/react";
-import { Icon } from "@iconify/react";
-import styles from "./Sidebar.module.css";
-import { db } from "../firebase/firebaseConfig";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { useEvents } from "../hooks/useEvents";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Icon } from "@iconify/react";
 import { useEventsRelated } from "../hooks/useEventsRelated";
 import ProfileCard from "./ProfileCard";
+import styles from "./Sidebar.module.css";
 
-// export default function SlidingSidebar({ data }) {
-export default function SlidingSidebar({ event, venue }) {
-    // export default function SlidingSidebar({
-    //     artists,
-    //     venueId,
-    //     categories,
-    //     createdBy,
-    //     venue,
-    // }) {
+export default function SlidingSidebar({ event }) {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
-
-    // console.log("sidebar data", data);
-
-    // const filters = {
-    //     artists: data.artists.length > 0 ? data.artists : undefined,
-    //     categories: data.categories.length > 0 ? data.categories : undefined,
-    //     createdBy: data.createdBy || undefined,
-    //     venue: data.venue || undefined,
-    // };
-
-    // const filters = {
-    //     artists: artists.length > 0 ? artists : undefined,
-    //     categories: categories.length > 0 ? categories : undefined,
-    //     createdBy: createdBy || undefined,
-    //     venue: venueId || undefined,
-    // };
-
-    const filters = {
-        artists: event.artists.length > 0 ? event.artists : undefined,
-        categories: event.categories.length > 0 ? event.categories : undefined,
-        createdBy: event.createdBy || undefined,
-        venue: event.venue || undefined,
-    };
 
     const { relatedEvents, loading } = useEventsRelated(event);
 
