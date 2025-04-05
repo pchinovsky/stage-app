@@ -23,12 +23,12 @@ export default function ProfileCard({
             <Image
                 src={data?.profileImage || data?.image}
                 alt={data?.name}
-                className="w-[480px] h-full object-cover"
                 classNames={{
-                    wrapper: "h-full w-[480px]",
-                    img: "h-full w-[480px] object-cover",
+                    wrapper: "min-w-full min-h-full object-cover",
+                    img: "min-w-full min-h-full object-cover",
                 }}
                 style={{
+                    borderRadius: "inherit",
                     height: "100%",
                 }}
             />

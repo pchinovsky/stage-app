@@ -69,6 +69,7 @@ export default function ArtistList({
                                 "before:bg-white dark:before:bg-white before:border-0",
                             ],
                         }}
+                        radius="lg"
                     >
                         <button
                             className="flex items-center gap-3 p-2 bg-white w-full rounded-lg cursor-pointer"

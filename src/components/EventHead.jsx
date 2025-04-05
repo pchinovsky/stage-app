@@ -53,6 +53,7 @@ export default function EventHead({
                     },
                 }}
                 className="py-0 px-0"
+                radius="lg"
             >
                 <button
                     className="font-bold font-primary text-primary text-2xl cursor-pointer"
