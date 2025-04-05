@@ -38,7 +38,7 @@ export default function ProfileCard({
                 }`}
             >
                 {footer && (
-                    <CardFooter className="bg-white bg-opacity-90 rounded-lg shadow-sm px-3 py-2 w-full">
+                    <CardFooter className="bg-white bg-opacity-90 font-primary rounded-lg shadow-sm px-3 py-2 w-full">
                         <div
                             className={`flex flex-col justify-end ${styles.pos}`}
                         >

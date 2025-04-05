@@ -39,10 +39,10 @@ export default function CalendarDate({ date, onPress }) {
                     onPress(true);
                 }}
             >
-                <span className="text-4xl font-bold text-blue-600">
+                <span className="text-4xl font-bold font-primary text-primary">
                     {formattedDate.getDate()}
                 </span>
-                <span className="text-lg font-semibold mb-2">
+                <span className="text-lg font-semibold font-primary mb-2">
                     {formattedDate.toLocaleString("en-US", { month: "long" })}
                 </span>
                 <span className="text-tiny opacity-70 text-gray-500">

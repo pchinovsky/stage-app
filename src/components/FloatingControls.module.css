@@ -5,7 +5,7 @@
 } */
 
 .panel {
-    @apply fixed z-[9999] border border-gray-300 rounded-xl backdrop-blur-md;
+    @apply fixed z-[9999] border border-gray-300 rounded-xl backdrop-blur-md font-primary;
     background-color: var(--panel-bg-color, rgba(255, 255, 255, 1));
     top: var(--panel-top, 13px);
     left: var(--panel-left, 16px);

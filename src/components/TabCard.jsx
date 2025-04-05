@@ -51,7 +51,8 @@ export default function TabbedCard() {
                 classNames={{
                     cursor: "w-1 h-1 rounded-full bg-blue-500 mb-0",
                     tab: "pb-3 h-5",
-                    tabContent: "text-gray-400 font-bold text-tiny",
+                    tabContent:
+                        "text-gray-400 font-bold font-primary text-tiny",
                 }}
                 motionProps={{
                     transition: { duration: 0.7 },

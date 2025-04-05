@@ -73,7 +73,7 @@ export default function EventCard({ event, onPress }) {
                 className={`${styles.card} ${isSelected ? styles.selected : ""}`}
                 onPress={handlePress}
                 classNames={{
-                    header: "p-4 py-3 bg-background/60 backdrop-blur-md hover:bg-white transition-all ease-in-out duration-500",
+                    header: "p-4 py-3 font-primary bg-background/60 backdrop-blur-md hover:bg-white transition-all ease-in-out duration-500",
                 }}
             >
                 <CardHeader className={styles.cardHeader}>
@@ -83,7 +83,7 @@ export default function EventCard({ event, onPress }) {
                     </small>
                     <Divider className="my-4"></Divider>
                     <div className="mt-auto flex gap-2 items-end">
-                        <span className="text-lg font-bold text-blue-600 mb-[-2px]">
+                        <span className="text-lg font-bold text-primary mb-[-2px]">
                             {formattedDate.getDate()}
                         </span>
                         <span className="text-md font-semibold">

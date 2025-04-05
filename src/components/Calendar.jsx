@@ -69,7 +69,7 @@ export default function CalendarModal({ isOpen, onClose }) {
             backdrop="opaque"
             className="absolute left-[505px] top-10 p-6 rounded-lg max-w-2xl bg-white z-[1000] shadow-md"
         >
-            <div className="absolute right-11 top-3 bottom-3 z-[1000] bg-white p-5 rounded-lg shadow-md">
+            <div className="absolute right-11 top-3 bottom-3 z-[1000] bg-white font-primary p-5 rounded-lg shadow-md">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold">
                         {viewMode === "mine"
@@ -82,7 +82,7 @@ export default function CalendarModal({ isOpen, onClose }) {
                                 viewMode === "mine" ? "followed" : "mine"
                             )
                         }
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                        className="bg-primary text-white px-4 py-2 rounded-lg"
                     >
                         {viewMode === "mine"
                             ? "See Followed Users' Events"
@@ -102,7 +102,7 @@ export default function CalendarModal({ isOpen, onClose }) {
                                     <Link
                                         key={event.id}
                                         to={`/events/${event.id}`}
-                                        className="absolute bottom-[1px] left-[5px] block bg-blue-400 text-white text-xs text-left rounded-md px-3 py-2 mb-1 hover:underline"
+                                        className="absolute bottom-[1px] left-[5px] block bg-primary text-white text-xs text-left rounded-md px-3 py-2 mb-1 hover:underline"
                                         style={{ lineHeight: 1.2 }}
                                     >
                                         {event.title}

@@ -8,7 +8,7 @@ export default function StatsBox({ stats, pos, disableAbsolute = false }) {
 
     return (
         <div
-            className={`flex flex-wrap ${disableAbsolute ? "justify-start" : "justify-end"} gap-4 z-[100] w-[400px]`}
+            className={`flex flex-wrap ${disableAbsolute ? "justify-start" : "justify-end"} font-primary gap-4 z-[100] w-[400px]`}
             style={containerStyle}
         >
             {stats.map((stat, index) => (
@@ -27,7 +27,7 @@ export default function StatsBox({ stats, pos, disableAbsolute = false }) {
                         </span>
                         <Icon
                             icon={stat.icon}
-                            className="text-3xl text-blue-400"
+                            className="text-3xl text-primary"
                         />
                     </CardHeader>
                     <CardBody className="text-center p-0">

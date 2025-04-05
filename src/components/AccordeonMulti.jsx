@@ -59,7 +59,7 @@ export default function MultiAccordion({ sections }) {
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-2 text-gray-700 mb-5 ml-2">
+                            <div className="py-2 text-gray-700 mb-5 ml-2 overflow-y-auto max-h-[200px]">
                                 {section.content}
                             </div>
                         )}

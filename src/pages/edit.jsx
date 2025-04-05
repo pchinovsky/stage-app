@@ -118,7 +118,7 @@ export default function Edit() {
     return (
         <DefaultLayout>
             <div
-                className="container p-6 w-[900px] mx-auto mt-[-20px] border border-slate-300 rounded-xl h-[80%]"
+                className="container font-primary p-6 w-[900px] mx-auto mt-[-20px] border border-slate-300 rounded-xl h-[80%]"
                 style={backgroundStyle}
             >
                 <div className="flex justify-between items-start mb-5">
@@ -331,7 +331,7 @@ export default function Edit() {
                                                 onClose={() =>
                                                     removeArtist(artist)
                                                 }
-                                                className="bg-blue-500 text-white py-4 px-2 hover:bg-blue-400 cursor-pointer"
+                                                className="bg-primary text-white py-4 px-2 hover:bg-blue-400 cursor-pointer"
                                             >
                                                 {artist.name}
                                             </Chip>

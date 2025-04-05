@@ -76,7 +76,7 @@ export default function ArtistList({
                             onClick={() => onClick(artist)}
                         >
                             <Avatar src={artist.profileImage} size="sm" />
-                            <span className="text-blue-400">{artist.name}</span>
+                            <span className="text-primary">{artist.name}</span>
                         </button>
                     </Tooltip>
                 ))}

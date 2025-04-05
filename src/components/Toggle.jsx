@@ -22,7 +22,7 @@ export default function Toggle({
     };
 
     return (
-        <div className="absolute left-[1150px] top-[755px] flex items-center w-[300px] h-10 bg-black rounded-full p-1 z-[1000]">
+        <div className="absolute left-[1150px] top-[755px] font-primary flex items-center w-[300px] h-10 bg-primary rounded-full p-1 z-[1000]">
             <motion.div
                 className="absolute top-1 left-1 h-8 bg-white rounded-full"
                 style={{ width: sliderWidth }}

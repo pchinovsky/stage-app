@@ -11,7 +11,7 @@
 }
 
 .title {
-    @apply pb-4 text-left text-3xl font-semibold;
+    @apply pb-4 text-left text-3xl font-semibold font-primary;
 }
 
 .emoji {
@@ -19,7 +19,7 @@
 }
 
 .form {
-    @apply flex flex-col gap-4;
+    @apply flex flex-col gap-4 font-primary;
 }
 
 .eyeIcon {
@@ -39,7 +39,7 @@
 }
 
 .loginText {
-    @apply text-center text-small;
+    @apply text-center text-small mt-5;
 }
 
 .eventInfo {

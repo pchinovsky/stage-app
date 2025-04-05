@@ -1,5 +1,5 @@
 .filterBar {
-    @apply w-full h-[110px] px-3 py-5 bg-white text-slate-950 shadow-md rounded-lg flex items-center gap-4;
+    @apply w-full h-[110px] px-3 py-5 bg-white text-slate-950 font-primary shadow-md rounded-lg flex items-center gap-4;
 }
 
 .input {
@@ -49,13 +49,13 @@
 
 .chip {
     @apply w-[100px] min-w-[100px] truncate text-ellipsis overflow-hidden px-2 py-2 rounded-lg text-tiny text-center text-gray-200;
-    @apply hover:shadow-md hover:bg-blue-300 hover:border-blue-300 hover:cursor-pointer;
+    @apply hover:shadow-md hover:bg-primary hover:border-primary hover:cursor-pointer;
     @apply hover:text-white !important;
 }
 
 .activeChip {
     @apply text-white shadow-md !important;
-    @apply bg-blue-600 border-none !important;
+    @apply bg-primary border-none !important;
     @apply transition-all ease-in-out duration-500;
 }
 

@@ -157,7 +157,7 @@ export default function Profile() {
                     />
                 </div>
             ) : (
-                <div className="container block mt-[550px] p-4 h-auto w-screen bg-gray-300 rounded-lg">
+                <div className="container block mt-[550px] p-4 h-auto w-screen font-primary bg-gray-300 rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full">
                         {/* User info */}
                         <div className="md:col-span-1 flex flex-col justify-between items-start bg-white p-6 rounded-lg shadow-md">
@@ -175,7 +175,7 @@ export default function Profile() {
                                 }}
                                 classNames={{
                                     base: "flex-col items-start",
-                                    name: "font-bold mt-4 text-left text-lg",
+                                    name: "font-bold mt-4 text-left text-lg text-primary",
                                 }}
                             />
 
@@ -197,7 +197,7 @@ export default function Profile() {
                                     isIconOnly
                                     variant="bordered"
                                     onPress={setIsCalendarOpen}
-                                    className="w-[95px] h-[95px] hover:text-blue-500"
+                                    className="w-[95px] h-[95px] hover:text-primary"
                                 >
                                     <Icon
                                         icon="ci:calendar-days"
@@ -223,10 +223,10 @@ export default function Profile() {
                                         isHoverable
                                     >
                                         <CardBody className="flex flex-col justify-between">
-                                            <h3 className="text-medium hover:text-blue-500 ">
+                                            <h3 className="text-medium hover:text-primary">
                                                 {label}
                                             </h3>
-                                            <p className="text-medium font-bold text-blue-500">
+                                            <p className="text-medium font-bold text-primary">
                                                 {value}
                                             </p>
                                         </CardBody>

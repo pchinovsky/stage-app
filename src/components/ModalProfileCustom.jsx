@@ -112,7 +112,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
     return (
         <AnimatePresence>
             <motion.div
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1100]"
+                className="fixed inset-0 bg-black bg-opacity-50 font-primary flex items-center justify-center z-[1100]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

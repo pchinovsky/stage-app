@@ -128,7 +128,7 @@ export default function InvitationCard({ invitation }) {
                             className="w-full h-full object-cover"
                         />
                     </CardHeader>
-                    <CardBody className="absolute left-[6px] bottom-[6px] w-[96.5%] z-10 bg-white h-[100px] rounded-lg py-2 px-3 overflow-hidden">
+                    <CardBody className="absolute left-[6px] bottom-[6px] w-[96.5%] z-10 bg-white h-[100px] font-primary rounded-lg py-2 px-3 overflow-hidden">
                         <h3 className="font-bold">
                             {invitationData.event.title}
                         </h3>
@@ -157,9 +157,9 @@ export default function InvitationCard({ invitation }) {
                                         <Tooltip content={"Accept"} radius="sm">
                                             <Button
                                                 size="sm"
-                                                color="success"
                                                 isIconOnly
                                                 onPress={handleAccept}
+                                                className="bg-primary"
                                             >
                                                 <Icon
                                                     icon="ci:check"

@@ -1,5 +1,5 @@
 .heroSection {
-    @apply sticky top-0 h-[34.5vh] w-full bg-white text-white flex items-center justify-center text-3xl z-10;
+    @apply sticky top-0 h-[34.5vh] w-full bg-white text-white font-primary flex items-center justify-center text-3xl z-10;
 }
 
 .infoBoxes {

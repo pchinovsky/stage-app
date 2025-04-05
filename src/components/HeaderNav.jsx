@@ -13,6 +13,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useContext } from "react";
+import { motion } from "framer-motion";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
 import { useUser } from "../hooks/useUser-new";
@@ -40,6 +41,29 @@ export default function HeaderNav() {
             : ""
         : "";
 
+    const container = {
+        hidden: { opacity: 1 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.05,
+            },
+        },
+    };
+
+    const letter = {
+        hidden: { y: -20, opacity: 0 },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                type: "spring",
+                damping: 10,
+                stiffness: 100,
+            },
+        },
+    };
+
     return (
         <Navbar
             className={styles.navbar}
@@ -66,7 +90,19 @@ export default function HeaderNav() {
                     href="/events"
                     className={`bg-transparent px-4 py-2 rounded-lg ${dockPositionClass}`}
                 >
-                    <p className={styles.brand}>STAGE</p>
+                    {/* <p className={styles.brand}>STAGE</p> */}
+                    <motion.p
+                        className={styles.brand + " flex gap-1"}
+                        variants={container}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        {"STAGE".split("").map((char, i) => (
+                            <motion.span key={i} variants={letter}>
+                                {char}
+                            </motion.span>
+                        ))}
+                    </motion.p>
                 </Link>
             </NavbarBrand>
 
@@ -86,7 +122,7 @@ export default function HeaderNav() {
                                     />
                                 }
                                 radius="lg"
-                                className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                                className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-primary"
                             >
                                 Profiles
                             </Button>
@@ -125,7 +161,7 @@ export default function HeaderNav() {
                     href="/events"
                     size="sm"
                     radius="lg"
-                    className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                    className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-primary"
                 >
                     Events
                 </Button>
@@ -138,7 +174,7 @@ export default function HeaderNav() {
                                 href="/create"
                                 size="sm"
                                 radius="lg"
-                                className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                                className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-primary"
                             >
                                 Create Event
                             </Button>
@@ -170,6 +206,12 @@ export default function HeaderNav() {
                             />
                         </DropdownTrigger>
                         <DropdownMenu>
+                            <DropdownItem key="username">
+                                Logged in as
+                                <p className="font-bold text-primary">
+                                    {currentUser?.name}
+                                </p>
+                            </DropdownItem>
                             <DropdownItem
                                 key="profile"
                                 as={Link}
@@ -197,7 +239,7 @@ export default function HeaderNav() {
                                     href="/login"
                                     size="sm"
                                     radius="lg"
-                                    className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-blue-600"
+                                    className="px-4 py-[17.5px] text-gray-600 font-bold bg-white text-[12px] hover:text-primary"
                                 >
                                     Login
                                 </Button>
@@ -208,7 +250,7 @@ export default function HeaderNav() {
                                     href="/register"
                                     size="sm"
                                     radius="lg"
-                                    className="px-4 py-[17.5px] text-white font-bold bg-blue-600 text-[12px] hover:text-blue-300"
+                                    className="px-4 py-[17.5px] text-white font-bold bg-primary text-[12px] hover:text-blue-300"
                                 >
                                     Sign Up
                                 </Button>

@@ -205,7 +205,7 @@ export default function CreatePage() {
     return (
         <DefaultLayout>
             <div
-                className="min-h-screen w-full transition-all duration-700 ease-in-out pt-10"
+                className="min-h-screen w-full transition-all duration-700 ease-in-out pt-10 font-primary"
                 style={backgroundStyle}
             >
                 <div className="container mx-auto py-8 px-4">
@@ -377,7 +377,7 @@ export default function CreatePage() {
                                             className={
                                                 formValues.image
                                                     ? "bg-white py-4 px-2"
-                                                    : "bg-white border border-blue-600 py-4 px-2"
+                                                    : "bg-white border border-primary py-4 px-2"
                                             }
                                         >
                                             <Link
@@ -388,7 +388,7 @@ export default function CreatePage() {
                                                 onClose={() => removeLink(link)}
                                                 className="max-w-[350px] overflow-hidden text-ellipsis whitespace-nowrap"
                                             >
-                                                <div className="py-2 text-blue-400">
+                                                <div className="py-2 text-primary">
                                                     {link}
                                                 </div>
                                             </Link>
@@ -557,7 +557,7 @@ export default function CreatePage() {
                                         color="primary"
                                         onPress={() => setShowArtistModal(true)}
                                         isIconOnly
-                                        className="h-full font-bold bg-blue-300"
+                                        className="h-full font-bold bg-primary"
                                     >
                                         +
                                     </Button>
