@@ -33,11 +33,14 @@ const CommentList = React.memo(({ comments, handleRemoveComment }) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.2 }}
-                            className="flex items-center gap-3 p-2 bg-gray-200 rounded-lg"
+                            className="flex items-center gap-3 p-2 bg-transparent rounded-lg hover:bg-gray-100 transition-all ease-in-out duration-500"
                         >
                             <Tooltip
                                 content={comment.authorName}
-                                placement="top"
+                                placement="left"
+                                offset={20}
+                                className="bg-primary text-white font-bold"
+                                radius="sm"
                             >
                                 <Avatar src={comment.authorImage} size="sm" />
                             </Tooltip>

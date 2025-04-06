@@ -13,9 +13,19 @@ import styles from "./register.module.css";
 export default function Register() {
     const { events, loading } = useEventsStore();
 
+<<<<<<< HEAD
     const [isVisible, setIsVisible] = useState(false);
     const [featuredEvent, setFeaturedEvent] = useState(null);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+=======
+    // useEffect(() => {
+    //     accessRegRef.current = true;
+
+    //     return () => {
+    //         accessRegRef.current = false;
+    //     };
+    // }, []);
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
 
     const register = useRegister();
 

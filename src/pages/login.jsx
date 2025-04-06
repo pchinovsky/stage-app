@@ -1,5 +1,30 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { Button, Input, Link, Form, Image, Spinner } from "@heroui/react";
+=======
+"use client";
+
+import React, { useState, useEffect } from "react";
+import {
+    Button,
+    Input,
+    Checkbox,
+    Link,
+    Form,
+    Image,
+    Skeleton,
+} from "@heroui/react";
+import { Icon } from "@iconify/react";
+import EventInfo from "../components/EventInfo";
+import DefaultLayout from "../layouts/default";
+import useForm from "../hooks/useForm";
+import { useLogin } from "../hooks/useAuth";
+import { loginSchema } from "../api/validationSchemas";
+import styles from "./login.module.css";
+import ButtonDynamic from "../components/ButtonDynamic";
+import { useEventsStore } from "../contexts/eventsContext";
+import { motion } from "framer-motion";
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
 import { useLocation } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
@@ -11,7 +36,10 @@ import { loginSchema } from "../api/validationSchemas";
 import DefaultLayout from "../layouts/default";
 import EventInfo from "../components/EventInfo";
 import ErrorModal from "../components/ModalError";
+<<<<<<< HEAD
 import styles from "./login.module.css";
+=======
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
 
 export default function Login() {
     const location = useLocation();
@@ -29,6 +57,11 @@ export default function Login() {
             if (!modalError) {
                 showError(location.state.error);
             }
+<<<<<<< HEAD
+=======
+
+            window.history.replaceState({}, document.title);
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
         }
     }, []);
 

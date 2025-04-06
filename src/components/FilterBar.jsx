@@ -42,6 +42,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
 
     const filtersRef = useRef(null);
 
+    const availableFilters = ["Categories", "Time", "Popular", "Involved"];
     const defaultFilterOptions = {
         Categories: [
             "Artist Talk",
@@ -63,12 +64,6 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
         ],
     };
 
-    const [availableFilters] = useState([
-        "Categories",
-        "Time",
-        "Popular",
-        "Involved",
-    ]);
     useEffect(() => {
         const width = isAuth ? "950px" : "1150px";
         setFilterWidth(width);
@@ -327,7 +322,7 @@ const FilterBar = forwardRef(({ searchFixed, setFilters }, ref) => {
                         ...prev,
                         popular: {
                             field: "invitedCount",
-                            greaterThan: 10,
+                            greaterThan: 3,
                             sort: "desc",
                         },
                     }));

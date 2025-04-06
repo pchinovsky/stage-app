@@ -71,14 +71,16 @@ export const eventSchema = z
     })
     .refine((data) => {
         if (typeof data.startTime === "object" || typeof data.endTime === "object") return true;
-        if (data.openingDate && data.startTime && data.eventEndDate && data.endTime) {
-            const openingDateTime = new Date(`${data.openingDate}T${data.startTime}`);
-            const endDateTime = new Date(`${data.eventEndDate}T${data.endTime}`);
-            return endDateTime > openingDateTime;
+
+        if (data.openingDate && data.startTime && data.endTime) {
+            const start = new Date(`${data.openingDate}T${data.startTime}`);
+            const end = new Date(`${data.openingDate}T${data.endTime}`);
+            return end > start;
         }
+
         return false;
     }, {
-        message: "End date and time must be after the start date and time",
-        path: ["eventEndDate"],
-    });
+        message: "End time must be after start time on the same day",
+        path: ["endTime"],
+    })
 

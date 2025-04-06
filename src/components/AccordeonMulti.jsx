@@ -44,7 +44,7 @@ export default function MultiAccordion({ sections }) {
                         className="overflow-hidden px-3"
                     >
                         {section.title === "Related Content" ? (
-                            <div className="py-2 text-blue-400 flex gap-2">
+                            <div className="py-2 text-primary flex gap-2">
                                 {section.content.map((link, i) => (
                                     <Link
                                         key={i}
@@ -52,7 +52,7 @@ export default function MultiAccordion({ sections }) {
                                         showAnchorIcon
                                         href={link}
                                     >
-                                        <div className="py-2 text-blue-400 ml-2">
+                                        <div className="py-2 text-primary ml-2">
                                             {link}
                                         </div>
                                     </Link>

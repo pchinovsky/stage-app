@@ -83,7 +83,7 @@ export default function Edit() {
                     ? `${String(formValues.endTime.hour).padStart(2, "0")}:${String(formValues.endTime.minute).padStart(2, "0")}`
                     : formValues.endTime,
         };
-
+        setFormValues(formattedValues);
         try {
             await handleSubmit(e);
         } catch (error) {

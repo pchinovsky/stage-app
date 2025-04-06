@@ -94,7 +94,6 @@ export default function Event() {
     };
 
     const handleCloseModal = () => {
-        console.log("Closing modal");
         setIsModalOpen(false);
         setModalContent(null);
         setTooltipExitDelay(500);
@@ -186,7 +185,6 @@ export default function Event() {
                             isModalOpen={isModalOpen}
                             handleOpenModal={handleOpenModal}
                         />
-                        {/* Artists Section */}
                         {artistsLoading ? (
                             <div className="absolute right-[230px] top-[150px] z-[100]">
                                 <Spinner size="lg" />

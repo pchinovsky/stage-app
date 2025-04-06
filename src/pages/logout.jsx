@@ -4,7 +4,8 @@ import { useLogout } from "../hooks/useAuth";
 import { AuthContext } from "../contexts/authContext";
 
 export default function LogoutPage() {
-    const { accessRegRef, accessLogRef } = useContext(AuthContext);
+    const { justLogRef, justRegRef, accessRegRef, accessLogRef } =
+        useContext(AuthContext);
     const logout = useLogout();
     const navigate = useNavigate();
 
@@ -12,6 +13,11 @@ export default function LogoutPage() {
         (async () => {
             await logout();
 
+<<<<<<< HEAD
+=======
+            justLogRef.current = false;
+            justRegRef.current = false;
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
             accessLogRef.current = false;
             accessRegRef.current = false;
 

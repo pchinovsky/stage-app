@@ -14,6 +14,7 @@ export function Provider({ children }) {
 
     return (
         <HeroUIProvider navigate={navigate} useHref={useHref}>
+<<<<<<< HEAD
             <AuthProvider>
                 <ErrorProvider>
                     <ToastProvider>
@@ -31,6 +32,23 @@ export function Provider({ children }) {
                     </ToastProvider>
                 </ErrorProvider>
             </AuthProvider>
+=======
+            <ErrorProvider>
+                <AuthProvider>
+                    <UsersProvider>
+                        <NavProvider>
+                            <FollowingProvider>
+                                <EventsProvider>
+                                    <FloatingProvider>
+                                        {children}
+                                    </FloatingProvider>
+                                </EventsProvider>
+                            </FollowingProvider>
+                        </NavProvider>
+                    </UsersProvider>
+                </AuthProvider>
+            </ErrorProvider>
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
         </HeroUIProvider>
     );
 }

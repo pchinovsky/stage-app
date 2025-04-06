@@ -20,9 +20,7 @@ import authApi from "../api/auth-api";
 import { useUser } from "../hooks/useUser";
 import { useError } from "../contexts/errorContext";
 import { useVenue } from "../hooks/useVenue";
-import { useLogout } from "../hooks/useAuth";
 import { userSchema } from "../api/validationSchemas";
-import { useFloatingContext } from "../contexts/floatingContext";
 
 import DefaultLayout from "@/layouts/default";
 import ProfileCard from "../components/ProfileCard";
@@ -50,12 +48,12 @@ export default function Profile() {
                 [key]: value,
             };
 
-            await authApi.updateUser(user.id, {
+            setCurrentUser({
+                ...user,
                 floatingPanelSettings: updatedSettings,
             });
 
-            setCurrentUser({
-                ...user,
+            await authApi.updateUser(user.id, {
                 floatingPanelSettings: updatedSettings,
             });
         } catch (error) {
@@ -387,32 +385,35 @@ export default function Profile() {
                                         <h2 className="text-xl font-bold mb-4 w-[100px]">
                                             Your Managed Venue
                                         </h2>
-                                        {venueLoading ? (
-                                            <div className="flex justify-center items-center h-full mr-10 mt-3">
-                                                <Spinner
-                                                    classNames={{
-                                                        wrapper: "w-16 h-16",
+                                        {user.managedVenue ? (
+                                            venueLoading ? (
+                                                <div className="flex justify-center items-center h-full mr-10 mt-3">
+                                                    <Spinner
+                                                        classNames={{
+                                                            wrapper:
+                                                                "w-16 h-16",
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <ProfileCard
+                                                    key={venue.id}
+                                                    data={venue}
+                                                    onClick={handleCardClick}
+                                                    className="self-end"
+                                                    size={{
+                                                        width: "480px",
+                                                        height: "288px",
                                                     }}
+                                                    styles={{
+                                                        text: "text-lg",
+                                                        desc: 150,
+                                                        footer: "h-[100px]",
+                                                        pos: "self-end",
+                                                    }}
+                                                    footer={true}
                                                 />
-                                            </div>
-                                        ) : user.managedVenue ? (
-                                            <ProfileCard
-                                                key={venue.id}
-                                                data={venue}
-                                                onClick={handleCardClick}
-                                                className="self-end"
-                                                size={{
-                                                    width: "480px",
-                                                    height: "288px",
-                                                }}
-                                                styles={{
-                                                    text: "text-lg",
-                                                    desc: 150,
-                                                    footer: "h-[100px]",
-                                                    pos: "self-end",
-                                                }}
-                                                footer={true}
-                                            />
+                                            )
                                         ) : (
                                             <p className="border border-gray-400 rounded-lg px-4 py-3 text-gray-400">
                                                 No managed venue.
@@ -431,7 +432,7 @@ export default function Profile() {
                         <div className="w-auto md:col-span-1 mb-5">
                             {/* Invitations */}
                             <div className="md:col-span-3 bg-white p-6 rounded-lg h-full w-auto shadow-md">
-                                <div className="my-0">
+                                <div className="my-0 overflow-y-auto max-h-[700px]">
                                     <h2 className="text-xl font-bold mb-8">
                                         Invitations
                                     </h2>

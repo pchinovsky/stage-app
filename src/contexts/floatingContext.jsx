@@ -118,6 +118,7 @@ export const FloatingProvider = ({ children }) => {
                           };
 
                 let involvedUpdate = {};
+
                 if (actionType === "attending") {
                     if (isAlreadyInList) {
                         if (!eventData.interested?.includes(userId)) {

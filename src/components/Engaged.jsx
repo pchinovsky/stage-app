@@ -97,16 +97,18 @@ export default function Engaged({
                         {loading ? (
                             <Spinner size="sm" />
                         ) : (
-                            attendingUsers.map(
-                                (user) =>
-                                    user && (
-                                        <User
-                                            key={user.id}
-                                            user={user}
-                                            currentUserId={userId}
-                                        />
-                                    )
-                            )
+                            <div className="flex flex-wrap gap-2">
+                                {attendingUsers.map(
+                                    (user) =>
+                                        user && (
+                                            <User
+                                                key={user.id}
+                                                user={user}
+                                                currentUserId={userId}
+                                            />
+                                        )
+                                )}
+                            </div>
                         )}
                     </>
                 )}
@@ -119,16 +121,18 @@ export default function Engaged({
                         {loading ? (
                             <Spinner size="sm" />
                         ) : (
-                            interestedUsers.map(
-                                (user) =>
-                                    user && (
-                                        <User
-                                            key={user.id}
-                                            user={user}
-                                            currentUserId={userId}
-                                        />
-                                    )
-                            )
+                            <div className="flex flex-wrap gap-2">
+                                {interestedUsers.map(
+                                    (user) =>
+                                        user && (
+                                            <User
+                                                key={user.id}
+                                                user={user}
+                                                currentUserId={userId}
+                                            />
+                                        )
+                                )}
+                            </div>
                         )}
                     </>
                 )}

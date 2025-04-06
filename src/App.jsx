@@ -19,13 +19,10 @@ import RegisterWrapper from "./pages/registerWrapper";
 
 function AnimatedRoutes() {
     const location = useLocation();
-    const { pathname } = location;
-    const { isAuth, authLoading, accessRegRef, accessLogRef } =
-        useContext(AuthContext);
-
-    const isGuest = !isAuth && !authLoading;
+    const { accessRegRef, accessLogRef } = useContext(AuthContext);
 
     useEffect(() => {
+<<<<<<< HEAD
         if (pathname === "/register") {
             if (isGuest) {
                 accessRegRef.current = true;
@@ -36,6 +33,14 @@ function AnimatedRoutes() {
                 accessLogRef.current = true;
                 accessRegRef.current = false;
             }
+=======
+        if (location.pathname === "/register") {
+            accessRegRef.current = true;
+            accessLogRef.current = false;
+        } else if (location.pathname === "/login") {
+            accessLogRef.current = true;
+            accessRegRef.current = false;
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
         } else {
             accessLogRef.current = false;
             accessRegRef.current = false;

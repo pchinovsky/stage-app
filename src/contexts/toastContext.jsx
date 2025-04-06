@@ -6,18 +6,15 @@ const ToastContext = createContext();
 export const ToastProvider = ({ children }) => {
     const [toastMessage, setToastMessage] = useState(null);
 
-    const showToast = useCallback((message) => {
+    const showToast = (message) => {
         setToastMessage(message);
         setTimeout(() => setToastMessage(null), 3000);
-    }, []);
+    };
 
     return (
         <ToastContext.Provider value={{ showToast }}>
             {children}
-            <Toast
-                message={toastMessage}
-                onClose={() => setToastMessage(null)}
-            />
+            <Toast message={toastMessage} />
         </ToastContext.Provider>
     );
 };

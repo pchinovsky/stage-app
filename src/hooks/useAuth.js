@@ -7,13 +7,17 @@ import { AuthContext } from "../contexts/authContext";
 
 export function useLogin() {
     const { showError } = useError();
-    const { setUser, setIsAuth } = useContext(AuthContext);
+    const { setUser, setIsAuth, justLogRef } = useContext(AuthContext);
 
     const log = async (data) => {
         try {
             const authData = await authApi.login(data);
             setUser(authData.user);
             setIsAuth(true);
+<<<<<<< HEAD
+=======
+            justLogRef.current = true;
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
         } catch (err) {
             const errMsg = err.message || "Error detected. Please try again.";
             showError(errMsg);
@@ -25,7 +29,7 @@ export function useLogin() {
 
 export function useRegister() {
     const { showError } = useError();
-    const { setUser, setIsAuth } = useContext(AuthContext);
+    const { setUser, setIsAuth, justRegRef } = useContext(AuthContext);
 
     const reg = async (data) => {
         try {
@@ -33,6 +37,12 @@ export function useRegister() {
 
             await new Promise((res) => setTimeout(res, 100));
 
+<<<<<<< HEAD
+=======
+            console.log("useRegister - about to set justRegRef to true");
+
+            justRegRef.current = true;
+>>>>>>> parent of a7bf5a5 (Fixing NonAuthGuard to ref flags.)
             setUser(authData.user);
             setIsAuth(true);
 
