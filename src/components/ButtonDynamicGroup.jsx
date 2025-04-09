@@ -22,6 +22,8 @@ export default function ButtonDynamicGroup({
 }) {
     const { showToast } = useToast();
     const { showError } = useError();
+
+    const currentInvolved = event?.involvedUsers || [];
     const [isInterested, setIsInterested] = useState(false);
     const [isAttending, setIsAttending] = useState(false);
 
@@ -47,11 +49,13 @@ export default function ButtonDynamicGroup({
                     : arrayUnion(userId),
                 attendingCount: isAttending ? increment(-1) : increment(1),
             };
+
             if (isAttending && !isInterested) {
                 updatedEvent.involvedUsers = arrayRemove(userId);
-            } else if (!isAttending) {
+            } else if (!isAttending && !currentInvolved.includes(userId)) {
                 updatedEvent.involvedUsers = arrayUnion(userId);
             }
+
             await eventsApi.updateEvent(event.id, updatedEvent);
 
             await calcTrending(event);
@@ -61,6 +65,7 @@ export default function ButtonDynamicGroup({
                     ? arrayRemove(event.id)
                     : arrayUnion(event.id),
             });
+
             setIsAttending(!isAttending);
             showToast(
                 isAttending
@@ -82,17 +87,22 @@ export default function ButtonDynamicGroup({
             return;
         }
         try {
+            // console.log("currentInvolved - ", currentInvolved);
+            // console.log("has user id - ", currentInvolved.includes(userId));
+
             const updatedEvent = {
                 interested: isInterested
                     ? arrayRemove(userId)
                     : arrayUnion(userId),
                 interestedCount: isInterested ? increment(-1) : increment(1),
             };
+
             if (isInterested && !isAttending) {
                 updatedEvent.involvedUsers = arrayRemove(userId);
-            } else if (!isInterested) {
+            } else if (!isInterested && !currentInvolved.includes(userId)) {
                 updatedEvent.involvedUsers = arrayUnion(userId);
             }
+
             await eventsApi.updateEvent(event.id, updatedEvent);
 
             await calcTrending(event);
@@ -136,7 +146,9 @@ export default function ButtonDynamicGroup({
                 width="576"
                 height="512"
                 onPress={handleInterested}
-                style={{ color: isInterested ? "blue" : "inherit" }}
+                style={{
+                    color: isInterested ? "blue" : "inherit",
+                }}
                 disableExpand={disableExpand}
                 disabled={disabled?.interested}
                 selectionMode={selectionMode}

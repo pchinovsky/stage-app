@@ -14,12 +14,14 @@ import { AuthContext } from "./authContext";
 import { useEventsStore } from "./eventsContext";
 import { useUser } from "../hooks/useUser-new";
 import { calcTrending } from "../../utils/calcTrending";
+import { useToast } from "./toastContext";
 
 const FloatingContext = createContext();
 
 export const useFloatingContext = () => useContext(FloatingContext);
 
 export const FloatingProvider = ({ children }) => {
+    const { showToast } = useToast();
     const { showError } = useError();
 
     const [selectedEvents, setSelectedEvents] = useState([]);
@@ -88,6 +90,9 @@ export const FloatingProvider = ({ children }) => {
 
     const bulkUpdate = async (actionType) => {
         try {
+            const addedEventNames = [];
+            const removedEventNames = [];
+
             const promises = selectedEvents.map(async (eventId) => {
                 const eventRef = doc(db, "events", eventId);
                 const eventSnap = await getDoc(eventRef);
@@ -97,6 +102,8 @@ export const FloatingProvider = ({ children }) => {
                     actionType === "interested"
                         ? eventData.interested?.includes(userId)
                         : eventData.attending?.includes(userId);
+
+                const toAdd = !isAlreadyInList;
 
                 const eventUpdate =
                     actionType === "interested"
@@ -157,10 +164,30 @@ export const FloatingProvider = ({ children }) => {
                 await eventsApi.updateEvent(eventId, finalEventUpdate);
                 await calcTrending(eventData);
                 await authApi.updateUser(userId, userUpdate);
+
+                const event = events.find((e) => e.id === eventId);
+                if (toAdd && event?.title) {
+                    addedEventNames.push(event.title);
+                } else if (!toAdd && event?.title) {
+                    removedEventNames.push(event.title);
+                }
             });
 
             await Promise.all(promises);
             clearSelection();
+
+            let toastMsg = "";
+
+            if (addedEventNames.length > 0) {
+                toastMsg += `You are now ${actionType} in the following events:\n${addedEventNames.join("\n")}`;
+            }
+
+            if (removedEventNames.length > 0) {
+                if (toastMsg) toastMsg += `\n\n`;
+                toastMsg += `You are no longer ${actionType} in the following events:\n${removedEventNames.join("\n")}`;
+            }
+
+            if (toastMsg) showToast(toastMsg);
         } catch (err) {
             console.error("Error during bulk update:", err);
             showError(err.message || "An error occurred during bulk update.");
