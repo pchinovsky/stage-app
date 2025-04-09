@@ -23,8 +23,22 @@ export default function Engaged({
         }
     }, [attendingIds, interestedIds]);
 
+    const usersPerPage = 6;
+
     const attendingUsers = attendingIds.map((id) => otherUsers[id]);
     const interestedUsers = interestedIds.map((id) => otherUsers[id]);
+    const uniqueUsers = Array.from(
+        new Map(
+            [author, ...attendingUsers, ...interestedUsers]
+                .filter(Boolean)
+                .map((user) => [user.id, user])
+        ).values()
+    );
+
+    const [currentPageAtt, setCurrentPageAtt] = useState(0);
+    const [currentPageInt, setCurrentPageInt] = useState(0);
+    const pageCountAtt = Math.ceil(attendingUsers.length / usersPerPage);
+    const pageCountInt = Math.ceil(interestedUsers.length / usersPerPage);
 
     return (
         <div
@@ -45,11 +59,12 @@ export default function Engaged({
                         {loading ? (
                             <Spinner size="sm" />
                         ) : (
-                            [author, ...attendingUsers, ...interestedUsers].map(
+                            uniqueUsers.map(
                                 (user) =>
                                     user && (
                                         <Avatar
-                                            key={user.id}
+                                            // key={user.id}
+                                            key={`av-${user.id}`}
                                             src={user.image}
                                             size="md"
                                         />
@@ -78,57 +93,135 @@ export default function Engaged({
 
                 {expanded && attendingUsers.length > 0 && (
                     <>
-                        <p
-                            className={`text-sm font-semibold text-gray-600 mt-2 transition-opacity duration-500 ${
-                                expanded ? "opacity-100" : "opacity-0"
-                            }`}
-                        >
-                            Author
-                        </p>
+                        <div className="flex justify-between items-center w-full">
+                            <p className="text-sm font-semibold text-gray-600 my-2">
+                                Attending ({attendingUsers.length})
+                            </p>
+                            <div className="flex gap-1">
+                                {attendingUsers.length > 6 && (
+                                    <p className="text-[12px] text-center text-gray-500 mr-3 flex items-center">
+                                        {currentPageAtt + 1}
+                                    </p>
+                                )}
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    isDisabled={currentPageAtt === 0}
+                                    onPress={() =>
+                                        setCurrentPageAtt((p) =>
+                                            Math.max(0, p - 1)
+                                        )
+                                    }
+                                >
+                                    <Icon icon="mdi:chevron-left" />
+                                </Button>
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    isDisabled={
+                                        currentPageAtt >= pageCountAtt - 1
+                                    }
+                                    onPress={() =>
+                                        setCurrentPageAtt((p) =>
+                                            Math.min(pageCountAtt - 1, p + 1)
+                                        )
+                                    }
+                                >
+                                    <Icon icon="mdi:chevron-right" />
+                                </Button>
+                            </div>
+                        </div>
                         {loading ? (
                             <Spinner size="sm" />
                         ) : (
-                            <User user={author} currentUserId={userId} />
-                        )}
-
-                        <p className="text-sm font-semibold text-gray-600 mt-4">
-                            Attending
-                        </p>
-                        {loading ? (
-                            <Spinner size="sm" />
-                        ) : (
-                            attendingUsers.map(
-                                (user) =>
-                                    user && (
-                                        <User
-                                            key={user.id}
-                                            user={user}
-                                            currentUserId={userId}
-                                        />
+                            <div className="grid grid-cols-6 gap-2 w-full">
+                                {attendingUsers
+                                    .slice(
+                                        currentPageAtt * usersPerPage,
+                                        (currentPageAtt + 1) * usersPerPage
                                     )
-                            )
+                                    .map(
+                                        (user) =>
+                                            user && (
+                                                <User
+                                                    // key={user.id}
+                                                    key={`att-${user.id}`}
+                                                    user={user}
+                                                    currentUserId={userId}
+                                                    size="md"
+                                                />
+                                            )
+                                    )}
+                            </div>
                         )}
                     </>
                 )}
 
                 {expanded && interestedUsers.length > 0 && (
                     <>
-                        <p className="text-sm font-semibold text-gray-600 mt-4">
-                            Interested
-                        </p>
+                        <div className="flex justify-between items-center w-full">
+                            <p className="text-sm font-semibold text-gray-600 my-2">
+                                Interested ({interestedUsers.length})
+                            </p>
+                            <div className="flex gap-1">
+                                {interestedUsers.length > 6 && (
+                                    <p className="text-[12px] text-center text-gray-500 mr-3 flex items-center">
+                                        {currentPageInt + 1}
+                                    </p>
+                                )}
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    isDisabled={currentPageInt === 0}
+                                    onPress={() =>
+                                        setCurrentPageInt((p) =>
+                                            Math.max(0, p - 1)
+                                        )
+                                    }
+                                >
+                                    <Icon icon="mdi:chevron-left" />
+                                </Button>
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    isDisabled={
+                                        currentPageInt >= pageCountInt - 1
+                                    }
+                                    onPress={() =>
+                                        setCurrentPageInt((p) =>
+                                            Math.min(pageCountInt - 1, p + 1)
+                                        )
+                                    }
+                                >
+                                    <Icon icon="mdi:chevron-right" />
+                                </Button>
+                            </div>
+                        </div>
                         {loading ? (
                             <Spinner size="sm" />
                         ) : (
-                            interestedUsers.map(
-                                (user) =>
-                                    user && (
-                                        <User
-                                            key={user.id}
-                                            user={user}
-                                            currentUserId={userId}
-                                        />
+                            <div className="grid grid-cols-6 gap-2 w-full">
+                                {interestedUsers
+                                    .slice(
+                                        currentPageInt * usersPerPage,
+                                        (currentPageInt + 1) * usersPerPage
                                     )
-                            )
+                                    .map(
+                                        (user) =>
+                                            user && (
+                                                <User
+                                                    // key={user.id}
+                                                    key={`int-${user.id}`}
+                                                    user={user}
+                                                    currentUserId={userId}
+                                                />
+                                            )
+                                    )}
+                            </div>
                         )}
                     </>
                 )}
