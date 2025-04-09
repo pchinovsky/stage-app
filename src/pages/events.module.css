@@ -82,11 +82,11 @@
     width: 40px;
     height: 40px;
     border: 0;
-    border-radius: 50%;
+    border-radius: 100px;
     background-color: rgba(240, 234, 234, 0.4);
     backdrop-filter: blur(10px);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     overflow: hidden;
     padding-inline: 9.5px;
     z-index: 500;
@@ -129,7 +129,7 @@
 .tooltipCircle:hover {
     width: 220px;
     height: 40px;
-    border-radius: 30px;
+    border-radius: 80px;
     justify-content: flex-start;
     padding-left: 10px;
 }

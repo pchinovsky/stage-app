@@ -154,12 +154,16 @@ export default function InvitationCard({ invitation }) {
                                     </Button>
                                 ) : (
                                     <>
-                                        <Tooltip content={"Accept"} radius="sm">
+                                        <Tooltip
+                                            content={"Accept"}
+                                            radius="sm"
+                                            className="bg-slate-900 text-white pb-[7px] px-3"
+                                        >
                                             <Button
                                                 size="sm"
                                                 isIconOnly
                                                 onPress={handleAccept}
-                                                className="bg-primary"
+                                                className="bg-primary text-white"
                                             >
                                                 <Icon
                                                     icon="ci:check"
@@ -171,6 +175,7 @@ export default function InvitationCard({ invitation }) {
                                         <Tooltip
                                             content={"Decline"}
                                             radius="sm"
+                                            className="bg-slate-900 text-white pb-[7px] px-3"
                                         >
                                             <Button
                                                 size="sm"

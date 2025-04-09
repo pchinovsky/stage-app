@@ -10,9 +10,9 @@ export function ImageUploadInput({
     previewImage,
     setPreviewImage,
     error,
+    uploading,
+    setUploading,
 }) {
-    const [uploading, setUploading] = useState(false);
-
     const handleFileChange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -53,7 +53,13 @@ export function ImageUploadInput({
                 disabled={uploading}
                 startContent={<Icon icon="lucide:image" className="mb-0.5" />}
                 className="flex-grow h-full"
-                label={!previewImage ? "Upload an image" : "Change image"}
+                label={
+                    uploading
+                        ? "Uploading..."
+                        : !previewImage
+                          ? "Upload an image"
+                          : "Change image"
+                }
                 labelPlacement="outside-top"
                 isInvalid={!!error?.image}
                 errorMessage={error?.image?.[0]}

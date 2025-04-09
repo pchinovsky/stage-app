@@ -26,6 +26,7 @@ export default function Edit() {
     const { eventId } = useParams();
 
     const [previewImage, setPreviewImage] = useState("");
+    const [uploading, setUploading] = useState(false);
 
     const formRef = useRef(null);
 
@@ -60,12 +61,6 @@ export default function Edit() {
         loadingEvent,
     } = useEventEdit(eventId, initialValues);
 
-    useEffect(() => {
-        if (!loadingEvent && formValues.image) {
-            setPreviewImage(formValues.image);
-        }
-    }, [loadingEvent, formValues.image]);
-
     const { artists: allArtists, loading: loadingArtists } = useArtists();
     const { artists: selectedArtists } = useArtists(formValues.artists);
 
@@ -84,6 +79,7 @@ export default function Edit() {
                     : formValues.endTime,
         };
 
+        setFormValues(formattedValues);
         try {
             await handleSubmit(e);
         } catch (error) {
@@ -105,15 +101,15 @@ export default function Edit() {
         }));
     };
 
-    const backgroundStyle =
-        previewImage || formValues.image
-            ? {
-                  backgroundImage: `url("${previewImage || formValues.image}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  color: "white",
-              }
-            : {};
+    const backgroundImageUrl = previewImage || formValues.image || "";
+    const backgroundStyle = backgroundImageUrl
+        ? {
+              backgroundImage: `url("${backgroundImageUrl}")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              color: "white",
+          }
+        : {};
 
     return (
         <DefaultLayout>
@@ -127,7 +123,8 @@ export default function Edit() {
                         <Button
                             type="submit"
                             color="primary"
-                            isDisabled={isSubmitting}
+                            isLoading={isSubmitting || uploading}
+                            isDisabled={isSubmitting || uploading}
                             onPress={() => formRef.current?.requestSubmit()}
                         >
                             {isSubmitting ? "Saving..." : "Save Changes"}
@@ -298,6 +295,8 @@ export default function Edit() {
                                     setFormValues={setFormValues}
                                     previewImage={previewImage}
                                     setPreviewImage={setPreviewImage}
+                                    uploading={uploading}
+                                    setUploading={setUploading}
                                     error={error}
                                 />
                             </div>

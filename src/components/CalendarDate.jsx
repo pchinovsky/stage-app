@@ -22,7 +22,7 @@ export default function CalendarDate({ date, onPress }) {
             closeDelay={1000}
             color="primary"
             offset={10}
-            className="bg-slate-700 text-white rounded-lg"
+            className="rounded-md bg-slate-900 text-white pb-[7px] px-3"
             isDisabled={!isAuth}
         >
             <Card

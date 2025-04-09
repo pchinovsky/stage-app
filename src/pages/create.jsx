@@ -33,6 +33,7 @@ import { categories } from "../constants/generalConstants";
 export default function CreatePage() {
     const createEvent = useEventCreate();
     const [previewImage, setPreviewImage] = useState("");
+    const [uploading, setUploading] = useState(false);
 
     const formRef = useRef(null);
 
@@ -231,6 +232,7 @@ export default function CreatePage() {
                                     onPress={() =>
                                         formRef.current?.requestSubmit()
                                     }
+                                    className="font-bold"
                                 >
                                     {isSubmitting
                                         ? "Staging in progress"
@@ -270,6 +272,8 @@ export default function CreatePage() {
                                     setFormValues={setFormValues}
                                     previewImage={previewImage}
                                     setPreviewImage={setPreviewImage}
+                                    uploading={uploading}
+                                    setUploading={setUploading}
                                     error={error}
                                 />
 

@@ -123,7 +123,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                 }}
             >
                 <motion.div
-                    className="w-[90%] max-w-3xl"
+                    className="w-[90%] max-w-4xl"
                     initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -50, opacity: 0 }}

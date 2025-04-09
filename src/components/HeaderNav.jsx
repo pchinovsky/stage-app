@@ -49,6 +49,11 @@ export default function HeaderNav() {
                 staggerChildren: 0.05,
             },
         },
+        hover: {
+            transition: {
+                staggerChildren: 0.05,
+            },
+        },
     };
 
     const letter = {
@@ -60,6 +65,15 @@ export default function HeaderNav() {
                 type: "spring",
                 damping: 10,
                 stiffness: 100,
+            },
+        },
+        hover: {
+            y: [-10, 0],
+            transition: {
+                type: "spring",
+                damping: 8,
+                stiffness: 150,
+                duration: 0.8,
             },
         },
     };
@@ -96,6 +110,7 @@ export default function HeaderNav() {
                         variants={container}
                         initial="hidden"
                         animate="visible"
+                        whileHover="hover"
                     >
                         {"STAGE".split("").map((char, i) => (
                             <motion.span key={i} variants={letter}>
@@ -189,7 +204,7 @@ export default function HeaderNav() {
                     <Dropdown
                         shouldBlockScroll={false}
                         offset={10}
-                        crossOffset={-80}
+                        crossOffset={-75}
                     >
                         <DropdownTrigger>
                             <User

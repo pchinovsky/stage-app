@@ -75,7 +75,10 @@ export default function ArtistList({
                             className="flex items-center gap-3 p-2 bg-white w-full rounded-lg cursor-pointer"
                             onClick={() => onClick(artist)}
                         >
-                            <Avatar src={artist.profileImage} size="sm" />
+                            <Avatar
+                                src={artist.profileImage || artist.image}
+                                size="sm"
+                            />
                             <span className="text-primary">{artist.name}</span>
                         </button>
                     </Tooltip>

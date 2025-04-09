@@ -149,7 +149,7 @@ export default function FloatingControls({ pos, active, dock, defaultDock }) {
                         offset={12}
                         delay={100}
                         closeDelay={700}
-                        className="rounded-md"
+                        className="rounded-md bg-slate-900 text-white pb-[7px] px-3"
                     >
                         <Button
                             className={styles.detachButton}
@@ -178,7 +178,7 @@ export default function FloatingControls({ pos, active, dock, defaultDock }) {
                         offset={12}
                         delay={100}
                         closeDelay={700}
-                        className="rounded-md"
+                        className="rounded-md bg-slate-900 text-white pb-[7px] px-3"
                     >
                         <Button
                             className={styles.sizeBtn}
@@ -250,7 +250,7 @@ export default function FloatingControls({ pos, active, dock, defaultDock }) {
                             {currentUser.floatingPanelSettings?.isLocked && (
                                 <Tooltip
                                     placement="bottom"
-                                    className="rounded-md"
+                                    className="rounded-md bg-slate-900 text-white pb-[7px] px-3"
                                     content={
                                         isLocked
                                             ? "Unlock position"
@@ -273,7 +273,7 @@ export default function FloatingControls({ pos, active, dock, defaultDock }) {
                             )}
                             <Tooltip
                                 placement="bottom"
-                                className="rounded-md"
+                                className="rounded-md bg-slate-900 text-white pb-[7px] px-3"
                                 content="Clear selection"
                                 isDisabled={!selectionMode}
                             >
