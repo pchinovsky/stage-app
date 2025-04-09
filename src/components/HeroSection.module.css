@@ -12,29 +12,3 @@
     @apply transition-opacity duration-700;
     object-position: center;
 }
-
-.tooltipCircle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
-
-.tooltipCircle:hover {
-    width: 80px;
-    border-radius: 20px;
-}
-
-.tooltipCircle:hover::after {
-    content: "";
-    background-image: url("path-to-arrow-icon");
-    width: 20px;
-    height: 20px;
-    margin-left: 10px;
-}

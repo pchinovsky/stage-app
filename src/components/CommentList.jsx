@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { AuthContext } from "../contexts/authContext";
 import OwnerGuard from "../guards/OwnerGuard";
+import User from "./User";
 
 const CommentList = React.memo(({ comments, handleRemoveComment }) => {
-    const { isAuth } = useContext(AuthContext);
+    const { isAuth, userId: currentUserId } = useContext(AuthContext);
+
     return (
         <div className="h-[250px] overflow-y-auto space-y-3 p-2">
             <AnimatePresence initial={false}>
@@ -33,13 +35,21 @@ const CommentList = React.memo(({ comments, handleRemoveComment }) => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.2 }}
-                            className="flex items-center gap-3 p-2 bg-gray-200 rounded-lg"
+                            className="flex items-center gap-3 p-3 bg-gray-200 rounded-lg"
                         >
                             <Tooltip
                                 content={comment.authorName}
                                 placement="top"
                             >
-                                <Avatar src={comment.authorImage} size="sm" />
+                                <User
+                                    user={{
+                                        id: comment.author,
+                                        name: comment.authorName,
+                                        image: comment.authorImage,
+                                    }}
+                                    currentUserId={currentUserId}
+                                    size="sm"
+                                />
                             </Tooltip>
                             <p className="text-black text-sm">
                                 {comment.content}
@@ -49,7 +59,7 @@ const CommentList = React.memo(({ comments, handleRemoveComment }) => {
                                     onPress={() =>
                                         handleRemoveComment(comment.id)
                                     }
-                                    className="ml-auto hover:text-red-500"
+                                    className="ml-auto hover:text-red-500 h-[30px]"
                                     isIconOnly
                                 >
                                     <Icon

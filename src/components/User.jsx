@@ -11,7 +11,9 @@ import { db } from "../firebase/firebaseConfig";
 import { useError } from "../contexts/errorContext";
 import { AuthContext } from "../contexts/authContext";
 
-export default function User({ user, currentUserId }) {
+export default function User({ user, currentUserId, size = "md" }) {
+    const self = user?.id === currentUserId;
+
     const { showError } = useError();
     const { isAuth } = useContext(AuthContext);
 
@@ -79,17 +81,30 @@ export default function User({ user, currentUserId }) {
             content={
                 <Button
                     onPress={handleFollow}
-                    isDisabled={user?.id === currentUserId}
+                    isDisabled={self}
                     size="sm"
                     color={isFollowing ? "danger" : "primary"}
-                    className="w-full"
+                    className="w-full h-auto py-2"
                 >
-                    {isFollowing ? "Unfollow" : "Follow"}
+                    {self ? (
+                        <p className="font-bold">You</p>
+                    ) : isFollowing ? (
+                        <div className="flex flex-col gap-1">
+                            <p>Unfollow</p>
+                            <p className="font-bold">{user?.name}</p>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-1">
+                            <p>Follow</p>
+                            <p className="font-bold">{user?.name}</p>
+                        </div>
+                    )}
                 </Button>
             }
             placement="left"
             className="py-0 px-0"
             isDisabled={!isAuth}
+            offset={10}
         >
             <div className="flex items-center gap-2 cursor-pointer">
                 <Avatar
@@ -97,11 +112,10 @@ export default function User({ user, currentUserId }) {
                     fallback={<AvatarIcon />}
                     showFallback={!user?.image}
                     alt={user?.name || "User"}
-                    size="md"
+                    size={size}
                     isBordered
                     color="primary"
                 />
-                <span className="text-sm">{user.name}</span>
             </div>
         </Tooltip>
     );
