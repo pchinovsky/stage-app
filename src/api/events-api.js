@@ -40,6 +40,9 @@ const getEventById = async (eventId) => {
     try {
         const eventRef = doc(db, "events", eventId);
         const eventSnap = await getDoc(eventRef);
+        if (!eventSnap.exists()) {
+            return null;
+        }
         return { id: eventSnap.id, ...eventSnap.data() };
     } catch (error) {
         console.error("Error fetching event: ", error);
