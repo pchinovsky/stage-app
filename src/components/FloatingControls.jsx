@@ -70,7 +70,7 @@ export default function FloatingControls({ pos, active, dock, defaultDock }) {
         }
 
         setIsDocked(dock);
-    }, [pos, dock]);
+    }, []);
 
     const {
         selectedEvents,

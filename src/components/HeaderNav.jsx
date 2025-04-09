@@ -12,7 +12,7 @@ import {
     User,
 } from "@heroui/react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { motion } from "framer-motion";
 import { NavContext } from "../contexts/navContext";
 import { AuthContext } from "../contexts/authContext";
@@ -33,7 +33,10 @@ export default function HeaderNav() {
     const isEventsPage = pathname === "/events";
 
     const { floatingPanelSettings: settings } = currentUser ?? {};
-    const { pos, docked, defaultDock } = getPanelState(settings, isEventsPage);
+
+    const { pos, docked, defaultDock } = useMemo(() => {
+        return getPanelState(settings, isEventsPage);
+    }, [settings?.lastPosition, settings?.dockPosition, isEventsPage]);
 
     const dockPositionClass = isAuth
         ? settings?.dockPosition === "top-left"
