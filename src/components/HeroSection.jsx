@@ -34,14 +34,10 @@ const HeroSection = React.memo(() => {
     useEffect(() => {
         if (!loading && events.length > 0) {
             (async () => {
-                const trendingValues = await Promise.all(
-                    events.map((e) => calcTrending(e))
+                const allInvolved = events.flatMap(
+                    (event) => event.involvedUsers || []
                 );
-                const involvedTotal = trendingValues.reduce(
-                    (acc, val) => acc + val,
-                    0
-                );
-                setInvolved(involvedTotal);
+                setInvolved(allInvolved.length);
             })();
         }
     }, [loading, events]);

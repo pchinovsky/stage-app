@@ -18,11 +18,11 @@ export default function ButtonDynamic({
     let tooltipContent;
     if (disableExpand) {
         tooltipContent = !selectionMode
-            ? "Activate selection mode."
+            ? "Activate selection mode"
             : !selection
-              ? "Make a selection."
+              ? "Make a selection"
               : disabled
-                ? "Selection must consist of events with the same status."
+                ? "Selection must consist of events with the same status"
                 : text;
     }
 
@@ -51,23 +51,28 @@ export default function ButtonDynamic({
                 content={tooltipContent}
                 placement="bottom"
                 radius="sm"
+                className="bg-slate-900 text-white pb-[7px] px-3"
             >
-                <Button
-                    onPress={onPress}
-                    isIconOnly={false}
-                    isDisabled={disabled}
-                    className="w-full h-full flex items-center justify-center px-2 py-2 rounded-full bg-white"
-                >
-                    <Icon
-                        icon={icon}
-                        width={20}
-                        className="mx-2"
-                        style={style}
-                    />
-                    {hovered && !disableExpand && (
-                        <span className="whitespace-nowrap ml-2">{text}</span>
-                    )}
-                </Button>
+                <div className="w-full h-full flex items-center justify-center">
+                    <Button
+                        onPress={onPress}
+                        isIconOnly={false}
+                        isDisabled={disabled}
+                        className="w-full h-full flex items-center justify-center px-2 py-2 rounded-full bg-white"
+                    >
+                        <Icon
+                            icon={icon}
+                            width={20}
+                            className="mx-2"
+                            style={style}
+                        />
+                        {hovered && !disableExpand && (
+                            <span className="whitespace-nowrap ml-2">
+                                {text}
+                            </span>
+                        )}
+                    </Button>
+                </div>
             </Tooltip>
         </motion.div>
     );
