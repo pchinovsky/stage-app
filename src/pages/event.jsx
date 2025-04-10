@@ -143,7 +143,7 @@ export default function Event() {
                 className={styles.eventContainer}
                 style={{ position: "relative" }}
             >
-                {loading ? (
+                {loading || !event ? (
                     <div className="flex justify-center items-center h-full">
                         <Spinner
                             classNames={{
@@ -161,7 +161,8 @@ export default function Event() {
                             event={event}
                         />
                         <CalendarDate
-                            date={event.openingDate}
+                            date={event?.openingDate}
+                            time={event?.startTime?.slice(0, 5)}
                             onPress={setIsCalendarOpen}
                         />
                         <CalendarModal
@@ -207,8 +208,8 @@ export default function Event() {
                                     author.image ||
                                     "https://example.com/default-avatar.jpg",
                             }}
-                            attendingIds={event.attending || []}
-                            interestedIds={event.interested || []}
+                            attendingIds={event?.attending || []}
+                            interestedIds={event?.interested || []}
                         />
 
                         <motion.div
@@ -233,8 +234,8 @@ export default function Event() {
                                     />
                                 ) : (
                                     <Image
-                                        src={event.image}
-                                        alt={event.title}
+                                        src={event?.image}
+                                        alt={event?.title}
                                         className={styles.image}
                                     />
                                 )}
@@ -305,14 +306,14 @@ export default function Event() {
                                         </div>
                                     ) : (
                                         <Discussion
-                                            eventId={event.id}
+                                            eventId={event?.id}
                                             authorData={currentUser}
                                         />
                                     )}
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                        <OwnerGuard ownerId={event.createdBy} mode="display">
+                        <OwnerGuard ownerId={event?.createdBy} mode="display">
                             <div className={styles.controlsColumn}>
                                 <Button
                                     onPress={handleEdit}
