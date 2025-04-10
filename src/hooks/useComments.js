@@ -48,11 +48,10 @@ export default function useComments(eventId, authorData) {
 
     const handleCreateComment = async (formValues) => {
         try {
+
             const commentData = {
                 ...formValues,
                 author: authorData.id,
-                authorImage: authorData.image,
-                authorName: authorData.name,
                 event: eventId,
             };
 
