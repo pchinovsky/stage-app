@@ -25,6 +25,7 @@ export function FormLinks({ links, onChange, error }) {
         <div className="w-full">
             <Input
                 label="Associated Links"
+                isRequired
                 name="associatedLinks"
                 placeholder="Enter a link and press Enter"
                 value={inputValue}

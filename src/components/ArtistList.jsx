@@ -14,7 +14,7 @@ export default function ArtistList({
 
     return (
         <div
-            className="absolute left-[1100px] top-[120px] w-[350px] max-w-lg overflow-hidden bg-white px-4 py-3 rounded-lg z-[100]"
+            className="absolute left-[1100px] top-[120px] w-[350px] max-w-lg overflow-hidden bg-white px-4 pr-2 py-3 rounded-lg z-[100]"
             style={{
                 height: `${h}px`,
                 backdropFilter: "blur(10px)",
@@ -25,9 +25,9 @@ export default function ArtistList({
                 {one ? "Artist" : "Artists"}
             </h2>
             <div
-                className="artist-scroll space-y-2 overflow-y-auto"
+                className="artist-scroll space-y-2 overflow-y-auto pr-2 rounded-lg"
                 style={{
-                    height: "100%",
+                    height: "calc(100% - 2em)",
                 }}
             >
                 {artists.map((artist) => (

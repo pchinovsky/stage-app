@@ -26,7 +26,7 @@ export default function ArtistsPage() {
             <div className="p-4">
                 <h1 className="text-2xl font-bold mb-4">Artists</h1>
                 <div
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto"
                     style={{ maxHeight: "80vh" }}
                 >
                     {loading

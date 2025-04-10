@@ -54,11 +54,11 @@ export default function SlidingSidebar({ event }) {
                     ) : (
                         relatedEvents.map((event) => (
                             <ProfileCard
-                                key={event.id}
+                                key={event?.id}
                                 data={{
-                                    name: event.title,
-                                    profileImage: event.image,
-                                    description: event.description,
+                                    name: event?.title,
+                                    profileImage: event?.image,
+                                    description: event?.description,
                                 }}
                                 size={{ width: "260px", height: "200px" }}
                                 onClick={() => handleEventPress(event.id)}

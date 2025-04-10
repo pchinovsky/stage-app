@@ -211,7 +211,7 @@ export default function CreatePage() {
             >
                 <div className="container mx-auto py-8 px-4">
                     <div
-                        className={`w-[850px] h-[700px] mx-auto rounded-xl p-6 ${previewImage ? "bg-gray-50/20 backdrop-blur-md" : "bg-white border border-slate-300"}`}
+                        className={`w-[1000px] h-[700px] mx-auto rounded-xl p-6 ${previewImage ? "bg-gray-50/20 backdrop-blur-md" : "bg-white border border-slate-300"}`}
                     >
                         <div className="flex justify-between items-start mb-5">
                             <h1
@@ -226,7 +226,11 @@ export default function CreatePage() {
                                     isDisabled={isSubmitting}
                                     startContent={
                                         isSubmitting ? (
-                                            <Spinner size="sm" />
+                                            <Spinner
+                                                size="sm"
+                                                color="white"
+                                                className="mr-2"
+                                            />
                                         ) : null
                                     }
                                     onPress={() =>
@@ -261,7 +265,7 @@ export default function CreatePage() {
 
                         <Form
                             ref={formRef}
-                            className="flex flex-row gap-10"
+                            className="flex flex-row justify-between gap-5"
                             onSubmit={handleSubmit}
                             validationBehavior="aria"
                         >
@@ -390,7 +394,7 @@ export default function CreatePage() {
                                                 showAnchorIcon
                                                 href={link}
                                                 onClose={() => removeLink(link)}
-                                                className="max-w-[350px] overflow-hidden text-ellipsis whitespace-nowrap"
+                                                className="max-w-[420px] overflow-hidden text-ellipsis whitespace-nowrap"
                                             >
                                                 <div className="py-2 text-primary">
                                                     {link}
@@ -401,7 +405,7 @@ export default function CreatePage() {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-[500px]">
                                 <div className="md:col-span-2"></div>
 
                                 <DatePicker
@@ -426,14 +430,6 @@ export default function CreatePage() {
                                     isRequired
                                     isInvalid={!!error?.openingDate}
                                     errorMessage={error?.openingDate?.[0]}
-                                    classNames={{
-                                        label: formValues.image
-                                            ? "text-white"
-                                            : "",
-                                        input: formValues.image
-                                            ? "text-white"
-                                            : "",
-                                    }}
                                 />
 
                                 <TimeInput
@@ -461,14 +457,6 @@ export default function CreatePage() {
                                     isRequired
                                     isInvalid={!!error?.startTime}
                                     errorMessage={error?.startTime?.[0]}
-                                    classNames={{
-                                        label: formValues.image
-                                            ? "text-white"
-                                            : "",
-                                        input: formValues.image
-                                            ? "text-white"
-                                            : "",
-                                    }}
                                 />
 
                                 <DatePicker
@@ -527,14 +515,6 @@ export default function CreatePage() {
                                     isRequired
                                     isInvalid={!!error?.endTime}
                                     errorMessage={error?.endTime?.[0]}
-                                    classNames={{
-                                        label: formValues.image
-                                            ? "text-white"
-                                            : "",
-                                        input: formValues.image
-                                            ? "text-white"
-                                            : "",
-                                    }}
                                 />
 
                                 <Input

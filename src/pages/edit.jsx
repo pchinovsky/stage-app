@@ -64,29 +64,6 @@ export default function Edit() {
     const { artists: allArtists, loading: loadingArtists } = useArtists();
     const { artists: selectedArtists } = useArtists(formValues.artists);
 
-    const handleSubmitWithConversion = async (e) => {
-        e.preventDefault();
-
-        const formattedValues = {
-            ...formValues,
-            startTime:
-                formValues.startTime && typeof formValues.startTime === "object"
-                    ? `${String(formValues.startTime.hour).padStart(2, "0")}:${String(formValues.startTime.minute).padStart(2, "0")}`
-                    : formValues.startTime,
-            endTime:
-                formValues.endTime && typeof formValues.endTime === "object"
-                    ? `${String(formValues.endTime.hour).padStart(2, "0")}:${String(formValues.endTime.minute).padStart(2, "0")}`
-                    : formValues.endTime,
-        };
-
-        setFormValues(formattedValues);
-        try {
-            await handleSubmit(e);
-        } catch (error) {
-            console.error("Error updating event:", error);
-        }
-    };
-
     const handleArtistChange = (updatedArtists) => {
         setFormValues((prev) => ({
             ...prev,
@@ -114,7 +91,7 @@ export default function Edit() {
     return (
         <DefaultLayout>
             <div
-                className="container font-primary p-6 w-[900px] mx-auto mt-[-20px] border border-slate-300 rounded-xl h-[80%]"
+                className="container font-primary p-6 w-[1000px] mx-auto mt-[-20px] border border-slate-300 rounded-xl h-[80%]"
                 style={backgroundStyle}
             >
                 <div className="flex justify-between items-start mb-5">
@@ -123,6 +100,15 @@ export default function Edit() {
                         <Button
                             type="submit"
                             color="primary"
+                            startContent={
+                                isSubmitting ? (
+                                    <Spinner
+                                        size="sm"
+                                        color="white"
+                                        className="mr-2"
+                                    />
+                                ) : null
+                            }
                             isLoading={isSubmitting || uploading}
                             isDisabled={isSubmitting || uploading}
                             onPress={() => formRef.current?.requestSubmit()}
@@ -149,7 +135,7 @@ export default function Edit() {
                 ) : (
                     <Form
                         ref={formRef}
-                        onSubmit={handleSubmitWithConversion}
+                        onSubmit={handleSubmit}
                         className="flex gap-5"
                         style={{ flexDirection: "row" }}
                     >

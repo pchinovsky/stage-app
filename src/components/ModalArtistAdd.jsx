@@ -261,7 +261,7 @@ export default function ModalArtistAdd({ isOpen, onClose, onArtistCreated }) {
                                                         <Chip
                                                             size="sm"
                                                             variant="solid"
-                                                            className="absolute top-[1px] right-[1px] cursor-pointer"
+                                                            className="absolute top-[1px] right-[5px] cursor-pointer"
                                                             onClose={() =>
                                                                 removeAdditionalImage(
                                                                     index
