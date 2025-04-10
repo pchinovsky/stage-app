@@ -18,9 +18,11 @@ import {
     CardFooter,
 } from "@heroui/react";
 import { useError } from "../contexts/errorContext";
+import { useToast } from "../contexts/toastContext";
 import { AuthContext } from "../contexts/authContext";
 
 export default function ModalProfileCustom({ isOpen, onClose, data }) {
+    const { showToast } = useToast();
     const { showError } = useError();
     const { isAuth, userId } = useContext(AuthContext);
 
@@ -87,6 +89,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                     followedBy: arrayRemove(userId),
                 });
                 setIsFollowing(false);
+                showToast(`Unfollowed ${data.name}`);
             } else {
                 // Follow
                 if (data.address) {
@@ -102,6 +105,7 @@ export default function ModalProfileCustom({ isOpen, onClose, data }) {
                     followedBy: arrayUnion(userId),
                 });
                 setIsFollowing(true);
+                showToast(`You're now following ${data.name}`);
             }
         } catch (error) {
             console.error("Error updating follow status:", error);
