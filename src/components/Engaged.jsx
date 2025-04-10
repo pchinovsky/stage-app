@@ -1,10 +1,10 @@
 import { useContext, useState, useEffect } from "react";
 import { Avatar, AvatarGroup, Button, Spinner } from "@heroui/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { AuthContext } from "../contexts/authContext";
 import { useUser } from "../hooks/useUser";
 import User from "./User";
-import styles from "./Engaged.module.css";
 
 export default function Engaged({
     author,
@@ -12,6 +12,9 @@ export default function Engaged({
     interestedIds = [],
 }) {
     const [expanded, setExpanded] = useState(false);
+    const [hideButton, setHideButton] = useState(false);
+    const [showAvatars, setShowAvatars] = useState(true);
+
     const { userId } = useContext(AuthContext);
     const { fetchUsersByIds, otherUsers, loading } = useUser();
 
@@ -22,6 +25,21 @@ export default function Engaged({
             return () => unsubscribe && unsubscribe();
         }
     }, [attendingIds, interestedIds]);
+
+    useEffect(() => {
+        if (expanded) {
+            setShowAvatars(false);
+            setHideButton(false);
+        } else {
+            setHideButton(true);
+            const timeout = setTimeout(() => {
+                setShowAvatars(true);
+                setHideButton(false);
+            }, 500);
+
+            return () => clearTimeout(timeout);
+        }
+    }, [expanded]);
 
     const usersPerPage = 6;
 
@@ -41,44 +59,28 @@ export default function Engaged({
     const pageCountInt = Math.ceil(interestedUsers.length / usersPerPage);
 
     return (
-        <div
+        <motion.div
+            layout
+            initial={false}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{
+                duration: expanded ? 0.2 : 0.4,
+                ease: "easeOut",
+            }}
             className={`absolute left-[1100px] top-[330px] w-[350px] z-[1000] overflow-hidden flex
-                ${expanded ? styles.cardMax : styles.cardMin} 
-             bg-white text-black shadow-md rounded-lg border border-gray-200`}
-            style={{ borderRadius: expanded ? "30px" : "40px" }}
+        bg-white text-black shadow-md rounded-lg border border-gray-200 p-2`}
+            style={{
+                borderRadius: expanded ? "30px" : "40px",
+            }}
         >
-            <div
-                className={`transition-all duration-1000 flex w-full ${
-                    expanded
-                        ? "flex-col items-start justify-start gap-1"
-                        : "flex-row items-center justify-between"
-                }`}
-            >
-                {!expanded && (
-                    <AvatarGroup max={9}>
-                        {loading ? (
-                            <Spinner size="sm" />
-                        ) : (
-                            uniqueUsers.map(
-                                (user) =>
-                                    user && (
-                                        <Avatar
-                                            // key={user.id}
-                                            key={`av-${user.id}`}
-                                            src={user.image}
-                                            size="md"
-                                        />
-                                    )
-                            )
-                        )}
-                    </AvatarGroup>
-                )}
-
+            {!hideButton && (
                 <Button
                     isIconOnly
                     variant="light"
+                    radius="full"
                     onPress={() => setExpanded(!expanded)}
-                    className="w-10 h-10 min-w-6 self-end"
+                    className="w-10 h-10 min-w-6 absolute top-2 right-2 z-[1011]"
                     style={{ padding: 0 }}
                     isDisabled={
                         attendingUsers.length === 0 &&
@@ -90,6 +92,45 @@ export default function Engaged({
                         className="text-xl"
                     />
                 </Button>
+            )}
+
+            <div
+                className={`transition-all duration-1000 flex w-full ${
+                    expanded
+                        ? "flex-col items-start justify-start gap-1 p-1"
+                        : "flex-row items-center justify-between"
+                }`}
+            >
+                <div className="relative w-full h-[40px]">
+                    <AnimatePresence mode="wait">
+                        {showAvatars && !expanded && (
+                            <motion.div
+                                key="showAvatars"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                className="absolute left-0 top-0 w-full h-full flex items-center justify-start pointer-events-none z-[1010]"
+                            >
+                                <AvatarGroup max={9}>
+                                    {loading ? (
+                                        <Spinner size="sm" />
+                                    ) : (
+                                        uniqueUsers.map((user) =>
+                                            user ? (
+                                                <Avatar
+                                                    key={`av-${user.id}`}
+                                                    src={user.image}
+                                                    size="md"
+                                                />
+                                            ) : null
+                                        )
+                                    )}
+                                </AvatarGroup>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
 
                 {expanded && attendingUsers.length > 0 && (
                     <>
@@ -146,7 +187,6 @@ export default function Engaged({
                                         (user) =>
                                             user && (
                                                 <User
-                                                    // key={user.id}
                                                     key={`att-${user.id}`}
                                                     user={user}
                                                     currentUserId={userId}
@@ -214,7 +254,6 @@ export default function Engaged({
                                         (user) =>
                                             user && (
                                                 <User
-                                                    // key={user.id}
                                                     key={`int-${user.id}`}
                                                     user={user}
                                                     currentUserId={userId}
@@ -226,6 +265,6 @@ export default function Engaged({
                     </>
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 }
