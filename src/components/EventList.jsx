@@ -22,13 +22,17 @@ const EventsList = ({ filters }) => {
     const filteredEvents = useMemo(() => {
         if (loading || !events || !postFilters) return [];
 
-        return events.filter((event) => {
+        const filtered = events.filter((event) => {
             if (!postFilters || typeof postFilters !== "object") return true;
             return Object.entries(postFilters).every(([key, values]) => {
                 if (!Array.isArray(values)) return true;
 
                 return values.every((val) => event[key]?.includes(val));
             });
+        });
+
+        return filtered.sort((a, b) => {
+            return new Date(a.openingDate) - new Date(b.openingDate);
         });
     }, [events, loading, postFilters]);
 
