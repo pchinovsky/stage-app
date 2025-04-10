@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styles from "./Calendar.module.css";
-import { Modal, Button } from "@heroui/react";
+import { Modal, Button, Tooltip } from "@heroui/react";
 import { useUser } from "../hooks/useUser";
 import { useEventsStore } from "../contexts/eventsContext";
 
@@ -96,33 +96,72 @@ export default function CalendarModal({ isOpen, onClose }) {
                         const eventsForThisDay = eventMap[dateKey];
                         if (!eventsForThisDay) return null;
 
+                        const maxVisible = 2;
+                        const visibleEvents = eventsForThisDay.slice(
+                            0,
+                            maxVisible
+                        );
+                        const extraEvents = eventsForThisDay.slice(maxVisible);
+                        const extraCount = eventsForThisDay.length - maxVisible;
+
                         return (
-                            <div>
-                                {eventsForThisDay.map((event) => (
+                            <div className="overflow-hidden mt-5">
+                                {visibleEvents.map((event) => (
                                     <Link
                                         key={event.id}
                                         to={`/events/${event.id}`}
-                                        className="absolute bottom-[1px] left-[5px] block bg-primary text-white text-xs text-left rounded-md px-3 py-2 mb-1 hover:underline"
-                                        style={{ lineHeight: 1.2 }}
+                                        className="block bg-primary text-white text-[10px] leading-tight rounded-md px-1 py-[4px] mb-[2px] truncate"
+                                        title={event.title}
                                     >
                                         {event.title}
                                     </Link>
                                 ))}
+                                {extraCount > 0 && (
+                                    <Tooltip
+                                        content={
+                                            <div className="flex flex-col items-start px-2 py-2">
+                                                {eventsForThisDay.map(
+                                                    (event) => (
+                                                        <Link
+                                                            key={event.id}
+                                                            to={`/events/${event.id}`}
+                                                            className="text-sm text-white hover:underline"
+                                                        >
+                                                            {event.title}
+                                                        </Link>
+                                                    )
+                                                )}
+                                            </div>
+                                        }
+                                        placement="top"
+                                        showArrow
+                                        className="rounded-md bg-slate-900 text-white pb-[7px] px-3"
+                                        classNames={{
+                                            base: [
+                                                "border-0",
+                                                "mr-16",
+                                                "before:bg-slate-900 before:border-0",
+                                            ],
+                                        }}
+                                    >
+                                        <span className="text-xs text-gray-700 underline cursor-pointer absolute top-2 right-2">
+                                            +{extraCount} more...
+                                        </span>
+                                    </Tooltip>
+                                )}
                             </div>
                         );
                     }}
                     className={`font-sans ${styles.calendarCustom}`}
                 />
-                <div className="flex mt-[120px] w-full">
-                    <Button
-                        onPress={onClose}
-                        className="ml-auto"
-                        variant="ghost"
-                        color="danger"
-                    >
-                        Close
-                    </Button>
-                </div>
+                <Button
+                    onPress={onClose}
+                    className="absolute bottom-4 right-4"
+                    variant="ghost"
+                    color="danger"
+                >
+                    Close
+                </Button>
             </div>
         </Modal>
     );
